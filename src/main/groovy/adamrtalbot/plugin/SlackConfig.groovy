@@ -1,0 +1,157 @@
+/*
+ * Copyright 2025, Seqera Labs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package adamrtalbot.plugin
+
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
+import nextflow.Session
+
+/**
+ * Configuration parser for Slack plugin settings.
+ *
+ * Reads configuration from:
+ * 1. slack {} configuration block in nextflow.config
+ * 2. params.slack_webhook parameter
+ * 3. SLACK_WEBHOOK_URL environment variable
+ *
+ * @author Adam Talbot <adam.talbot@seqera.io>
+ */
+@Slf4j
+@CompileStatic
+class SlackConfig {
+
+    /**
+     * Enable/disable the plugin
+     */
+    final boolean enabled
+
+    /**
+     * Slack webhook URL for posting messages
+     */
+    final String webhook
+
+    /**
+     * Default channel to post to (optional, usually configured in webhook)
+     */
+    final String channel
+
+    /**
+     * Send notification when workflow starts
+     */
+    final boolean notifyOnStart
+
+    /**
+     * Send notification when workflow completes successfully
+     */
+    final boolean notifyOnComplete
+
+    /**
+     * Send notification when workflow errors
+     */
+    final boolean notifyOnError
+
+    /**
+     * Custom username for bot messages
+     */
+    final String username
+
+    /**
+     * Custom emoji icon for bot messages
+     */
+    final String iconEmoji
+
+    /**
+     * Include command line in messages
+     */
+    final boolean includeCommandLine
+
+    /**
+     * Include resource usage in completion messages
+     */
+    final boolean includeResourceUsage
+
+    /**
+     * Private constructor - use from() factory method
+     */
+    private SlackConfig(Map config) {
+        this.enabled = config.enabled != null ? config.enabled as boolean : true
+        this.webhook = config.webhook as String
+        this.channel = config.channel as String
+        this.notifyOnStart = config.notifyOnStart != null ? config.notifyOnStart as boolean : true
+        this.notifyOnComplete = config.notifyOnComplete != null ? config.notifyOnComplete as boolean : true
+        this.notifyOnError = config.notifyOnError != null ? config.notifyOnError as boolean : true
+        this.username = config.username ?: 'Nextflow Bot'
+        this.iconEmoji = config.iconEmoji ?: ':rocket:'
+        this.includeCommandLine = config.includeCommandLine != null ? config.includeCommandLine as boolean : true
+        this.includeResourceUsage = config.includeResourceUsage != null ? config.includeResourceUsage as boolean : true
+    }
+
+    /**
+     * Create SlackConfig from Nextflow session
+     *
+     * @param session The Nextflow session
+     * @return SlackConfig instance, or null if not configured/disabled
+     */
+    static SlackConfig from(Session session) {
+        // Build configuration map from session config
+        def config = session.config?.navigate('slack') as Map ?: [:]
+
+        // Check if explicitly disabled
+        if (config.enabled == false) {
+            log.debug "Slack plugin: Explicitly disabled in configuration"
+            return null
+        }
+
+        // Get webhook URL
+        def webhook = getWebhookUrl(session)
+        if (!webhook) {
+            log.debug "Slack plugin: No webhook URL configured, plugin will be disabled"
+            return null
+        }
+
+        // Set webhook in config
+        if (!config.webhook) {
+            config.webhook = webhook
+        }
+
+        def slackConfig = new SlackConfig(config)
+        log.info "Slack plugin: Enabled with webhook notifications"
+        return slackConfig
+    }
+
+    /**
+     * Get webhook URL from config
+     */
+    private static String getWebhookUrl(Session session) {
+        return session.config?.navigate('slack.webhook') as String
+    }
+
+
+    /**
+     * Check if plugin is configured and enabled
+     */
+    boolean isConfigured() {
+        return enabled && webhook != null
+    }
+
+    @Override
+    String toString() {
+        return "SlackConfig[enabled=${enabled}, webhook=${webhook ? '***configured***' : 'null'}, " +
+               "channel=${channel}, notifyOnStart=${notifyOnStart}, " +
+               "notifyOnComplete=${notifyOnComplete}, notifyOnError=${notifyOnError}]"
+    }
+}
