@@ -36,11 +36,9 @@ import nextflow.plugin.extension.PluginExtensionPoint
 @CompileStatic
 class SlackExtension extends PluginExtensionPoint {
 
-    private Session session
-
     @Override
     protected void init(Session session) {
-        this.session = session
+        // No initialization needed
     }
 
     /**

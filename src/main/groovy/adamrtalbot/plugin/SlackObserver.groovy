@@ -42,7 +42,6 @@ class SlackObserver implements TraceObserver {
     private SlackConfig config
     private SlackClient client
     private SlackMessageBuilder messageBuilder
-    private TraceRecord errorRecord
 
     /**
      * Called when the workflow is created
@@ -75,14 +74,6 @@ class SlackObserver implements TraceObserver {
     }
 
     /**
-     * Called when the workflow begins execution
-     */
-    @Override
-    void onFlowBegin() {
-        // Nothing to do here for now
-    }
-
-    /**
      * Called when the workflow completes successfully
      */
     @Override
@@ -94,8 +85,6 @@ class SlackObserver implements TraceObserver {
             client.sendMessage(message)
             log.debug "Slack plugin: Sent workflow complete notification"
         }
-
-        shutdownClient()
     }
 
     /**
@@ -103,10 +92,6 @@ class SlackObserver implements TraceObserver {
      */
     @Override
     void onFlowError(TaskHandler handler, TraceRecord trace) {
-        if (trace) {
-            this.errorRecord = trace
-        }
-
         if (!isConfigured()) return
 
         if (config.notifyOnError) {
@@ -114,8 +99,6 @@ class SlackObserver implements TraceObserver {
             client.sendMessage(message)
             log.debug "Slack plugin: Sent workflow error notification"
         }
-
-        shutdownClient()
     }
 
     /**
@@ -123,13 +106,6 @@ class SlackObserver implements TraceObserver {
      */
     private boolean isConfigured() {
         return config != null && client != null && messageBuilder != null
-    }
-
-    /**
-     * Shutdown the client and wait for pending messages
-     */
-    private void shutdownClient() {
-        client?.shutdown()
     }
 
     /**
