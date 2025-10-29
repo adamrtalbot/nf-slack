@@ -45,11 +45,6 @@ class SlackConfig {
     final String webhook
 
     /**
-     * Default channel to post to (optional, usually configured in webhook)
-     */
-    final String channel
-
-    /**
      * Send notification when workflow starts
      */
     final boolean notifyOnStart
@@ -90,7 +85,6 @@ class SlackConfig {
     private SlackConfig(Map config) {
         this.enabled = config.enabled != null ? config.enabled as boolean : true
         this.webhook = config.webhook as String
-        this.channel = config.channel as String
         this.notifyOnStart = config.notifyOnStart != null ? config.notifyOnStart as boolean : true
         this.notifyOnComplete = config.notifyOnComplete != null ? config.notifyOnComplete as boolean : true
         this.notifyOnError = config.notifyOnError != null ? config.notifyOnError as boolean : true
@@ -151,7 +145,7 @@ class SlackConfig {
     @Override
     String toString() {
         return "SlackConfig[enabled=${enabled}, webhook=${webhook ? '***configured***' : 'null'}, " +
-               "channel=${channel}, notifyOnStart=${notifyOnStart}, " +
+               "notifyOnStart=${notifyOnStart}, " +
                "notifyOnComplete=${notifyOnComplete}, notifyOnError=${notifyOnError}]"
     }
 }

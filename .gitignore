@@ -9,3 +9,5 @@ work
 
 # Don't save LLM stuff
 .claude
+
+.envrc

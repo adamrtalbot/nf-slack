@@ -30,7 +30,6 @@ class SlackConfigTest extends Specification {
         session.config >> [
             slack: [
                 webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-                channel: '#test-channel',
                 notifyOnStart: false,
                 notifyOnComplete: true,
                 notifyOnError: true,
@@ -46,7 +45,6 @@ class SlackConfigTest extends Specification {
         config != null
         config.enabled == true
         config.webhook == 'https://hooks.slack.com/services/TEST/TEST/TEST'
-        config.channel == '#test-channel'
         config.notifyOnStart == false
         config.notifyOnComplete == true
         config.notifyOnError == true
