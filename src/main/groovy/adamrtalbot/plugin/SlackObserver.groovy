@@ -140,6 +140,13 @@ class SlackObserver implements TraceObserver {
     }
 
     /**
+     * Set the Slack client (package-private for testing)
+     */
+    void setClient(SlackClient client) {
+        this.client = client
+    }
+
+    /**
      * Get the message builder for use by extension functions
      */
     SlackMessageBuilder getMessageBuilder() {

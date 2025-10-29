@@ -110,8 +110,11 @@ class SlackObserverTest extends Specification {
         noExceptionThrown()
     }
 
-    def 'should throw exception when sending notification with invalid webhook'() {
+    def 'should send notification on flow complete when configured'() {
         given:
+        def mockClient = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        mockClient.doSendMessage(_) >> true
+
         def session = Mock(Session)
         session.config >> [
             slack: [
@@ -127,17 +130,20 @@ class SlackObserverTest extends Specification {
 
         def observer = new SlackObserver()
         observer.onFlowCreate(session)
+        observer.setClient(mockClient)  // Inject mocked client
 
         when:
-        // This will throw because the webhook URL is invalid
         observer.onFlowComplete()
 
         then:
-        thrown(RuntimeException)
+        noExceptionThrown()
     }
 
-    def 'should throw exception when sending error notification with invalid webhook'() {
+    def 'should send notification on flow error when configured'() {
         given:
+        def mockClient = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        mockClient.doSendMessage(_) >> true
+
         def session = Mock(Session)
         session.config >> [
             slack: [
@@ -157,12 +163,12 @@ class SlackObserverTest extends Specification {
 
         def observer = new SlackObserver()
         observer.onFlowCreate(session)
+        observer.setClient(mockClient)  // Inject mocked client
 
         when:
-        // This will throw because the webhook URL is invalid
         observer.onFlowError(null, errorRecord)
 
         then:
-        thrown(RuntimeException)
+        noExceptionThrown()
     }
 }

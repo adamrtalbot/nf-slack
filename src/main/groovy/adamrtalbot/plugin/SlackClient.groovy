@@ -140,7 +140,7 @@ class SlackClient {
      * @param message JSON message payload
      * @return true if successful, false otherwise
      */
-    private boolean doSendMessage(String message) {
+    protected boolean doSendMessage(String message) {
         try {
             def url = new URL(webhookUrl)
             def connection = url.openConnection() as HttpURLConnection
