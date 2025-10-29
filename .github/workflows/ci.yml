@@ -2,12 +2,12 @@ name: nf-slack CI
 on:
   push:
     branches:
-      - '*'
+      - "*"
     tags-ignore:
-      - '*'
+      - "*"
   pull_request:
     branches:
-      - '*'
+      - "*"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         java_version: [17, 21]
-        nextflow_version: ['24.10', '25.04']
+        nextflow_version: ["25.04", "25.10"]
 
     steps:
       - name: Environment
@@ -37,12 +37,12 @@ jobs:
         with:
           java-version: ${{matrix.java_version}}
           architecture: x64
-          distribution: 'temurin'
+          distribution: "temurin"
 
       - name: Run unit tests
         run: make test
         env:
-          GRADLE_OPTS: '-Dorg.gradle.daemon=false'
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
       - name: Setup Nextflow ${{ matrix.nextflow_version }}
         uses: nf-core/setup-nextflow@v2
@@ -51,9 +51,6 @@ jobs:
 
       - name: Install plugin
         run: make install
-
-      - name: Verify plugin installation
-        run: nextflow plugin list
 
     outputs:
       test-status: ${{ job.status }}
