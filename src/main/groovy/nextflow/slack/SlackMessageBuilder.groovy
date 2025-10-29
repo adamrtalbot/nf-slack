@@ -62,6 +62,11 @@ class SlackMessageBuilder {
         def runName = session.runName ?: 'Unknown run'
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
+        // Check if using custom message configuration
+        if (config.startMessage instanceof Map) {
+            return buildCustomMessage(config.startMessage as Map, workflowName, timestamp, 'started')
+        }
+
         def fields = []
 
         // Add run name
@@ -92,6 +97,8 @@ class SlackMessageBuilder {
             ]
         }
 
+        def messageText = config.startMessage instanceof String ? config.startMessage : '🚀 *Pipeline started*'
+
         def message = [
             username: config.username,
             icon_emoji: config.iconEmoji,
@@ -101,7 +108,7 @@ class SlackMessageBuilder {
                     color: COLOR_INFO,
                     author_name: workflowName,
                     author_icon: NEXTFLOW_ICON,
-                    text: "🚀 *Pipeline started*",
+                    text: messageText,
                     fields: fields,
                     footer: "Started at ${formatTimestamp(timestamp)}",
                     ts: System.currentTimeMillis() / 1000 as long
@@ -120,6 +127,11 @@ class SlackMessageBuilder {
         def runName = session.runName ?: 'Unknown run'
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+
+        // Check if using custom message configuration
+        if (config.completeMessage instanceof Map) {
+            return buildCustomMessage(config.completeMessage as Map, workflowName, timestamp, 'completed')
+        }
 
         def fields = []
 
@@ -163,6 +175,8 @@ class SlackMessageBuilder {
             }
         }
 
+        def messageText = config.completeMessage instanceof String ? config.completeMessage : '✅ *Pipeline completed successfully*'
+
         def message = [
             username: config.username,
             icon_emoji: config.iconEmoji,
@@ -172,7 +186,7 @@ class SlackMessageBuilder {
                     color: COLOR_SUCCESS,
                     author_name: workflowName,
                     author_icon: NEXTFLOW_ICON,
-                    text: "✅ *Pipeline completed successfully*",
+                    text: messageText,
                     fields: fields,
                     footer: "Completed at ${formatTimestamp(timestamp)}",
                     ts: System.currentTimeMillis() / 1000 as long
@@ -192,6 +206,11 @@ class SlackMessageBuilder {
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
         def errorMessage = session.workflowMetadata?.errorMessage ?: 'Unknown error'
+
+        // Check if using custom message configuration
+        if (config.errorMessage instanceof Map) {
+            return buildCustomMessage(config.errorMessage as Map, workflowName, timestamp, 'failed', errorRecord)
+        }
 
         def fields = []
 
@@ -244,6 +263,8 @@ class SlackMessageBuilder {
             ]
         }
 
+        def messageText = config.errorMessage instanceof String ? config.errorMessage : '❌ *Pipeline failed*'
+
         def message = [
             username: config.username,
             icon_emoji: config.iconEmoji,
@@ -253,7 +274,7 @@ class SlackMessageBuilder {
                     color: COLOR_ERROR,
                     author_name: workflowName,
                     author_icon: NEXTFLOW_ICON,
-                    text: "❌ *Pipeline failed*",
+                    text: messageText,
                     fields: fields,
                     footer: "Failed at ${formatTimestamp(timestamp)}",
                     ts: System.currentTimeMillis() / 1000 as long
@@ -305,6 +326,145 @@ class SlackMessageBuilder {
         ]
 
         return new JsonBuilder(message).toPrettyString()
+    }
+
+    /**
+     * Build a custom message using map configuration
+     *
+     * @param customConfig Map with keys: text, color, includeFields, customFields
+     * @param workflowName Name of the workflow
+     * @param timestamp ISO timestamp
+     * @param status Workflow status (started, completed, failed)
+     * @param errorRecord Optional error record for failed workflows
+     */
+    private String buildCustomMessage(Map customConfig, String workflowName, String timestamp, String status, TraceRecord errorRecord = null) {
+        def runName = session.runName ?: 'Unknown run'
+        def duration = session.workflowMetadata?.duration ?: Duration.of(0)
+        def errorMessage = session.workflowMetadata?.errorMessage ?: 'Unknown error'
+
+        // Get message text
+        def messageText = customConfig.text ?: getDefaultMessageText(status)
+
+        // Get color
+        def color = customConfig.color ?: getDefaultColor(status)
+
+        // Build fields array
+        def fields = []
+
+        // Add default fields if specified
+        def includeFields = customConfig.includeFields as List ?: []
+        if (includeFields) {
+            if (includeFields.contains('runName')) {
+                fields << [title: 'Run Name', value: runName, short: true]
+            }
+            if (includeFields.contains('duration') && status != 'started') {
+                fields << [title: 'Duration', value: duration.toString(), short: true]
+            }
+            if (includeFields.contains('status')) {
+                fields << [title: 'Status', value: getStatusEmoji(status), short: true]
+            }
+            if (includeFields.contains('commandLine') && session.commandLine) {
+                fields << [title: 'Command Line', value: "```${session.commandLine}```", short: false]
+            }
+            if (includeFields.contains('workDir') && session.workDir && status == 'started') {
+                fields << [title: 'Work Directory', value: "`${session.workDir}`", short: false]
+            }
+            if (includeFields.contains('errorMessage') && status == 'failed') {
+                fields << [title: 'Error Message', value: "```${errorMessage.take(500)}${errorMessage.length() > 500 ? '...' : ''}```", short: false]
+            }
+            if (includeFields.contains('failedProcess') && errorRecord) {
+                def processName = errorRecord.get('process')
+                if (processName) {
+                    fields << [title: 'Failed Process', value: "`${processName}`", short: true]
+                }
+            }
+            if (includeFields.contains('tasks') && status == 'completed') {
+                def stats = session.workflowMetadata?.stats
+                if (stats) {
+                    def resourceInfo = []
+                    if (stats.cachedCount) resourceInfo << "Cached: ${stats.cachedCount}"
+                    if (stats.succeedCount) resourceInfo << "Completed: ${stats.succeedCount}"
+                    if (stats.failedCount) resourceInfo << "Failed: ${stats.failedCount}"
+                    if (resourceInfo) {
+                        fields << [title: 'Tasks', value: resourceInfo.join(', '), short: true]
+                    }
+                }
+            }
+        }
+
+        // Add custom fields
+        def customFields = customConfig.customFields as List ?: []
+        fields.addAll(customFields)
+
+        // Build footer text
+        def footerText = "Workflow ${status} at ${formatTimestamp(timestamp)}"
+
+        def message = [
+            username: config.username,
+            icon_emoji: config.iconEmoji,
+            attachments: [
+                [
+                    fallback: "Pipeline ${workflowName} ${status}",
+                    color: color,
+                    author_name: workflowName,
+                    author_icon: NEXTFLOW_ICON,
+                    text: messageText,
+                    fields: fields,
+                    footer: footerText,
+                    ts: System.currentTimeMillis() / 1000 as long
+                ]
+            ]
+        ]
+
+        return new JsonBuilder(message).toPrettyString()
+    }
+
+    /**
+     * Get default message text for a status
+     */
+    private static String getDefaultMessageText(String status) {
+        switch (status) {
+            case 'started':
+                return '🚀 *Pipeline started*'
+            case 'completed':
+                return '✅ *Pipeline completed successfully*'
+            case 'failed':
+                return '❌ *Pipeline failed*'
+            default:
+                return '*Pipeline event*'
+        }
+    }
+
+    /**
+     * Get default color for a status
+     */
+    private static String getDefaultColor(String status) {
+        switch (status) {
+            case 'started':
+                return COLOR_INFO
+            case 'completed':
+                return COLOR_SUCCESS
+            case 'failed':
+                return COLOR_ERROR
+            default:
+                return COLOR_INFO
+        }
+    }
+
+    /**
+     * Get status emoji
+     */
+    private static String getStatusEmoji(String status) {
+        switch (status) {
+            case 'started':
+                return '🚀 Running'
+            case 'completed':
+                return '✅ Success'
+            case 'failed':
+                return '❌ Failed'
+            default:
+                return 'Unknown'
+        }
     }
 
     /**

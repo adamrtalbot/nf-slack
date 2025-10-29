@@ -80,6 +80,21 @@ class SlackConfig {
     final boolean includeResourceUsage
 
     /**
+     * Custom message template for workflow start (simple string or map with full config)
+     */
+    final Object startMessage
+
+    /**
+     * Custom message template for workflow completion (simple string or map with full config)
+     */
+    final Object completeMessage
+
+    /**
+     * Custom message template for workflow error (simple string or map with full config)
+     */
+    final Object errorMessage
+
+    /**
      * Private constructor - use from() factory method
      */
     private SlackConfig(Map config) {
@@ -92,6 +107,9 @@ class SlackConfig {
         this.iconEmoji = config.iconEmoji ?: ':rocket:'
         this.includeCommandLine = config.includeCommandLine != null ? config.includeCommandLine as boolean : true
         this.includeResourceUsage = config.includeResourceUsage != null ? config.includeResourceUsage as boolean : true
+        this.startMessage = config.startMessage ?: '🚀 *Pipeline started*'
+        this.completeMessage = config.completeMessage ?: '✅ *Pipeline completed successfully*'
+        this.errorMessage = config.errorMessage ?: '❌ *Pipeline failed*'
     }
 
     /**

@@ -53,9 +53,6 @@ slack {
     // Required: Webhook URL
     webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
 
-    // Optional: Override default channel (if not set in webhook)
-    channel = '#my-channel'
-
     // Control which notifications to send (all default to true)
     notifyOnStart = true
     notifyOnComplete = true
@@ -70,6 +67,84 @@ slack {
     includeResourceUsage = true
 }
 ```
+
+### Customizing Default Messages
+
+You can customize the default notification messages in two ways:
+
+#### Simple Text Customization
+
+```groovy
+slack {
+    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    // Simple string templates (supports Slack markdown formatting)
+    startMessage = '🎬 *My analysis pipeline is starting!*'
+    completeMessage = '🎉 *Analysis completed successfully!*'
+    errorMessage = '💥 *Pipeline encountered an error!*'
+}
+```
+
+#### Advanced Message Customization
+
+For full control over message design, colors, and fields, use map-based configuration:
+
+```groovy
+slack {
+    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    // Customize start message with specific fields
+    startMessage = [
+        text: '🚀 *Production Pipeline Starting*',
+        color: '#3AA3E3',  // Custom blue color
+        includeFields: ['runName', 'status', 'commandLine'],  // Choose which default fields to include
+        customFields: [
+            [title: 'Environment', value: 'Production', short: true],
+            [title: 'Priority', value: 'High', short: true]
+        ]
+    ]
+
+    // Customize completion message
+    completeMessage = [
+        text: '✅ *Analysis Complete*',
+        color: '#2EB887',  // Green
+        includeFields: ['runName', 'duration', 'status', 'tasks'],
+        customFields: [
+            [title: 'Results Location', value: 's3://my-bucket/results/', short: false]
+        ]
+    ]
+
+    // Customize error message
+    errorMessage = [
+        text: '❌ *Pipeline Failed*',
+        color: '#A30301',  // Red
+        includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
+        customFields: [
+            [title: 'Support', value: 'support@example.com', short: true]
+        ]
+    ]
+}
+```
+
+**Available includeFields options:**
+- `runName` - The Nextflow run name
+- `status` - Workflow status with emoji
+- `duration` - How long the workflow ran (not available for start messages)
+- `commandLine` - The command used to launch the workflow
+- `workDir` - The work directory (only for start messages)
+- `errorMessage` - Error details (only for error messages)
+- `failedProcess` - Which process failed (only for error messages)
+- `tasks` - Task statistics (only for completion messages)
+
+**Field structure for customFields:**
+- `title` (required) - Field label
+- `value` (required) - Field content
+- `short` (optional) - If `true`, field appears in column layout (default: `false`)
+
+Default messages (if not customized):
+- **Start**: `🚀 *Pipeline started*`
+- **Complete**: `✅ *Pipeline completed successfully*`
+- **Error**: `❌ *Pipeline failed*`
 
 ### Disabling the Plugin
 

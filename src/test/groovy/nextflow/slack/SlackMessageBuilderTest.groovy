@@ -222,4 +222,204 @@ class SlackMessageBuilderTest extends Specification {
         def fields = json.attachments[0].fields
         !fields.find { it.title == 'Command Line' }
     }
+
+    def 'should use custom start message template'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            startMessage: '🎬 *Custom workflow is starting!*'
+        ])
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def message = messageBuilder.buildWorkflowStartMessage()
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '🎬 *Custom workflow is starting!*'
+    }
+
+    def 'should use custom complete message template'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            completeMessage: '🎉 *Analysis finished successfully!*'
+        ])
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('1h')
+        session.workflowMetadata >> metadata
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def message = messageBuilder.buildWorkflowCompleteMessage()
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '🎉 *Analysis finished successfully!*'
+    }
+
+    def 'should use custom error message template'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            errorMessage: '💥 *Workflow encountered an error!*'
+        ])
+        def errorSession = Mock(Session)
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('30m')
+        metadata.errorMessage >> 'Process failed'
+        errorSession.workflowMetadata >> metadata
+        errorSession.runName >> 'test-run'
+        messageBuilder = new SlackMessageBuilder(config, errorSession)
+
+        when:
+        def message = messageBuilder.buildWorkflowErrorMessage(null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '💥 *Workflow encountered an error!*'
+    }
+
+    def 'should use default messages when custom templates not provided'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+        ])
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def startMessage = messageBuilder.buildWorkflowStartMessage()
+        def startJson = new JsonSlurper().parseText(startMessage)
+
+        then:
+        startJson.attachments[0].text == '🚀 *Pipeline started*'
+    }
+
+    def 'should use map-based custom start message with custom fields'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            startMessage: [
+                text: '🎬 *Custom pipeline starting*',
+                color: '#FF5733',
+                includeFields: ['runName', 'status'],
+                customFields: [
+                    [title: 'Environment', value: 'Production', short: true]
+                ]
+            ]
+        ])
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def message = messageBuilder.buildWorkflowStartMessage()
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '🎬 *Custom pipeline starting*'
+        json.attachments[0].color == '#FF5733'
+        json.attachments[0].fields.find { it.title == 'Run Name' }?.value == 'test-run'
+        json.attachments[0].fields.find { it.title == 'Status' }?.value == '🚀 Running'
+        json.attachments[0].fields.find { it.title == 'Environment' }?.value == 'Production'
+    }
+
+    def 'should use map-based custom complete message with selective fields'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            completeMessage: [
+                text: '🎉 *Analysis finished!*',
+                color: '#00FF00',
+                includeFields: ['runName', 'duration', 'status'],
+                customFields: [
+                    [title: 'Output Location', value: 's3://bucket/results', short: false]
+                ]
+            ]
+        ])
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('2h')
+        session.workflowMetadata >> metadata
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def message = messageBuilder.buildWorkflowCompleteMessage()
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '🎉 *Analysis finished!*'
+        json.attachments[0].color == '#00FF00'
+        json.attachments[0].fields.find { it.title == 'Run Name' }
+        json.attachments[0].fields.find { it.title == 'Duration' }
+        json.attachments[0].fields.find { it.title == 'Status' }?.value == '✅ Success'
+        json.attachments[0].fields.find { it.title == 'Output Location' }?.value == 's3://bucket/results'
+    }
+
+    def 'should use map-based custom error message with error fields'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            errorMessage: [
+                text: '💥 *Pipeline crashed!*',
+                color: '#FF0000',
+                includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
+                customFields: [
+                    [title: 'Support', value: 'contact@example.com', short: true]
+                ]
+            ]
+        ])
+        def errorSession = Mock(Session)
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('30m')
+        metadata.errorMessage >> 'Out of memory error'
+        errorSession.workflowMetadata >> metadata
+        errorSession.runName >> 'test-run'
+        messageBuilder = new SlackMessageBuilder(config, errorSession)
+
+        def errorRecord = Mock(nextflow.trace.TraceRecord)
+        errorRecord.get('process') >> 'FAILED_PROCESS'
+
+        when:
+        def message = messageBuilder.buildWorkflowErrorMessage(errorRecord)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == '💥 *Pipeline crashed!*'
+        json.attachments[0].color == '#FF0000'
+        json.attachments[0].fields.find { it.title == 'Run Name' }
+        json.attachments[0].fields.find { it.title == 'Duration' }
+        json.attachments[0].fields.find { it.title == 'Error Message' }?.value.contains('Out of memory')
+        json.attachments[0].fields.find { it.title == 'Failed Process' }?.value == '`FAILED_PROCESS`'
+        json.attachments[0].fields.find { it.title == 'Support' }?.value == 'contact@example.com'
+    }
+
+    def 'should use default values when map config has minimal settings'() {
+        given:
+        config = new SlackConfig([
+            enabled: true,
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            startMessage: [
+                text: 'Starting...'
+            ]
+        ])
+        messageBuilder = new SlackMessageBuilder(config, session)
+
+        when:
+        def message = messageBuilder.buildWorkflowStartMessage()
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.attachments[0].text == 'Starting...'
+        json.attachments[0].color == '#3AA3E3' // default INFO color
+        json.attachments[0].fields.size() == 0 // no fields since includeFields not specified
+    }
 }
