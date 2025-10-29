@@ -1,0 +1,83 @@
+name: Run example pipeline
+on:
+  workflow_run:
+    workflows: ["nf-slack CI"]
+    types:
+      - completed
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      nextflow_version:
+        description: "Nextflow version to test"
+        required: false
+        default: "25.10"
+        type: choice
+        options:
+          - "25.10"
+      java_version:
+        description: "Java version to use"
+        required: false
+        default: "21"
+        type: choice
+        options:
+          - "17"
+          - "21"
+
+jobs:
+  run-example:
+    name: Test example pipeline
+    # Only run if CI tests passed or if manually triggered
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        java_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('[{0}]', github.event.inputs.java_version)) || fromJSON('[17, 21]') }}
+        nextflow_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.nextflow_version)) || fromJSON('["24.10", "25.04"]') }}
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: true
+
+      - name: Setup Java ${{ matrix.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{matrix.java_version}}
+          architecture: x64
+          distribution: "temurin"
+
+      - name: Setup Nextflow ${{ matrix.nextflow_version }}
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "${{ matrix.nextflow_version }}"
+
+      - name: Build and install plugin
+        run: |
+          make clean
+          make assemble
+          make install
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+      - name: Verify plugin installation
+        run: nextflow plugin list
+
+      - name: Run example pipeline
+        run: |
+          cd example
+          nextflow run main.nf -plugins nf-slack@0.1.0
+        env:
+          # Mock Slack webhook URL for testing
+          # The example will run but messages won't be sent
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
