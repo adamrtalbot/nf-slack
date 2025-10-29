@@ -37,8 +37,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('[{0}]', github.event.inputs.java_version)) || fromJSON('[17, 21]') }}
-        nextflow_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.nextflow_version)) || fromJSON('["24.10", "25.04"]') }}
+        java_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('[{0}]', github.event.inputs.java_version)) || fromJSON('[21]') }}
+        nextflow_version: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.nextflow_version)) || fromJSON('["25.10"]') }}
 
     steps:
       - name: Environment
