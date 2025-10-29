@@ -33,6 +33,7 @@ import groovy.util.logging.Slf4j
 class SlackClient {
 
     private final String webhookUrl
+    private final Set<String> loggedErrors = Collections.synchronizedSet(new HashSet<String>())
 
     /**
      * Create a new SlackClient with the given webhook URL
@@ -62,12 +63,18 @@ class SlackClient {
             def responseCode = connection.responseCode
             if (responseCode != 200) {
                 def errorBody = connection.errorStream?.text ?: ""
-                log.error "Slack webhook HTTP ${responseCode}: ${errorBody}"
+                def errorMsg = "Slack webhook HTTP ${responseCode}: ${errorBody}".toString()
+                if (loggedErrors.add(errorMsg)) {
+                    log.error errorMsg
+                }
             }
 
             connection.disconnect()
         } catch (Exception e) {
-            log.error "Slack plugin: Error sending message: ${e.message}"
+            def errorMsg = "Slack plugin: Error sending message: ${e.message}".toString()
+            if (loggedErrors.add(errorMsg)) {
+                log.error errorMsg
+            }
         }
     }
 }
