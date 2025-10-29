@@ -95,30 +95,30 @@ class SlackClient {
 
                 if (success) {
                     if (attempt > 0) {
-                        log.debug("Slack plugin: Message sent successfully after ${attempt} retries")
+                        log.debug "Slack plugin: Message sent successfully after ${attempt} retries"
                     }
                     return true
                 }
 
                 attempt++
                 if (attempt < MAX_RETRIES) {
-                    log.warn("Slack plugin: Message send failed, retrying in ${delay}ms (attempt ${attempt}/${MAX_RETRIES})")
+                    log.warn "Slack plugin: Message send failed, retrying in ${delay}ms (attempt ${attempt}/${MAX_RETRIES})"
                     Thread.sleep(delay)
                     delay = Math.min(delay * 2, MAX_RETRY_DELAY_MS) // Exponential backoff with cap
                 }
 
             } catch (InterruptedException e) {
-                log.warn("Slack plugin: Message sending interrupted")
+                log.warn "Slack plugin: Message sending interrupted"
                 Thread.currentThread().interrupt()
                 return false
             } catch (IllegalStateException e) {
                 // Configuration error - don't retry
-                log.debug("Slack plugin: Stopping retries due to configuration error")
+                log.debug "Slack plugin: Stopping retries due to configuration error"
                 return false
             } catch (Exception e) {
                 attempt++
                 if (attempt < MAX_RETRIES) {
-                    log.warn("Slack plugin: Error sending message (attempt ${attempt}/${MAX_RETRIES}): ${e.message}")
+                    log.warn "Slack plugin: Error sending message (attempt ${attempt}/${MAX_RETRIES}): ${e.message}"
                     try {
                         Thread.sleep(delay)
                         delay = Math.min(delay * 2, MAX_RETRY_DELAY_MS)
@@ -130,7 +130,7 @@ class SlackClient {
             }
         }
 
-        log.error("Slack plugin: Failed to send message after ${MAX_RETRIES} attempts")
+        log.error "Slack plugin: Failed to send message after ${MAX_RETRIES} attempts"
         return false
     }
 
@@ -156,7 +156,7 @@ class SlackClient {
             def responseCode = connection.responseCode
             if (responseCode != 200) {
                 def errorBody = connection.errorStream?.text ?: ""
-                log.warn("Slack webhook HTTP ${responseCode}: ${errorBody}")
+                log.warn "Slack webhook HTTP ${responseCode}: ${errorBody}"
                 connection.disconnect()
                 return false
             }
@@ -164,7 +164,7 @@ class SlackClient {
             connection.disconnect()
             return true
         } catch (Exception e) {
-            log.debug("Slack plugin: Error sending message: ${e.message}")
+            log.debug "Slack plugin: Error sending message: ${e.message}"
             return false
         }
     }
@@ -174,14 +174,14 @@ class SlackClient {
      */
     void shutdown() {
         try {
-            log.debug("Slack plugin: Shutting down message sender")
+            log.debug "Slack plugin: Shutting down message sender"
             executor.shutdown()
             if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
-                log.warn("Slack plugin: Timeout waiting for pending messages, forcing shutdown")
+                log.warn "Slack plugin: Timeout waiting for pending messages, forcing shutdown"
                 executor.shutdownNow()
             }
         } catch (InterruptedException e) {
-            log.warn("Slack plugin: Interrupted during shutdown")
+            log.warn "Slack plugin: Interrupted during shutdown"
             executor.shutdownNow()
             Thread.currentThread().interrupt()
         }

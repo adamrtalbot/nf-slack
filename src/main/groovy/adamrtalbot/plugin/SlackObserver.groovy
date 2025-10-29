@@ -56,7 +56,7 @@ class SlackObserver implements TraceObserver {
 
         // If not configured or disabled, skip initialization
         if (!config?.isConfigured()) {
-            log.debug("Slack plugin: Not configured or disabled, notifications will not be sent")
+            log.debug "Slack plugin: Not configured or disabled, notifications will not be sent"
             return
         }
 
@@ -64,13 +64,13 @@ class SlackObserver implements TraceObserver {
         this.client = new SlackClient(config.webhook)
         this.messageBuilder = new SlackMessageBuilder(config, session)
 
-        log.debug("Slack plugin: Initialized successfully")
+        log.debug "Slack plugin: Initialized successfully"
 
         // Send workflow started notification if enabled
         if (config.notifyOnStart) {
             def message = messageBuilder.buildWorkflowStartMessage()
             client.sendMessage(message)
-            log.debug("Slack plugin: Sent workflow start notification")
+            log.debug "Slack plugin: Sent workflow start notification"
         }
     }
 
@@ -92,7 +92,7 @@ class SlackObserver implements TraceObserver {
         if (config.notifyOnComplete) {
             def message = messageBuilder.buildWorkflowCompleteMessage()
             client.sendMessage(message)
-            log.debug("Slack plugin: Sent workflow complete notification")
+            log.debug "Slack plugin: Sent workflow complete notification"
         }
 
         shutdownClient()
@@ -112,7 +112,7 @@ class SlackObserver implements TraceObserver {
         if (config.notifyOnError) {
             def message = messageBuilder.buildWorkflowErrorMessage(trace)
             client.sendMessage(message)
-            log.debug("Slack plugin: Sent workflow error notification")
+            log.debug "Slack plugin: Sent workflow error notification"
         }
 
         shutdownClient()

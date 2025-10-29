@@ -58,12 +58,12 @@ class SlackExtension extends PluginExtensionPoint {
             def observer = SlackFactory.observerInstance
 
             if (!observer) {
-                log.debug("Slack plugin: Observer not initialized, skipping message")
+                log.debug "Slack plugin: Observer not initialized, skipping message"
                 return
             }
 
             if (!observer.client || !observer.messageBuilder) {
-                log.debug("Slack plugin: Not configured, skipping message")
+                log.debug "Slack plugin: Not configured, skipping message"
                 return
             }
 
@@ -71,10 +71,10 @@ class SlackExtension extends PluginExtensionPoint {
             def message = observer.messageBuilder.buildSimpleMessage(text)
             observer.client.sendMessage(message)
 
-            log.debug("Slack plugin: Sent custom text message")
+            log.debug "Slack plugin: Sent custom text message"
 
         } catch (Exception e) {
-            log.error("Slack plugin: Error sending message: ${e.message}", e)
+            log.error "Slack plugin: Error sending message: ${e.message}", e
             // Don't propagate exception - never fail the workflow
         }
     }
@@ -102,7 +102,7 @@ class SlackExtension extends PluginExtensionPoint {
         try {
             // Validate required parameters
             if (!options.message) {
-                log.error("Slack plugin: 'message' parameter is required for rich messages")
+                log.error "Slack plugin: 'message' parameter is required for rich messages"
                 return
             }
 
@@ -110,12 +110,12 @@ class SlackExtension extends PluginExtensionPoint {
             def observer = SlackFactory.observerInstance
 
             if (!observer) {
-                log.debug("Slack plugin: Observer not initialized, skipping message")
+                log.debug "Slack plugin: Observer not initialized, skipping message"
                 return
             }
 
             if (!observer.client || !observer.messageBuilder) {
-                log.debug("Slack plugin: Not configured, skipping message")
+                log.debug "Slack plugin: Not configured, skipping message"
                 return
             }
 
@@ -123,10 +123,10 @@ class SlackExtension extends PluginExtensionPoint {
             def message = observer.messageBuilder.buildRichMessage(options)
             observer.client.sendMessage(message)
 
-            log.debug("Slack plugin: Sent custom rich message")
+            log.debug "Slack plugin: Sent custom rich message"
 
         } catch (Exception e) {
-            log.error("Slack plugin: Error sending rich message: ${e.message}", e)
+            log.error "Slack plugin: Error sending rich message: ${e.message}", e
             // Don't propagate exception - never fail the workflow
         }
     }
