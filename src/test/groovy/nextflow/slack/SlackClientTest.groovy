@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package adamrtalbot.plugin
+package nextflow.slack
 
 import spock.lang.Specification
 

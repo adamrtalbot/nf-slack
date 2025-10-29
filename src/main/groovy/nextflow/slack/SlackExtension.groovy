@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package adamrtalbot.plugin
+package nextflow.slack
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

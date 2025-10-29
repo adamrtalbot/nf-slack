@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package adamrtalbot.plugin
+package nextflow.slack
 
 import groovy.json.JsonBuilder
 import groovy.transform.CompileStatic
