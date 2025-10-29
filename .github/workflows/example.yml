@@ -70,9 +70,6 @@ jobs:
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
-      - name: Verify plugin installation
-        run: nextflow plugin list
-
       - name: Run example pipeline
         run: |
           cd example
