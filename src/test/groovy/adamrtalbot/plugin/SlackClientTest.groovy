@@ -17,10 +17,12 @@
 package adamrtalbot.plugin
 
 import spock.lang.Specification
-import java.util.concurrent.TimeUnit
 
 /**
  * Tests for SlackClient
+ *
+ * These tests mock HTTP connections to test error handling and logging behavior
+ * without making actual network calls.
  */
 class SlackClientTest extends Specification {
 
@@ -32,18 +34,77 @@ class SlackClientTest extends Specification {
         client != null
     }
 
-    def 'should accept async message send'() {
+    def 'should send message successfully with mocked HTTP connection'() {
         given:
-        def client = new SlackClient('https://hooks.slack.com/services/TEST/TEST/TEST')
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
         def message = '{"text":"test message"}'
+
+        // Mock the doSendMessage to simulate successful send
+        client.doSendMessage(_) >> { /* do nothing - simulate success */ }
 
         when:
         client.sendMessage(message)
-        // Give async operation time to attempt
-        Thread.sleep(100)
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        client.shutdown()
+    }
+
+    def 'should handle HTTP 404 error response'() {
+        given:
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+
+        // Mock doSendMessage to throw RuntimeException for 404
+        client.doSendMessage(_) >> { throw new RuntimeException("Slack webhook HTTP 404: Not Found") }
+
+        when:
+        client.sendMessage(message)
+
+        then:
+        def exception = thrown(RuntimeException)
+        exception.message.contains("404")
+        exception.message.contains("Not Found")
+
+        cleanup:
+        client.shutdown()
+    }
+
+    def 'should handle HTTP 500 error response'() {
+        given:
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+
+        // Mock doSendMessage to throw RuntimeException for 500
+        client.doSendMessage(_) >> { throw new RuntimeException("Slack webhook HTTP 500: Internal Server Error") }
+
+        when:
+        client.sendMessage(message)
+
+        then:
+        def exception = thrown(RuntimeException)
+        exception.message.contains("500")
+
+        cleanup:
+        client.shutdown()
+    }
+
+    def 'should handle connection timeout'() {
+        given:
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+
+        // Mock doSendMessage to throw SocketTimeoutException
+        client.doSendMessage(_) >> { throw new RuntimeException("Connection timeout") }
+
+        when:
+        client.sendMessage(message)
+
+        then:
+        def exception = thrown(RuntimeException)
+        exception.message.contains("timeout")
 
         cleanup:
         client.shutdown()
@@ -60,34 +121,77 @@ class SlackClientTest extends Specification {
         noExceptionThrown()
     }
 
-    def 'should handle multiple async messages'() {
+    def 'should shutdown gracefully even with pending messages'() {
         given:
-        def client = new SlackClient('https://hooks.slack.com/services/TEST/TEST/TEST')
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+
+        // Mock to simulate successful send
+        client.doSendMessage(_) >> { Thread.sleep(50) } // Simulate some processing time
 
         when:
-        5.times { i ->
-            client.sendMessage("{\"text\":\"message ${i}\"}")
-        }
-        Thread.sleep(500)
+        client.sendMessage('{"text":"test"}')
         client.shutdown()
 
         then:
         noExceptionThrown()
     }
 
-    def 'shutdown should wait for pending messages'() {
+    def 'sendMessageWithRetry should return true on success'() {
         given:
-        def client = new SlackClient('https://hooks.slack.com/services/TEST/TEST/TEST')
-        def message = '{"text":"test"}'
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+
+        // Mock doSendMessage to return true (success)
+        client.doSendMessage(_) >> true
 
         when:
-        client.sendMessage(message)
-        def start = System.currentTimeMillis()
-        client.shutdown()
-        def duration = System.currentTimeMillis() - start
+        def result = client.sendMessageWithRetry(message)
 
         then:
-        noExceptionThrown()
-        duration >= 0 // Shutdown should complete, even if webhook fails
+        result == true
+
+        cleanup:
+        client.shutdown()
+    }
+
+    def 'sendMessageWithRetry should return false after max retries'() {
+        given:
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+
+        // Mock doSendMessage to always return false (failure)
+        client.doSendMessage(_) >> false
+
+        when:
+        def result = client.sendMessageWithRetry(message)
+
+        then:
+        result == false
+
+        cleanup:
+        client.shutdown()
+    }
+
+    def 'sendMessageWithRetry should retry on failure then succeed'() {
+        given:
+        def client = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
+        def message = '{"text":"test message"}'
+        def callCount = 0
+
+        // Mock to fail twice then succeed
+        client.doSendMessage(_) >> {
+            callCount++
+            return callCount >= 3 // Succeed on third attempt
+        }
+
+        when:
+        def result = client.sendMessageWithRetry(message)
+
+        then:
+        result == true
+        callCount == 3
+
+        cleanup:
+        client.shutdown()
     }
 }

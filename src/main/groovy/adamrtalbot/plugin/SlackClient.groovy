@@ -138,26 +138,35 @@ class SlackClient {
      * Send a single message to Slack webhook
      *
      * @param message JSON message payload
+     * @return true if successful, false otherwise
      */
-    private void doSendMessage(String message) {
-        def url = new URL(webhookUrl)
-        def connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = 'POST'
-        connection.doOutput = true
-        connection.setRequestProperty('Content-type', 'application/json')
+    private boolean doSendMessage(String message) {
+        try {
+            def url = new URL(webhookUrl)
+            def connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = 'POST'
+            connection.doOutput = true
+            connection.setRequestProperty('Content-type', 'application/json')
 
-        // Send message
-        connection.outputStream.write(message.bytes)
-        connection.outputStream.close()
+            // Send message
+            connection.outputStream.write(message.bytes)
+            connection.outputStream.close()
 
-        // Check response
-        def responseCode = connection.responseCode
-        if (responseCode != 200) {
-            def errorBody = connection.errorStream?.text ?: ""
-            throw new RuntimeException("Slack webhook HTTP ${responseCode}: ${errorBody}")
+            // Check response
+            def responseCode = connection.responseCode
+            if (responseCode != 200) {
+                def errorBody = connection.errorStream?.text ?: ""
+                log.warn("Slack webhook HTTP ${responseCode}: ${errorBody}")
+                connection.disconnect()
+                return false
+            }
+
+            connection.disconnect()
+            return true
+        } catch (Exception e) {
+            log.debug("Slack plugin: Error sending message: ${e.message}")
+            return false
         }
-
-        connection.disconnect()
     }
 
     /**
