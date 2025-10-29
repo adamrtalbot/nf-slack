@@ -44,6 +44,23 @@ slack {
 
 That's it! You'll now receive Slack notifications for your workflow events.
 
+## 📚 Configuration Examples
+
+We provide **6 progressive examples** demonstrating plugin features from basic to advanced:
+
+| Example | Feature | Description |
+|---------|---------|-------------|
+| [01-minimal.config](example/configs/01-minimal.config) | Enable notifications | Just webhook, use defaults |
+| [02-notification-control.config](example/configs/02-notification-control.config) | Control when to notify | Choose which events trigger notifications |
+| [03-message-text.config](example/configs/03-message-text.config) | Customize message text | Change notification text with strings |
+| [04-message-colors.config](example/configs/04-message-colors.config) | Customize colors | Use custom colors (map format) |
+| [05-custom-fields.config](example/configs/05-custom-fields.config) | Add custom fields | Include your own information |
+| [06-selective-fields.config](example/configs/06-selective-fields.config) | Choose default fields | Select which workflow info to show |
+
+Each example focuses on **one specific feature** and builds upon the previous ones.
+
+**[View all examples with detailed documentation →](example/configs/README.md)**
+
 ## Configuration
 
 ### Basic Configuration
