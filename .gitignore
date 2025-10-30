@@ -11,3 +11,28 @@ work
 .claude
 
 .envrc
+
+# Java/Groovy compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Log files
+*.log
+
+# Environment files
+.env*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*.swp
+*.tmp
+*.bak
+
+# Test reports
+test-results/
+test-output/
