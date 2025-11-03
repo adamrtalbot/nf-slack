@@ -12,22 +12,38 @@
 // Import the Slack messaging function
 include { slackMessage } from 'plugin/nf-slack'
 
+process HELLO {
+    input:
+    val sample_id
+
+    output:
+    stdout
+
+    script:
+    """
+    echo "Processing sample: ${sample_id}"
+    sleep 2  # Simulate some work
+    echo "${sample_id}_processed"
+    """
+}
+
 workflow {
 
     // ============================================
     // BEFORE: Send message at workflow start
     // ============================================
-    slackMessage("🚀 Example workflow starting!")
+    // slackMessage("🚀 Example workflow starting!")
 
     // ============================================
     // DURING: Create a simple channel and send messages
     // ============================================
-    channel.of('sample_1', 'sample_2', 'sample_3')
+    inputs = channel.of('sample_1', 'sample_2', 'sample_3')
         .map { sample ->
             // Send a simple message for each item
             slackMessage("⚙️ Processing ${sample}")
             return sample
         }
+    HELLO(inputs)
 
     // ============================================
     // AFTER: Send rich formatted completion message

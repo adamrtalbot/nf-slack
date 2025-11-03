@@ -61,9 +61,9 @@ slack {
 **Concept**: Choose which events trigger notifications
 
 **New configuration options**:
-- `notifyOnStart` - Send notification when workflow starts
-- `notifyOnComplete` - Send notification when workflow completes
-- `notifyOnError` - Send notification when workflow fails
+- `onStart.enabled` - Send notification when workflow starts
+- `onComplete.enabled` - Send notification when workflow completes
+- `onError.enabled` - Send notification when workflow fails
 
 ```groovy
 slack {
@@ -71,9 +71,17 @@ slack {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
 
-    notifyOnStart = false      // Don't notify on start
-    notifyOnComplete = true    // DO notify on completion
-    notifyOnError = true       // DO notify on error
+    onStart {
+        enabled = false      // Don't notify on start
+    }
+
+    onComplete {
+        enabled = true       // DO notify on completion
+    }
+
+    onError {
+        enabled = true       // DO notify on error
+    }
 }
 ```
 
@@ -87,9 +95,9 @@ slack {
 **Concept**: Customize the text in notification messages
 
 **New configuration options**:
-- `startMessage` - Custom text for start notifications
-- `completeMessage` - Custom text for completion notifications
-- `errorMessage` - Custom text for error notifications
+- `onStart.message` - Custom text for start notifications
+- `onComplete.message` - Custom text for completion notifications
+- `onError.message` - Custom text for error notifications
 
 ```groovy
 slack {
@@ -97,9 +105,17 @@ slack {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
 
-    startMessage = '🚀 *My workflow is starting...*'
-    completeMessage = '✅ *My workflow finished successfully!*'
-    errorMessage = '❌ *My workflow failed!*'
+    onStart {
+        message = '🚀 *My workflow is starting...*'
+    }
+
+    onComplete {
+        message = '✅ *My workflow finished successfully!*'
+    }
+
+    onError {
+        message = '❌ *My workflow failed!*'
+    }
 }
 ```
 
@@ -122,20 +138,26 @@ slack {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
 
-    startMessage = [
-        text: '🚀 *Pipeline started*',
-        color: '#3AA3E3'  // Blue
-    ]
+    onStart {
+        message = [
+            text: '🚀 *Pipeline started*',
+            color: '#3AA3E3'  // Blue
+        ]
+    }
 
-    completeMessage = [
-        text: '✅ *Pipeline completed*',
-        color: '#2EB887'  // Green
-    ]
+    onComplete {
+        message = [
+            text: '✅ *Pipeline completed*',
+            color: '#2EB887'  // Green
+        ]
+    }
 
-    errorMessage = [
-        text: '❌ *Pipeline failed*',
-        color: '#A30301'  // Red
-    ]
+    onError {
+        message = [
+            text: '❌ *Pipeline failed*',
+            color: '#A30301'  // Red
+        ]
+    }
 }
 ```
 
@@ -160,15 +182,17 @@ slack {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
 
-    startMessage = [
-        text: '🚀 *Pipeline started*',
-        color: '#3AA3E3',
-        customFields: [
-            [title: 'Priority', value: 'High', short: true],
-            [title: 'Team', value: 'Bioinformatics', short: true],
-            [title: 'Notes', value: 'Running with increased resources', short: false]
+    onStart {
+        message = [
+            text: '🚀 *Pipeline started*',
+            color: '#3AA3E3',
+            customFields: [
+                [title: 'Priority', value: 'High', short: true],
+                [title: 'Team', value: 'Bioinformatics', short: true],
+                [title: 'Notes', value: 'Running with increased resources', short: false]
+            ]
         ]
-    ]
+    }
 }
 ```
 
@@ -194,23 +218,29 @@ slack {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
 
-    startMessage = [
-        text: '🚀 *Pipeline started*',
-        color: '#3AA3E3',
-        includeFields: ['runName', 'status']
-    ]
+    onStart {
+        message = [
+            text: '🚀 *Pipeline started*',
+            color: '#3AA3E3',
+            includeFields: ['runName', 'status']
+        ]
+    }
 
-    completeMessage = [
-        text: '✅ *Pipeline completed*',
-        color: '#2EB887',
-        includeFields: ['runName', 'duration', 'status', 'tasks']
-    ]
+    onComplete {
+        message = [
+            text: '✅ *Pipeline completed*',
+            color: '#2EB887',
+            includeFields: ['runName', 'duration', 'status', 'tasks']
+        ]
+    }
 
-    errorMessage = [
-        text: '❌ *Pipeline failed*',
-        color: '#A30301',
-        includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess']
-    ]
+    onError {
+        message = [
+            text: '❌ *Pipeline failed*',
+            color: '#A30301',
+            includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess']
+        ]
+    }
 }
 ```
 
@@ -266,19 +296,26 @@ slack {
     }
 
     // From example 2: notification control
-    notifyOnStart = false
-    notifyOnComplete = true
-    notifyOnError = true
+    onStart {
+        enabled = false
+    }
 
-    // From examples 4, 5, 6: advanced message config
-    completeMessage = [
-        text: '✅ *Pipeline completed*',
-        color: '#2EB887',
-        includeFields: ['runName', 'duration', 'tasks'],
-        customFields: [
-            [title: 'Quality', value: 'Passed', short: true]
+    onComplete {
+        enabled = true
+        // From examples 4, 5, 6: advanced message config
+        message = [
+            text: '✅ *Pipeline completed*',
+            color: '#2EB887',
+            includeFields: ['runName', 'duration', 'tasks'],
+            customFields: [
+                [title: 'Quality', value: 'Passed', short: true]
+            ]
         ]
-    ]
+    }
+
+    onError {
+        enabled = true
+    }
 }
 ```
 
@@ -288,31 +325,46 @@ slack {
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `webhook` | String | (required) | Slack webhook URL |
+| `webhook.url` | String | (required) | Slack webhook URL |
 | `enabled` | Boolean | `true` | Enable/disable plugin |
-| `notifyOnStart` | Boolean | `true` | Send start notifications |
-| `notifyOnComplete` | Boolean | `true` | Send completion notifications |
-| `notifyOnError` | Boolean | `true` | Send error notifications |
-| `includeCommandLine` | Boolean | `true` | Include command in messages |
-| `includeResourceUsage` | Boolean | `true` | Include resource stats |
+| `onStart.enabled` | Boolean | `true` | Send start notifications |
+| `onComplete.enabled` | Boolean | `true` | Send completion notifications |
+| `onError.enabled` | Boolean | `true` | Send error notifications |
+
+### Notification Scope Options
+
+Each notification scope (`onStart`, `onComplete`, `onError`) supports:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `enabled` | Boolean | `true` | Enable/disable this notification type |
+| `message` | String/Map | Default text | Notification message (string or map) |
+| `includeCommandLine` | Boolean | `true` | Include command line in message |
+| `includeResourceUsage`* | Boolean | `true` | Include task statistics |
+
+*Only available in `onComplete` scope
 
 ### Message Configuration
 
 **String format** (simple):
 ```groovy
-startMessage = '🚀 *My message*'
+onStart {
+    message = '🚀 *My message*'
+}
 ```
 
 **Map format** (advanced):
 ```groovy
-startMessage = [
-    text: '🚀 *My message*',              // Message text
-    color: '#3AA3E3',                     // Hex color
-    includeFields: ['runName', 'status'], // Default fields to include
-    customFields: [                       // Your custom fields
-        [title: 'Field', value: 'Value', short: true]
+onStart {
+    message = [
+        text: '🚀 *My message*',              // Message text
+        color: '#3AA3E3',                     // Hex color
+        includeFields: ['runName', 'status'], // Default fields to include
+        customFields: [                       // Your custom fields
+            [title: 'Field', value: 'Value', short: true]
+        ]
     ]
-]
+}
 ```
 
 ## 🆘 Troubleshooting

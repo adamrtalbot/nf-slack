@@ -34,11 +34,20 @@ class SlackMessageBuilderTest extends Specification {
     def setup() {
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            onStart: [
+                enabled: true,
+                includeCommandLine: true
             ],
-            includeCommandLine: true,
-            includeResourceUsage: true
+            onComplete: [
+                enabled: true,
+                includeCommandLine: true,
+                includeResourceUsage: true
+            ],
+            onError: [
+                enabled: true,
+                includeCommandLine: true
+            ]
         ])
 
         session = Mock(Session)
@@ -202,10 +211,11 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
-            ],
-            includeCommandLine: false
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            onStart: [
+                enabled: true,
+                includeCommandLine: false
+            ]
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
 
@@ -222,10 +232,11 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
-            ],
-            startMessage: '🎬 *Custom workflow is starting!*'
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            onStart: [
+                enabled: true,
+                message: '🎬 *Custom workflow is starting!*'
+            ]
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
 
@@ -241,10 +252,11 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
-            ],
-            completeMessage: '🎉 *Analysis finished successfully!*'
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            onComplete: [
+                enabled: true,
+                message: '🎉 *Analysis finished successfully!*'
+            ]
         ])
         def metadata = Mock(WorkflowMetadata)
         metadata.scriptName >> 'test-workflow.nf'
@@ -264,10 +276,11 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
-            ],
-            errorMessage: '💥 *Workflow encountered an error!*'
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            onError: [
+                enabled: true,
+                message: '💥 *Workflow encountered an error!*'
+            ]
         ])
         def errorSession = Mock(Session)
         def metadata = Mock(WorkflowMetadata)
@@ -290,9 +303,7 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: [
-                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
-            ]
+            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST'
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
 
@@ -309,12 +320,15 @@ class SlackMessageBuilderTest extends Specification {
         config = new SlackConfig([
             enabled: true,
             webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-            startMessage: [
-                text: '🎬 *Custom pipeline starting*',
-                color: '#FF5733',
-                includeFields: ['runName', 'status'],
-                customFields: [
-                    [title: 'Environment', value: 'Production', short: true]
+            onStart: [
+                enabled: true,
+                message: [
+                    text: '🎬 *Custom pipeline starting*',
+                    color: '#FF5733',
+                    includeFields: ['runName', 'status'],
+                    customFields: [
+                        [title: 'Environment', value: 'Production', short: true]
+                    ]
                 ]
             ]
         ])
@@ -337,12 +351,15 @@ class SlackMessageBuilderTest extends Specification {
         config = new SlackConfig([
             enabled: true,
             webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-            completeMessage: [
-                text: '🎉 *Analysis finished!*',
-                color: '#00FF00',
-                includeFields: ['runName', 'duration', 'status'],
-                customFields: [
-                    [title: 'Output Location', value: 's3://bucket/results', short: false]
+            onComplete: [
+                enabled: true,
+                message: [
+                    text: '🎉 *Analysis finished!*',
+                    color: '#00FF00',
+                    includeFields: ['runName', 'duration', 'status'],
+                    customFields: [
+                        [title: 'Output Location', value: 's3://bucket/results', short: false]
+                    ]
                 ]
             ]
         ])
@@ -370,12 +387,15 @@ class SlackMessageBuilderTest extends Specification {
         config = new SlackConfig([
             enabled: true,
             webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-            errorMessage: [
-                text: '💥 *Pipeline crashed!*',
-                color: '#FF0000',
-                includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
-                customFields: [
-                    [title: 'Support', value: 'contact@example.com', short: true]
+            onError: [
+                enabled: true,
+                message: [
+                    text: '💥 *Pipeline crashed!*',
+                    color: '#FF0000',
+                    includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
+                    customFields: [
+                        [title: 'Support', value: 'contact@example.com', short: true]
+                    ]
                 ]
             ]
         ])
@@ -410,8 +430,11 @@ class SlackMessageBuilderTest extends Specification {
         config = new SlackConfig([
             enabled: true,
             webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-            startMessage: [
-                text: 'Starting...'
+            onStart: [
+                enabled: true,
+                message: [
+                    text: 'Starting...'
+                ]
             ]
         ])
         messageBuilder = new SlackMessageBuilder(config, session)

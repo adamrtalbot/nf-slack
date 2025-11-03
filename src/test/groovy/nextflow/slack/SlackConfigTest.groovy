@@ -32,9 +32,15 @@ class SlackConfigTest extends Specification {
                 webhook: [
                     url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
                 ],
-                notifyOnStart: false,
-                notifyOnComplete: true,
-                notifyOnError: true
+                onStart: [
+                    enabled: false
+                ],
+                onComplete: [
+                    enabled: true
+                ],
+                onError: [
+                    enabled: true
+                ]
             ]
         ]
 
@@ -45,9 +51,9 @@ class SlackConfigTest extends Specification {
         config != null
         config.enabled == true
         config.webhook == 'https://hooks.slack.com/services/TEST/TEST/TEST'
-        config.notifyOnStart == false
-        config.notifyOnComplete == true
-        config.notifyOnError == true
+        config.onStart.enabled == false
+        config.onComplete.enabled == true
+        config.onError.enabled == true
     }
 
     def 'should use default values when not specified'() {
@@ -67,11 +73,13 @@ class SlackConfigTest extends Specification {
         then:
         config != null
         config.enabled == true
-        config.notifyOnStart == true
-        config.notifyOnComplete == true
-        config.notifyOnError == true
-        config.includeCommandLine == true
-        config.includeResourceUsage == true
+        config.onStart.enabled == true
+        config.onStart.includeCommandLine == true
+        config.onComplete.enabled == true
+        config.onComplete.includeCommandLine == true
+        config.onComplete.includeResourceUsage == true
+        config.onError.enabled == true
+        config.onError.includeCommandLine == true
     }
 
     def 'should return null when webhook is not configured'() {

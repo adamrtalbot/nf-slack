@@ -50,7 +50,9 @@ class SlackObserverTest extends Specification {
                 webhook: [
                     url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
                 ],
-                notifyOnStart: false
+                onStart: [
+                    enabled: false
+                ]
             ]
         ]
         def metadata = Mock(WorkflowMetadata)
@@ -122,8 +124,12 @@ class SlackObserverTest extends Specification {
                 webhook: [
                     url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
                 ],
-                notifyOnStart: false,
-                notifyOnComplete: true
+                onStart: [
+                    enabled: false
+                ],
+                onComplete: [
+                    enabled: true
+                ]
             ]
         ]
         def metadata = Mock(WorkflowMetadata)
@@ -152,8 +158,12 @@ class SlackObserverTest extends Specification {
                 webhook: [
                     url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
                 ],
-                notifyOnStart: false,
-                notifyOnError: true
+                onStart: [
+                    enabled: false
+                ],
+                onError: [
+                    enabled: true
+                ]
             ]
         ]
         def metadata = Mock(WorkflowMetadata)

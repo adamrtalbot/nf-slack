@@ -11,6 +11,11 @@ A Nextflow plugin for sending Slack notifications during workflow execution.
 - 🛡️ **Fail-Safe**: Never fails your workflow, even if Slack is unavailable
 - 🔒 **Secure**: Keep webhook URLs in config files or use Nextflow secrets
 
+## Current Limitations
+
+- Only supports Slack Incoming Webhooks (no Bot API yet)
+- Threads are not supported
+
 ## Quick Start
 
 ### 1. Set up a Slack Webhook
@@ -35,10 +40,18 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    // Notification settings
-    notifyOnStart = true
-    notifyOnComplete = true
-    notifyOnError = true
+    // Notification settings (all optional - defaults shown)
+    onStart {
+        enabled = true
+    }
+
+    onComplete {
+        enabled = true
+    }
+
+    onError {
+        enabled = true
+    }
 }
 ```
 
@@ -74,14 +87,27 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    // Control which notifications to send (all default to true)
-    notifyOnStart = true
-    notifyOnComplete = true
-    notifyOnError = true
+    // Configure start notifications
+    onStart {
+        enabled = true                  // Send notification when workflow starts
+        message = '🚀 *Pipeline started*'  // Custom message (optional)
+        includeCommandLine = true       // Include command line in message
+    }
 
-    // Control message content
-    includeCommandLine = true
-    includeResourceUsage = true
+    // Configure completion notifications
+    onComplete {
+        enabled = true                  // Send notification when workflow completes
+        message = '✅ *Pipeline completed*'  // Custom message (optional)
+        includeCommandLine = true       // Include command line in message
+        includeResourceUsage = true     // Include task statistics
+    }
+
+    // Configure error notifications
+    onError {
+        enabled = true                  // Send notification when workflow fails
+        message = '❌ *Pipeline failed*'  // Custom message (optional)
+        includeCommandLine = true       // Include command line in message
+    }
 }
 ```
 
@@ -98,9 +124,17 @@ slack {
     }
 
     // Simple string templates (supports Slack markdown formatting)
-    startMessage = '🎬 *My analysis pipeline is starting!*'
-    completeMessage = '🎉 *Analysis completed successfully!*'
-    errorMessage = '💥 *Pipeline encountered an error!*'
+    onStart {
+        message = '🎬 *My analysis pipeline is starting!*'
+    }
+
+    onComplete {
+        message = '🎉 *Analysis completed successfully!*'
+    }
+
+    onError {
+        message = '💥 *Pipeline encountered an error!*'
+    }
 }
 ```
 
@@ -115,35 +149,41 @@ slack {
     }
 
     // Customize start message with specific fields
-    startMessage = [
-        text: '🚀 *Production Pipeline Starting*',
-        color: '#3AA3E3',  // Custom blue color
-        includeFields: ['runName', 'status', 'commandLine'],  // Choose which default fields to include
-        customFields: [
-            [title: 'Environment', value: 'Production', short: true],
-            [title: 'Priority', value: 'High', short: true]
+    onStart {
+        message = [
+            text: '🚀 *Production Pipeline Starting*',
+            color: '#3AA3E3',  // Custom blue color
+            includeFields: ['runName', 'status', 'commandLine'],  // Choose which default fields to include
+            customFields: [
+                [title: 'Environment', value: 'Production', short: true],
+                [title: 'Priority', value: 'High', short: true]
+            ]
         ]
-    ]
+    }
 
     // Customize completion message
-    completeMessage = [
-        text: '✅ *Analysis Complete*',
-        color: '#2EB887',  // Green
-        includeFields: ['runName', 'duration', 'status', 'tasks'],
-        customFields: [
-            [title: 'Results Location', value: 's3://my-bucket/results/', short: false]
+    onComplete {
+        message = [
+            text: '✅ *Analysis Complete*',
+            color: '#2EB887',  // Green
+            includeFields: ['runName', 'duration', 'status', 'tasks'],
+            customFields: [
+                [title: 'Results Location', value: 's3://my-bucket/results/', short: false]
+            ]
         ]
-    ]
+    }
 
     // Customize error message
-    errorMessage = [
-        text: '❌ *Pipeline Failed*',
-        color: '#A30301',  // Red
-        includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
-        customFields: [
-            [title: 'Support', value: 'support@example.com', short: true]
+    onError {
+        message = [
+            text: '❌ *Pipeline Failed*',
+            color: '#A30301',  // Red
+            includeFields: ['runName', 'duration', 'errorMessage', 'failedProcess'],
+            customFields: [
+                [title: 'Support', value: 'support@example.com', short: true]
+            ]
         ]
-    ]
+    }
 }
 ```
 

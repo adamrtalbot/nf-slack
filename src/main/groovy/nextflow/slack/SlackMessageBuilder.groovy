@@ -63,8 +63,8 @@ class SlackMessageBuilder {
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
         // Check if using custom message configuration
-        if (config.startMessage instanceof Map) {
-            return buildCustomMessage(config.startMessage as Map, workflowName, timestamp, 'started')
+        if (config.onStart.message instanceof Map) {
+            return buildCustomMessage(config.onStart.message as Map, workflowName, timestamp, 'started')
         }
 
         def fields = []
@@ -80,7 +80,7 @@ class SlackMessageBuilder {
         // Can be added back in future version if needed
 
         // Add command line if configured
-        if (config.includeCommandLine && session.commandLine) {
+        if (config.onStart.includeCommandLine && session.commandLine) {
             fields << [
                 title: 'Command Line',
                 value: "```${session.commandLine}```",
@@ -97,7 +97,7 @@ class SlackMessageBuilder {
             ]
         }
 
-        def messageText = config.startMessage instanceof String ? config.startMessage : '🚀 *Pipeline started*'
+        def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
 
         def message = [
             attachments: [
@@ -127,8 +127,8 @@ class SlackMessageBuilder {
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
         // Check if using custom message configuration
-        if (config.completeMessage instanceof Map) {
-            return buildCustomMessage(config.completeMessage as Map, workflowName, timestamp, 'completed')
+        if (config.onComplete.message instanceof Map) {
+            return buildCustomMessage(config.onComplete.message as Map, workflowName, timestamp, 'completed')
         }
 
         def fields = []
@@ -155,7 +155,7 @@ class SlackMessageBuilder {
         ]
 
         // Add resource usage if configured
-        if (config.includeResourceUsage) {
+        if (config.onComplete.includeResourceUsage) {
             def stats = session.workflowMetadata?.stats
             if (stats) {
                 def resourceInfo = []
@@ -173,7 +173,7 @@ class SlackMessageBuilder {
             }
         }
 
-        def messageText = config.completeMessage instanceof String ? config.completeMessage : '✅ *Pipeline completed successfully*'
+        def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
 
         def message = [
             attachments: [
@@ -204,8 +204,8 @@ class SlackMessageBuilder {
         def errorMessage = session.workflowMetadata?.errorMessage ?: 'Unknown error'
 
         // Check if using custom message configuration
-        if (config.errorMessage instanceof Map) {
-            return buildCustomMessage(config.errorMessage as Map, workflowName, timestamp, 'failed', errorRecord)
+        if (config.onError.message instanceof Map) {
+            return buildCustomMessage(config.onError.message as Map, workflowName, timestamp, 'failed', errorRecord)
         }
 
         def fields = []
@@ -251,7 +251,7 @@ class SlackMessageBuilder {
         }
 
         // Add command line if configured
-        if (config.includeCommandLine && session.commandLine) {
+        if (config.onError.includeCommandLine && session.commandLine) {
             fields << [
                 title: 'Command Line',
                 value: "```${session.commandLine}```",
@@ -259,7 +259,7 @@ class SlackMessageBuilder {
             ]
         }
 
-        def messageText = config.errorMessage instanceof String ? config.errorMessage : '❌ *Pipeline failed*'
+        def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
 
         def message = [
             attachments: [

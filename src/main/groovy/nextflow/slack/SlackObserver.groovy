@@ -66,7 +66,7 @@ class SlackObserver implements TraceObserver {
         log.debug "Slack plugin: Initialized successfully"
 
         // Send workflow started notification if enabled
-        if (config.notifyOnStart) {
+        if (config.onStart.enabled) {
             def message = messageBuilder.buildWorkflowStartMessage()
             sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow start notification"
@@ -80,7 +80,7 @@ class SlackObserver implements TraceObserver {
     void onFlowComplete() {
         if (!isConfigured()) return
 
-        if (config.notifyOnComplete) {
+        if (config.onComplete.enabled) {
             def message = messageBuilder.buildWorkflowCompleteMessage()
             sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow complete notification"
@@ -94,7 +94,7 @@ class SlackObserver implements TraceObserver {
     void onFlowError(TaskHandler handler, TraceRecord trace) {
         if (!isConfigured()) return
 
-        if (config.notifyOnError) {
+        if (config.onError.enabled) {
             def message = messageBuilder.buildWorkflowErrorMessage(trace)
             sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow error notification"
