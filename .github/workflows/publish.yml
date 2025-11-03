@@ -1,0 +1,30 @@
+name: Publish Plugin
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish plugin to Nextflow registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          architecture: x64
+          distribution: "temurin"
+
+      - name: Publish plugin
+        run: make release
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+          ORG_GRADLE_PROJECT_npr_apiKey: ${{ secrets.NF_PLUGIN_PUBLISH_TOKEN }}
