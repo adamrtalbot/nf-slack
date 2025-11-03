@@ -108,6 +108,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Automated Release Process**: Simplified release workflow to a single action (merge PR)
+  - Modified `.github/workflows/publish.yml` to trigger on push to main branch
+  - Workflow now automatically extracts version from `build.gradle`
+  - Automatically creates git tags in `v{version}` format
+  - Automatically creates GitHub releases with changelog notes
+  - Idempotent: safe to re-run, skips if tag already exists
+  - Updated `docs/CONTRIBUTING.md` with new release process documentation
+  - Release now requires only: (1) create PR with version bump, (2) merge to main
 - **Documentation Reorganization**: Simplified README from 455 to ~165 lines for better onboarding
   - Moved detailed content to dedicated documentation pages
   - Created `docs/USAGE.md` with comprehensive usage patterns and examples
