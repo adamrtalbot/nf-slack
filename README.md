@@ -35,6 +35,8 @@ slack {
 }
 ```
 
+![default Slack message](./docs/imgs/nf-slack-00.png)
+
 ### 3. Run Your Pipeline
 
 That's it! You'll automatically receive notifications when your pipeline starts, completes, or fails.
@@ -62,11 +64,13 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    onStart.enabled = true      // Notify when pipeline starts
+    onStart.enabled = false     // Do not notify when pipeline starts
     onComplete.enabled = true   // Notify on successful completion
     onError.enabled = true      // Notify on failures
 }
 ```
+
+![Slack message on completion or error](./docs/imgs/nf-slack-01.png)
 
 ### Customize Message Text
 
@@ -92,6 +96,8 @@ slack {
 }
 ```
 
+![Custom Slack messages](./docs/imgs/nf-slack-02.png)
+
 ### Add Colors and Custom Fields
 
 For richer messages with colors and additional information:
@@ -115,12 +121,16 @@ slack {
 }
 ```
 
+![Custom Slack blocks](./docs/imgs/nf-slack-03.png)
+
 ### Send Custom Messages from Your Workflow
 
 Send notifications from within your pipeline code:
 
 ```groovy
 include { slackMessage } from 'plugin/nf-slack'
+
+params.sample_id = "SAMPLE_001"
 
 workflow {
     slackMessage("🔬 Starting analysis for sample ${params.sample_id}")
@@ -130,6 +140,8 @@ workflow {
     slackMessage("✅ Analysis complete!")
 }
 ```
+
+![Workflow Slack message](./docs/imgs/nf-slack-04.png)
 
 **Want more control?** See the full [Configuration Reference](docs/CONFIG.md) for all available options.
 
