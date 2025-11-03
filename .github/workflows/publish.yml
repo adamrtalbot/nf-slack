@@ -27,4 +27,4 @@ jobs:
         run: make release
         env:
           GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-          ORG_GRADLE_PROJECT_npr_apiKey: ${{ secrets.NF_PLUGIN_PUBLISH_TOKEN }}
+          NPR_API_KEY: ${{ secrets.NF_PLUGIN_PUBLISH_TOKEN }}
