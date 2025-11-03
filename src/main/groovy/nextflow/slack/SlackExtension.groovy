@@ -60,14 +60,14 @@ class SlackExtension extends PluginExtensionPoint {
                 return
             }
 
-            if (!observer.client || !observer.messageBuilder) {
+            if (!observer.sender || !observer.messageBuilder) {
                 log.debug "Slack plugin: Not configured, skipping message"
                 return
             }
 
             // Build and send simple message
             def message = observer.messageBuilder.buildSimpleMessage(text)
-            observer.client.sendMessage(message)
+            observer.sender.sendMessage(message)
 
             log.debug "Slack plugin: Sent custom text message"
 
@@ -112,14 +112,14 @@ class SlackExtension extends PluginExtensionPoint {
                 return
             }
 
-            if (!observer.client || !observer.messageBuilder) {
+            if (!observer.sender || !observer.messageBuilder) {
                 log.debug "Slack plugin: Not configured, skipping message"
                 return
             }
 
             // Build and send rich message
             def message = observer.messageBuilder.buildRichMessage(options)
-            observer.client.sendMessage(message)
+            observer.sender.sendMessage(message)
 
             log.debug "Slack plugin: Sent custom rich message"
 

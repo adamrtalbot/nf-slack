@@ -40,7 +40,7 @@ class SlackObserver implements TraceObserver {
 
     private Session session
     private SlackConfig config
-    private SlackClient client
+    private SlackSender sender
     private SlackMessageBuilder messageBuilder
 
     /**
@@ -59,8 +59,8 @@ class SlackObserver implements TraceObserver {
             return
         }
 
-        // Initialize client and message builder
-        this.client = new SlackClient(config.webhook)
+        // Initialize sender and message builder
+        this.sender = config.createSender()
         this.messageBuilder = new SlackMessageBuilder(config, session)
 
         log.debug "Slack plugin: Initialized successfully"
@@ -68,7 +68,7 @@ class SlackObserver implements TraceObserver {
         // Send workflow started notification if enabled
         if (config.notifyOnStart) {
             def message = messageBuilder.buildWorkflowStartMessage()
-            client.sendMessage(message)
+            sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow start notification"
         }
     }
@@ -82,7 +82,7 @@ class SlackObserver implements TraceObserver {
 
         if (config.notifyOnComplete) {
             def message = messageBuilder.buildWorkflowCompleteMessage()
-            client.sendMessage(message)
+            sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow complete notification"
         }
     }
@@ -96,7 +96,7 @@ class SlackObserver implements TraceObserver {
 
         if (config.notifyOnError) {
             def message = messageBuilder.buildWorkflowErrorMessage(trace)
-            client.sendMessage(message)
+            sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow error notification"
         }
     }
@@ -105,21 +105,21 @@ class SlackObserver implements TraceObserver {
      * Check if the observer is properly configured
      */
     private boolean isConfigured() {
-        return config != null && client != null && messageBuilder != null
+        return config != null && sender != null && messageBuilder != null
     }
 
     /**
-     * Get the Slack client for use by extension functions
+     * Get the Slack sender for use by extension functions
      */
-    SlackClient getClient() {
-        return client
+    SlackSender getSender() {
+        return sender
     }
 
     /**
-     * Set the Slack client (package-private for testing)
+     * Set the Slack sender (package-private for testing)
      */
-    void setClient(SlackClient client) {
-        this.client = client
+    void setSender(SlackSender sender) {
+        this.sender = sender
     }
 
     /**
