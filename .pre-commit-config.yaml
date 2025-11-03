@@ -17,6 +17,16 @@ repos:
             plugins/.*
           )$
 
+  # Nextflow linting
+  - repo: local
+    hooks:
+      - id: nextflow-lint
+        name: Lint Nextflow scripts
+        entry: nextflow lint
+        language: system
+        files: \.nf$
+        pass_filenames: true
+
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
