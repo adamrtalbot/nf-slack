@@ -34,7 +34,9 @@ class SlackMessageBuilderTest extends Specification {
     def setup() {
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ],
             includeCommandLine: true,
             includeResourceUsage: true
         ])
@@ -200,7 +202,9 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ],
             includeCommandLine: false
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
@@ -218,7 +222,9 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ],
             startMessage: '🎬 *Custom workflow is starting!*'
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
@@ -235,7 +241,9 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ],
             completeMessage: '🎉 *Analysis finished successfully!*'
         ])
         def metadata = Mock(WorkflowMetadata)
@@ -256,7 +264,9 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ],
             errorMessage: '💥 *Workflow encountered an error!*'
         ])
         def errorSession = Mock(Session)
@@ -280,7 +290,9 @@ class SlackMessageBuilderTest extends Specification {
         given:
         config = new SlackConfig([
             enabled: true,
-            webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            webhook: [
+                url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+            ]
         ])
         messageBuilder = new SlackMessageBuilder(config, session)
 

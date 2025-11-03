@@ -19,25 +19,25 @@ package nextflow.slack
 import spock.lang.Specification
 
 /**
- * Tests for SlackClient
+ * Tests for WebhookSlackSender
  *
- * These tests verify basic client functionality.
+ * These tests verify basic sender functionality.
  * Network calls are tested in integration tests.
  */
 class SlackClientTest extends Specification {
 
-    def 'should create client with webhook URL'() {
+    def 'should create sender with webhook URL'() {
         when:
-        def client = new SlackClient('https://hooks.slack.com/services/TEST/TEST/TEST')
+        def sender = new WebhookSlackSender('https://hooks.slack.com/services/TEST/TEST/TEST')
 
         then:
-        client != null
+        sender != null
     }
 
     def 'should handle null webhook URL gracefully'() {
         when:
-        def client = new SlackClient(null)
-        client.sendMessage('{"text":"test"}')
+        def sender = new WebhookSlackSender(null)
+        sender.sendMessage('{"text":"test"}')
 
         then:
         noExceptionThrown()
@@ -45,8 +45,8 @@ class SlackClientTest extends Specification {
 
     def 'should handle invalid JSON gracefully'() {
         when:
-        def client = new SlackClient('https://hooks.slack.com/services/TEST/TEST/TEST')
-        client.sendMessage('not valid json')
+        def sender = new WebhookSlackSender('https://hooks.slack.com/services/TEST/TEST/TEST')
+        sender.sendMessage('not valid json')
 
         then:
         noExceptionThrown()

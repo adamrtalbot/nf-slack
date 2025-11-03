@@ -47,7 +47,9 @@ class SlackObserverTest extends Specification {
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
                 notifyOnStart: false
             ]
         ]
@@ -63,7 +65,7 @@ class SlackObserverTest extends Specification {
 
         then:
         observer.config != null
-        observer.client != null
+        observer.sender != null
         observer.messageBuilder != null
         noExceptionThrown()
     }
@@ -81,7 +83,7 @@ class SlackObserverTest extends Specification {
 
         then:
         observer.config == null
-        observer.client == null
+        observer.sender == null
         observer.messageBuilder == null
         noExceptionThrown()
     }
@@ -112,13 +114,14 @@ class SlackObserverTest extends Specification {
 
     def 'should send notification on flow complete when configured'() {
         given:
-        def mockClient = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
-        mockClient.doSendMessage(_) >> true
+        def mockSender = Mock(SlackSender)
 
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
                 notifyOnStart: false,
                 notifyOnComplete: true
             ]
@@ -130,7 +133,7 @@ class SlackObserverTest extends Specification {
 
         def observer = new SlackObserver()
         observer.onFlowCreate(session)
-        observer.setClient(mockClient)  // Inject mocked client
+        observer.setSender(mockSender)  // Inject mocked sender
 
         when:
         observer.onFlowComplete()
@@ -141,13 +144,14 @@ class SlackObserverTest extends Specification {
 
     def 'should send notification on flow error when configured'() {
         given:
-        def mockClient = Spy(SlackClient, constructorArgs: ['https://hooks.slack.com/services/TEST/TEST/TEST'])
-        mockClient.doSendMessage(_) >> true
+        def mockSender = Mock(SlackSender)
 
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
                 notifyOnStart: false,
                 notifyOnError: true
             ]
@@ -163,7 +167,7 @@ class SlackObserverTest extends Specification {
 
         def observer = new SlackObserver()
         observer.onFlowCreate(session)
-        observer.setClient(mockClient)  // Inject mocked client
+        observer.setSender(mockSender)  // Inject mocked sender
 
         when:
         observer.onFlowError(null, errorRecord)

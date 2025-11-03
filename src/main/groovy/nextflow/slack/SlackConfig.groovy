@@ -23,10 +23,17 @@ import nextflow.Session
 /**
  * Configuration parser for Slack plugin settings.
  *
- * Reads configuration from:
- * 1. slack {} configuration block in nextflow.config
- * 2. params.slack_webhook parameter
- * 3. SLACK_WEBHOOK_URL environment variable
+ * Supports two integration types:
+ * 1. Webhook: Uses Slack Incoming Webhooks (current implementation)
+ * 2. Bot: Uses Slack Bot Token API (future implementation)
+ *
+ * Configuration structure:
+ * slack {
+ *     webhook {
+ *         url = 'https://hooks.slack.com/services/...'
+ *     }
+ *     // Future: bot { token = 'xoxb-...', channel = '#workflows' }
+ * }
  *
  * @author Adam Talbot <adam.talbot@seqera.io>
  */
@@ -40,7 +47,7 @@ class SlackConfig {
     final boolean enabled
 
     /**
-     * Slack webhook URL for posting messages
+     * Slack webhook URL for posting messages (internal use)
      */
     final String webhook
 
@@ -116,17 +123,15 @@ class SlackConfig {
             return null
         }
 
-        // Get webhook URL
+        // Get webhook URL from nested structure
         def webhook = getWebhookUrl(session)
         if (!webhook) {
             log.debug "Slack plugin: No webhook URL configured, plugin will be disabled"
             return null
         }
 
-        // Set webhook in config
-        if (!config.webhook) {
-            config.webhook = webhook
-        }
+        // Set webhook string in config for constructor (replaces nested map)
+        config.webhook = webhook
 
         def slackConfig = new SlackConfig(config)
         log.info "Slack plugin: Enabled with webhook notifications"
@@ -135,9 +140,10 @@ class SlackConfig {
 
     /**
      * Get webhook URL from config
+     * Reads from nested webhook { url = '...' } structure
      */
     private static String getWebhookUrl(Session session) {
-        return session.config?.navigate('slack.webhook') as String
+        return session.config?.navigate('slack.webhook.url') as String
     }
 
 
@@ -146,6 +152,21 @@ class SlackConfig {
      */
     boolean isConfigured() {
         return enabled && webhook != null
+    }
+
+    /**
+     * Create the appropriate SlackSender based on configuration
+     *
+     * @return SlackSender instance (WebhookSlackSender for now, future: BotSlackSender)
+     */
+    SlackSender createSender() {
+        if (!isConfigured()) {
+            throw new IllegalStateException("Cannot create sender: Slack plugin not configured")
+        }
+
+        // For now, only webhook sender is supported
+        // Future: Check if bot config exists and create BotSlackSender
+        return new WebhookSlackSender(webhook)
     }
 
     @Override

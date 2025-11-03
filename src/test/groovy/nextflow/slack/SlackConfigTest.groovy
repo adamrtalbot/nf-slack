@@ -29,7 +29,9 @@ class SlackConfigTest extends Specification {
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
                 notifyOnStart: false,
                 notifyOnComplete: true,
                 notifyOnError: true
@@ -53,7 +55,9 @@ class SlackConfigTest extends Specification {
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ]
             ]
         ]
 
@@ -88,7 +92,9 @@ class SlackConfigTest extends Specification {
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
                 enabled: false
             ]
         ]
@@ -105,7 +111,9 @@ class SlackConfigTest extends Specification {
         def session = Mock(Session)
         session.config >> [
             slack: [
-                webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ]
             ]
         ]
 
@@ -114,5 +122,25 @@ class SlackConfigTest extends Specification {
 
         then:
         config.isConfigured() == true
+    }
+
+    def 'createSender should return WebhookSlackSender for webhook configuration'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ]
+            ]
+        ]
+        def config = SlackConfig.from(session)
+
+        when:
+        def sender = config.createSender()
+
+        then:
+        sender != null
+        sender instanceof WebhookSlackSender
     }
 }
