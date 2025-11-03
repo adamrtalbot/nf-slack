@@ -7,7 +7,7 @@ version = '0.1.0'
 nextflowPlugin {
     nextflowVersion = '24.10.0'
 
-    provider = 'adam.talbot@seqera.io'
+    provider = 'Seqera'
     className = 'nextflow.slack.SlackPlugin'
     extensionPoints = [
         'nextflow.slack.SlackExtension',
