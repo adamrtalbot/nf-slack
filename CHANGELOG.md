@@ -5,6 +5,27 @@ All notable changes to the nf-slack plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-11-03
+
+### Changed
+
+- **Automated Release Process**: Simplified release workflow to a single action (merge PR)
+  - Modified `.github/workflows/publish.yml` to trigger on push to main branch
+  - Workflow now automatically extracts version from `build.gradle`
+  - Automatically creates git tags in `v{version}` format
+  - Automatically creates GitHub releases with changelog notes
+  - Idempotent: safe to re-run, skips if tag already exists
+  - Updated `docs/CONTRIBUTING.md` with new release process documentation
+  - Release now requires only: (1) create PR with version bump, (2) merge to main
+- **Documentation Reorganization**: Simplified README from 455 to ~165 lines for better onboarding
+  - Moved detailed content to dedicated documentation pages
+  - Created `docs/USAGE.md` with comprehensive usage patterns and examples
+  - Created `docs/TROUBLESHOOTING.md` with common issues and solutions
+  - Moved `example/configs/README.md` to `docs/EXAMPLES.md` for centralized documentation
+  - Enhanced `docs/CONFIG.md` with cross-references to other documentation
+  - README now focuses on quick start with clear paths to detailed documentation
+  - Added basic customization examples without overwhelming API details
+
 ## [0.1.0] - 2025-10-30
 
 ### Added
@@ -106,17 +127,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
-- **Documentation Reorganization**: Simplified README from 455 to ~165 lines for better onboarding
-  - Moved detailed content to dedicated documentation pages
-  - Created `docs/USAGE.md` with comprehensive usage patterns and examples
-  - Created `docs/TROUBLESHOOTING.md` with common issues and solutions
-  - Moved `example/configs/README.md` to `docs/EXAMPLES.md` for centralized documentation
-  - Enhanced `docs/CONFIG.md` with cross-references to other documentation
-  - README now focuses on quick start with clear paths to detailed documentation
-  - Added basic customization examples without overwhelming API details
-
 ### Planned
 
 - Asynchronous message sending with ExecutorService
@@ -129,6 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **[0.1.1]** - Release automation and documentation improvements
 - **[0.1.0]** - Initial release with automatic notifications, custom messages, and progressive configuration examples
 
-[0.1.0]: https://github.com/seqeralabs/nf-slack/releases/tag/v0.1.0
+[0.1.1]: https://github.com/adamrtalbot/nf-slack/releases/tag/v0.1.1
+[0.1.0]: https://github.com/adamrtalbot/nf-slack/releases/tag/v0.1.0
