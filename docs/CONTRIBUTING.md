@@ -193,32 +193,66 @@ To publish the plugin to the Nextflow Plugin Registry:
 
 ### Creating a Release
 
-1. **Update version number** in `build.gradle`
+Releases are fully automated via GitHub Actions when you merge a PR that updates the version:
+
+1. **Create a release PR**
+
+   ```bash
+   git checkout -b release/v0.2.0
+   ```
+
+2. **Update version number** in `build.gradle`
 
    ```groovy
    version = '0.2.0'
    ```
 
-2. **Update CHANGELOG** (if applicable) with new version details
+3. **Update CHANGELOG.md** with release notes
 
-3. **Create and push a tag**
+   ```markdown
+   ## [0.2.0] - 2024-01-15
 
-   ```bash
-   git tag v0.2.0
-   git push origin v0.2.0
+   ### Added
+
+   - New feature description
+
+   ### Fixed
+
+   - Bug fix description
    ```
 
-4. **Publish to registry**
+4. **Commit and push**
 
    ```bash
-   make release
+   git add build.gradle CHANGELOG.md
+   git commit -m "chore: release v0.2.0"
+   git push origin release/v0.2.0
    ```
 
-   Or manually:
+5. **Create and merge PR**
 
-   ```bash
-   ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
-   ```
+   Open a pull request to `main` branch. Once merged, the automation will:
+
+   - ✅ Publish plugin to Nextflow Plugin Registry
+   - ✅ Create git tag (e.g., `v0.2.0`)
+   - ✅ Create GitHub release with changelog
+
+**That's it!** No manual steps required after merging the PR.
+
+### Manual Release (if needed)
+
+If you need to manually trigger a release, use the GitHub Actions workflow:
+
+1. Go to Actions → Publish Plugin
+2. Click "Run workflow"
+3. Select the `main` branch
+4. Click "Run workflow"
+
+Or publish locally (requires `npr.apiKey` in `~/.gradle/gradle.properties`):
+
+```bash
+make release
+```
 
 > **Note**: The Nextflow Plugin Registry is currently available as preview technology. Contact info@nextflow.io to learn how to get access.
 
