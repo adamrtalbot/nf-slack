@@ -7,7 +7,7 @@ version = '0.1.0'
 nextflowPlugin {
     nextflowVersion = '24.10.0'
 
-    provider = 'nextflow'
+    provider = 'adamrtalbot'
     className = 'nextflow.slack.SlackPlugin'
     extensionPoints = [
         'nextflow.slack.SlackExtension',
