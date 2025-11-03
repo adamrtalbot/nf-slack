@@ -39,7 +39,9 @@ nextflow run your_pipeline.nf -c example/configs/01-minimal.config
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 }
 ```
 
@@ -65,7 +67,9 @@ slack {
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     notifyOnStart = false      // Don't notify on start
     notifyOnComplete = true    // DO notify on completion
@@ -89,7 +93,9 @@ slack {
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     startMessage = '🚀 *My workflow is starting...*'
     completeMessage = '✅ *My workflow finished successfully!*'
@@ -112,7 +118,9 @@ slack {
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     startMessage = [
         text: '🚀 *Pipeline started*',
@@ -148,7 +156,9 @@ slack {
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     startMessage = [
         text: '🚀 *Pipeline started*',
@@ -180,7 +190,9 @@ slack {
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     startMessage = [
         text: '🚀 *Pipeline started*',
@@ -249,7 +261,9 @@ You can combine features from different examples:
 
 ```groovy
 slack {
-    webhook = System.getenv('SLACK_WEBHOOK_URL')
+    webhook {
+        url = System.getenv('SLACK_WEBHOOK_URL')
+    }
 
     // From example 2: notification control
     notifyOnStart = false

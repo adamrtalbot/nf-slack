@@ -30,7 +30,10 @@ plugins {
 
 slack {
     enabled = true
-    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
 
     // Notification settings
     notifyOnStart = true
@@ -66,8 +69,10 @@ Each example focuses on **one specific feature** and builds upon the previous on
 
 ```groovy
 slack {
-    // Required: Webhook URL
-    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    // Required: Webhook configuration
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
 
     // Control which notifications to send (all default to true)
     notifyOnStart = true
@@ -88,7 +93,9 @@ You can customize the default notification messages in two ways:
 
 ```groovy
 slack {
-    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
 
     // Simple string templates (supports Slack markdown formatting)
     startMessage = '🎬 *My analysis pipeline is starting!*'
@@ -103,7 +110,9 @@ For full control over message design, colors, and fields, use map-based configur
 
 ```groovy
 slack {
-    webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
 
     // Customize start message with specific fields
     startMessage = [
@@ -166,7 +175,7 @@ slack {
 }
 ```
 
-Or simply don't configure a webhook - the plugin will disable itself if no webhook is configured.
+Or simply don't configure a webhook - the plugin will disable itself if no webhook URL is configured.
 
 ## Custom Messages from Workflows
 
