@@ -18,6 +18,7 @@ This document specifies the HTTP API contract between the nf-slack plugin and Sl
 ### URL Validation Rules
 
 The plugin MUST validate webhook URLs before use:
+
 - ✅ Scheme must be `https` (not `http`)
 - ✅ Host must be `hooks.slack.com`
 - ✅ Path must match pattern `/services/{workspace}/{channel}/{token}`
@@ -43,6 +44,7 @@ https://hooks.slack.com/other-path          # Wrong path pattern
 ### Headers
 
 **Required Headers**:
+
 ```http
 POST /services/{workspace}/{channel}/{token} HTTP/1.1
 Host: hooks.slack.com
@@ -54,6 +56,7 @@ User-Agent: nf-slack/{version}
 ### Request Body Schema
 
 **JSON Structure** (application/json):
+
 ```json
 {
   "text": "string (required)",
@@ -92,6 +95,7 @@ User-Agent: nf-slack/{version}
 ### Field Constraints
 
 **Top-Level Fields**:
+
 - `text` (string, required): Fallback text, max 4000 characters
 - `username` (string, optional): Bot display name, max 80 characters
 - `icon_emoji` (string, optional): Emoji code like `:rocket:`
@@ -99,6 +103,7 @@ User-Agent: nf-slack/{version}
 - `channel` (string, optional): Override webhook default channel (e.g., `#alerts`, `@user`)
 
 **Attachment Fields**:
+
 - `color` (string, optional): Hex color code `#RRGGBB` or preset (`good`, `warning`, `danger`)
 - `author_name` (string, optional): Author/workflow name, max 256 characters
 - `title` (string, optional): Message title, max 256 characters
@@ -108,6 +113,7 @@ User-Agent: nf-slack/{version}
 - `ts` (integer, optional): Unix timestamp in seconds
 
 **Field Object**:
+
 - `title` (string, required): Field label, max 50 characters
 - `value` (string, required): Field content, max 2000 characters
 - `short` (boolean, optional): Display in column layout if true
@@ -135,21 +141,23 @@ User-Agent: nf-slack/{version}
   "text": "Pipeline started",
   "username": "Nextflow Bot",
   "icon_emoji": ":rocket:",
-  "attachments": [{
-    "color": "#3AA3E3",
-    "author_name": "RNA-seq Pipeline",
-    "author_icon": "https://www.nextflow.io/icon.png",
-    "title": "🚀 Pipeline started",
-    "fields": [
-      {"title": "Run Name", "value": "focused_euler", "short": true},
-      {"title": "Status", "value": "🟢 Running", "short": true},
-      {"title": "Command Line", "value": "nextflow run main.nf --input data/", "short": false},
-      {"title": "Work Directory", "value": "/work/abc123", "short": false}
-    ],
-    "footer": "Nextflow",
-    "footer_icon": "https://www.nextflow.io/icon.png",
-    "ts": 1730300400
-  }]
+  "attachments": [
+    {
+      "color": "#3AA3E3",
+      "author_name": "RNA-seq Pipeline",
+      "author_icon": "https://www.nextflow.io/icon.png",
+      "title": "🚀 Pipeline started",
+      "fields": [
+        { "title": "Run Name", "value": "focused_euler", "short": true },
+        { "title": "Status", "value": "🟢 Running", "short": true },
+        { "title": "Command Line", "value": "nextflow run main.nf --input data/", "short": false },
+        { "title": "Work Directory", "value": "/work/abc123", "short": false }
+      ],
+      "footer": "Nextflow",
+      "footer_icon": "https://www.nextflow.io/icon.png",
+      "ts": 1730300400
+    }
+  ]
 }
 ```
 
@@ -160,21 +168,23 @@ User-Agent: nf-slack/{version}
   "text": "Pipeline completed successfully",
   "username": "Nextflow Bot",
   "icon_emoji": ":rocket:",
-  "attachments": [{
-    "color": "#2EB887",
-    "author_name": "RNA-seq Pipeline",
-    "author_icon": "https://www.nextflow.io/icon.png",
-    "title": "✅ Pipeline completed successfully",
-    "fields": [
-      {"title": "Run Name", "value": "focused_euler", "short": true},
-      {"title": "Duration", "value": "1h 23m 45s", "short": true},
-      {"title": "Status", "value": "✅ Completed", "short": true},
-      {"title": "Tasks", "value": "42 succeeded, 0 failed, 5 cached", "short": true}
-    ],
-    "footer": "Nextflow",
-    "footer_icon": "https://www.nextflow.io/icon.png",
-    "ts": 1730304000
-  }]
+  "attachments": [
+    {
+      "color": "#2EB887",
+      "author_name": "RNA-seq Pipeline",
+      "author_icon": "https://www.nextflow.io/icon.png",
+      "title": "✅ Pipeline completed successfully",
+      "fields": [
+        { "title": "Run Name", "value": "focused_euler", "short": true },
+        { "title": "Duration", "value": "1h 23m 45s", "short": true },
+        { "title": "Status", "value": "✅ Completed", "short": true },
+        { "title": "Tasks", "value": "42 succeeded, 0 failed, 5 cached", "short": true }
+      ],
+      "footer": "Nextflow",
+      "footer_icon": "https://www.nextflow.io/icon.png",
+      "ts": 1730304000
+    }
+  ]
 }
 ```
 
@@ -185,21 +195,27 @@ User-Agent: nf-slack/{version}
   "text": "Pipeline failed",
   "username": "Nextflow Bot",
   "icon_emoji": ":rocket:",
-  "attachments": [{
-    "color": "#A30301",
-    "author_name": "RNA-seq Pipeline",
-    "author_icon": "https://www.nextflow.io/icon.png",
-    "title": "❌ Pipeline failed",
-    "fields": [
-      {"title": "Run Name", "value": "focused_euler", "short": true},
-      {"title": "Duration", "value": "23m 12s", "short": true},
-      {"title": "Failed Process", "value": "ALIGN_READS", "short": true},
-      {"title": "Error Message", "value": "Command error: samtools index failed with exit status 1", "short": false}
-    ],
-    "footer": "Nextflow",
-    "footer_icon": "https://www.nextflow.io/icon.png",
-    "ts": 1730302000
-  }]
+  "attachments": [
+    {
+      "color": "#A30301",
+      "author_name": "RNA-seq Pipeline",
+      "author_icon": "https://www.nextflow.io/icon.png",
+      "title": "❌ Pipeline failed",
+      "fields": [
+        { "title": "Run Name", "value": "focused_euler", "short": true },
+        { "title": "Duration", "value": "23m 12s", "short": true },
+        { "title": "Failed Process", "value": "ALIGN_READS", "short": true },
+        {
+          "title": "Error Message",
+          "value": "Command error: samtools index failed with exit status 1",
+          "short": false
+        }
+      ],
+      "footer": "Nextflow",
+      "footer_icon": "https://www.nextflow.io/icon.png",
+      "ts": 1730302000
+    }
+  ]
 }
 ```
 
@@ -210,21 +226,23 @@ User-Agent: nf-slack/{version}
   "text": "Analysis results available",
   "username": "Nextflow Bot",
   "icon_emoji": ":rocket:",
-  "attachments": [{
-    "color": "#2EB887",
-    "author_name": "RNA-seq Pipeline",
-    "author_icon": "https://www.nextflow.io/icon.png",
-    "title": "Analysis Results",
-    "fields": [
-      {"title": "Sample", "value": "sample_001", "short": true},
-      {"title": "Status", "value": "✅ Success", "short": true},
-      {"title": "Total Variants", "value": "1,234", "short": true},
-      {"title": "Quality Score", "value": "98.5%", "short": true},
-      {"title": "Results Path", "value": "s3://bucket/results/sample_001/", "short": false}
-    ],
-    "footer": "Nextflow",
-    "ts": 1730303000
-  }]
+  "attachments": [
+    {
+      "color": "#2EB887",
+      "author_name": "RNA-seq Pipeline",
+      "author_icon": "https://www.nextflow.io/icon.png",
+      "title": "Analysis Results",
+      "fields": [
+        { "title": "Sample", "value": "sample_001", "short": true },
+        { "title": "Status", "value": "✅ Success", "short": true },
+        { "title": "Total Variants", "value": "1,234", "short": true },
+        { "title": "Quality Score", "value": "98.5%", "short": true },
+        { "title": "Results Path", "value": "s3://bucket/results/sample_001/", "short": false }
+      ],
+      "footer": "Nextflow",
+      "ts": 1730303000
+    }
+  ]
 }
 ```
 
@@ -256,6 +274,7 @@ invalid_payload
 ```
 
 **Causes**:
+
 - Malformed JSON
 - Missing required `text` field
 - Invalid field types
@@ -273,6 +292,7 @@ action_prohibited
 ```
 
 **Causes**:
+
 - Invalid webhook URL
 - Webhook has been revoked
 - Workspace access restrictions
@@ -289,6 +309,7 @@ channel_not_found
 ```
 
 **Causes**:
+
 - Webhook URL no longer exists
 - Channel has been deleted
 
@@ -304,6 +325,7 @@ channel_is_archived
 ```
 
 **Causes**:
+
 - Target channel has been archived
 
 **Plugin Behavior**: Log error, do NOT retry (permanent error)
@@ -319,6 +341,7 @@ rate_limited
 ```
 
 **Causes**:
+
 - Exceeded Slack rate limits (typically 1 message/second)
 
 **Plugin Behavior**: Retry with exponential backoff, respect `Retry-After` header
@@ -333,6 +356,7 @@ rollup_error
 ```
 
 **Causes**:
+
 - Slack internal server error
 - Transient service issue
 
@@ -348,6 +372,7 @@ service_unavailable
 ```
 
 **Causes**:
+
 - Slack service temporarily down
 - Maintenance window
 
@@ -360,12 +385,14 @@ The plugin MUST implement the following retry policy:
 ### Retry on Transient Errors
 
 **Retry these status codes**:
+
 - 429 (Too Many Requests)
 - 500 (Internal Server Error)
 - 503 (Service Unavailable)
 - Network errors (connection timeout, connection refused)
 
 **Retry Schedule**:
+
 ```
 Attempt 1: Immediate
 Attempt 2: Wait 1 second
@@ -375,12 +402,14 @@ Max: 3 retries (4 total attempts)
 ```
 
 **Honor `Retry-After` Header**:
+
 - If present on 429 response, wait specified seconds before retry
 - Override default backoff schedule
 
 ### Do NOT Retry Client Errors
 
 **Never retry these status codes**:
+
 - 400 (Bad Request) - Invalid payload
 - 403 (Forbidden) - Authentication/authorization issue
 - 404 (Not Found) - Resource doesn't exist
@@ -393,12 +422,14 @@ These indicate configuration or permanent errors that won't resolve with retries
 **Slack Recommendation**: 1 message per second per webhook
 
 **Plugin Implementation**:
+
 - Enforce 1 message/second limit internally
 - Use token bucket or timestamp-based rate limiter
 - Queue messages if sending too fast
 - Log rate limit encounters for monitoring
 
 **Burst Handling**:
+
 - Allow burst of up to 3 messages
 - Then enforce 1/second rate
 - Prevents dropped messages during workflow startup when multiple events fire rapidly
@@ -429,6 +460,7 @@ SSL/TLS Errors
 **Critical**: The plugin MUST NEVER cause workflow failure due to Slack issues.
 
 **On all errors after retry exhaustion**:
+
 1. Log detailed error message (including sanitized webhook URL)
 2. Continue workflow execution normally
 3. Emit warning to Nextflow log

@@ -18,6 +18,7 @@ Sync Impact Report:
 ### I. User-First Design
 
 The nf-slack plugin MUST prioritize user experience and ease of adoption above technical elegance. Every feature MUST:
+
 - Work with minimal configuration (webhook URL only for basic usage)
 - Provide progressive disclosure of advanced features
 - Include clear, actionable documentation with working examples
@@ -28,6 +29,7 @@ The nf-slack plugin MUST prioritize user experience and ease of adoption above t
 ### II. Configuration Flexibility
 
 The plugin MUST support multiple configuration patterns:
+
 - Simple string-based configuration for basic usage
 - Map-based configuration for advanced customization
 - Progressive configuration examples from minimal to complex
@@ -38,6 +40,7 @@ The plugin MUST support multiple configuration patterns:
 ### III. Test Coverage for Public APIs
 
 All public-facing functionality (configuration options, functions, and event handlers) MUST have:
+
 - Unit tests verifying behavior
 - Integration tests for Slack API interactions
 - Example configurations demonstrating usage
@@ -48,6 +51,7 @@ All public-facing functionality (configuration options, functions, and event han
 ### IV. Documentation as Code
 
 Every feature MUST include:
+
 - Working example configuration files
 - Progressive examples showing feature adoption path
 - Inline code documentation for public APIs
@@ -115,6 +119,7 @@ Documentation MUST be maintained in sync with code changes.
 ### Quality Gates
 
 Before release:
+
 - All tests pass (`make test`)
 - Build succeeds (`make assemble`)
 - Example configurations validated with real Nextflow workflows
@@ -126,6 +131,7 @@ Before release:
 ### Amendment Procedure
 
 Constitution amendments require:
+
 1. Documented rationale for the change
 2. Impact assessment on existing principles
 3. Review by plugin maintainers
@@ -138,6 +144,7 @@ Constitution amendments require:
 ### Versioning Policy
 
 This constitution follows semantic versioning:
+
 - **MAJOR.MINOR.PATCH** format
 - MAJOR = Breaking principle changes affecting development approach
 - MINOR = New principles or significant additions
@@ -153,6 +160,7 @@ This constitution follows semantic versioning:
 ### Complexity Justification
 
 If a feature violates constitution principles (especially Principle I: User-First Design or Principle IV: Documentation as Code):
+
 - Document the violation in PR description
 - Provide rationale for why it's necessary
 - Propose mitigation strategies

@@ -5,7 +5,7 @@
 **Status**: Draft
 **Input**: User description: "create a Nextflow plugin for creating a Slack messsages as part of the pipeline that does not require a user to modify their pipeline but enables them to send messages by function if required."
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Automatic Workflow Notifications (Priority: P1)
 
@@ -67,7 +67,7 @@ A pipeline developer wants to customize which events trigger notifications, the 
 - What happens when network connectivity is lost during workflow execution?
 - How does the plugin behave when multiple workflows run simultaneously in the same environment?
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -99,7 +99,7 @@ A pipeline developer wants to customize which events trigger notifications, the 
 - **Webhook Configuration**: The connection settings for Slack integration, including webhook URL, channel, bot appearance, and enabled notification types
 - **Custom Message**: User-defined messages sent via slackMessage function, containing either simple text or structured field data
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

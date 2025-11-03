@@ -18,25 +18,26 @@ Implement a Nextflow plugin that automatically sends Slack notifications for wor
 **Target Platform**: Cross-platform (Linux, macOS, Windows) - runs wherever Nextflow runs
 **Project Type**: Single Nextflow plugin project (existing structure at repository root)
 **Performance Goals**:
-  - Notification send < 5 seconds per event
-  - Plugin initialization < 1 second
-  - Async message sending (non-blocking)
-  - Rate limiting at 1 message/second
-**Constraints**:
-  - Must not block workflow execution
-  - Must handle Slack API unavailability gracefully
-  - Must support 100+ concurrent workflow executions
-  - Retry logic with exponential backoff for transient failures
-**Scale/Scope**:
-  - Single plugin module (~10-15 Groovy classes)
-  - 3 main event handlers (start, completion, error)
-  - 1 custom function extension (slackMessage)
-  - Progressive configuration examples (6 example files)
-  - Comprehensive test coverage for public APIs
+
+- Notification send < 5 seconds per event
+- Plugin initialization < 1 second
+- Async message sending (non-blocking)
+- Rate limiting at 1 message/second
+  **Constraints**:
+- Must not block workflow execution
+- Must handle Slack API unavailability gracefully
+- Must support 100+ concurrent workflow executions
+- Retry logic with exponential backoff for transient failures
+  **Scale/Scope**:
+- Single plugin module (~10-15 Groovy classes)
+- 3 main event handlers (start, completion, error)
+- 1 custom function extension (slackMessage)
+- Progressive configuration examples (6 example files)
+- Comprehensive test coverage for public APIs
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Principle I: User-First Design ✅
 
@@ -77,24 +78,28 @@ Implement a Nextflow plugin that automatically sends Slack notifications for wor
 ### Quality Standards Check ✅
 
 **Security**:
+
 - ✅ Webhook URLs via Nextflow secrets supported (FR-008)
 - ✅ No sensitive data in logs (implemented)
 - ✅ HTTPS enforced (Slack webhook URLs are HTTPS-only)
 - ✅ Rate limiting implemented (1 msg/sec)
 
 **Performance**:
+
 - ✅ Async/non-blocking where possible (FR-016)
 - ✅ Fast initialization target (< 1 second)
 - ✅ Non-blocking message formatting
 - ✅ Negligible resource usage (stateless plugin)
 
 **Reliability**:
+
 - ✅ Clear error messages planned (FR-015)
 - ✅ Retry with exponential backoff (FR-016)
 - ✅ Detailed logging (FR-015)
 - ✅ Startup validation (FR-018)
 
 **Compatibility**:
+
 - ✅ Nextflow plugin API version compatibility
 - ✅ Backward compatible configs (additive only)
 - ✅ SemVer versioning enforced
@@ -178,6 +183,7 @@ No constitution violations - this section is not applicable.
 ### Design Artifacts Review
 
 **Generated Artifacts**:
+
 1. `research.md` - Technical decisions and best practices (COMPLETE)
 2. `data-model.md` - Entity definitions and relationships (COMPLETE)
 3. `contracts/slack-api.md` - Slack Incoming Webhooks API contract (COMPLETE)
@@ -186,24 +192,28 @@ No constitution violations - this section is not applicable.
 ### Principle Compliance Post-Design
 
 **I. User-First Design** ✅
+
 - Quickstart guide achieves <5 minute setup (confirmed)
 - Progressive examples match planned 01-06 structure (documented)
 - Minimal config validated: webhook URL only requirement (confirmed)
 - Sensible defaults documented in data-model.md (confirmed)
 
 **II. Configuration Flexibility** ✅
+
 - Both string and map message formats specified in data-model.md (confirmed)
 - MessageTemplate entity supports progressive disclosure (confirmed)
 - Backward compatibility strategy documented in research.md (confirmed)
 - Configuration schema allows additive changes (confirmed)
 
 **III. Test Coverage for Public APIs** ✅
+
 - Test strategy defined in research.md (unit + integration tests)
 - Existing test files verified in project structure
 - API contract provides test scenarios (slack-api.md)
 - Example configs serve as acceptance tests (6 examples)
 
 **IV. Documentation as Code** ✅
+
 - Quickstart.md provides working examples (confirmed)
 - Progressive example path documented (01-minimal through 06-selective-fields)
 - API contract includes inline examples (slack-api.md)
@@ -212,24 +222,28 @@ No constitution violations - this section is not applicable.
 ### Quality Standards Compliance Post-Design
 
 **Security** ✅
+
 - Webhook URL masking strategy defined (research.md, slack-api.md)
 - HTTPS enforcement specified in contracts (slack-api.md)
 - Nextflow secrets integration documented (quickstart.md)
 - No sensitive data in logs policy defined (slack-api.md)
 
 **Performance** ✅
+
 - Async sending strategy defined (research.md: ExecutorService)
 - Rate limiting implementation specified (token bucket, 1 msg/sec)
 - Initialization targets maintained (<1 sec)
 - Non-blocking design confirmed in data-model.md
 
 **Reliability** ✅
+
 - Retry policy fully specified (slack-api.md: exponential backoff)
 - Error handling strategy defined (retry transient, fail fast on client errors)
 - Logging strategy documented (research.md)
 - URL validation rules specified (slack-api.md)
 
 **Compatibility** ✅
+
 - Plugin API version requirements documented (research.md)
 - Configuration migration strategy defined (additive only)
 - SemVer commitment stated

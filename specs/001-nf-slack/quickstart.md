@@ -66,6 +66,7 @@ nextflow run hello
 ### When Workflow Starts
 
 A blue notification with:
+
 - Workflow name
 - Run ID
 - Start time
@@ -74,6 +75,7 @@ A blue notification with:
 ### When Workflow Completes
 
 A green notification with:
+
 - Workflow name
 - Duration
 - Task statistics (succeeded, failed, cached)
@@ -82,6 +84,7 @@ A green notification with:
 ### When Workflow Fails
 
 A red notification with:
+
 - Workflow name
 - Duration
 - Error message
@@ -204,11 +207,13 @@ Find them in `example/configs/` directory and see `example/configs/README.md` fo
 **Check 1 - Webhook URL**: Verify the webhook URL is correct and starts with `https://hooks.slack.com/services/`
 
 **Check 2 - Plugin Loaded**: Look for "Slack plugin:" messages in Nextflow logs:
+
 ```bash
 nextflow run main.nf -log debug
 ```
 
 **Check 3 - Test Webhook**: Verify your webhook works with curl:
+
 ```bash
 curl -X POST -H 'Content-type: application/json' \
   --data '{"text":"Test message"}' \
@@ -231,24 +236,24 @@ curl -X POST -H 'Content-type: application/json' \
 
 ### Basic Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | Boolean | `true` | Enable/disable the plugin |
-| `webhook` | String | Required | Slack webhook URL |
-| `notifyOnStart` | Boolean | `true` | Send notification when workflow starts |
-| `notifyOnComplete` | Boolean | `true` | Send notification when workflow completes |
-| `notifyOnError` | Boolean | `true` | Send notification when workflow fails |
+| Option             | Type    | Default  | Description                               |
+| ------------------ | ------- | -------- | ----------------------------------------- |
+| `enabled`          | Boolean | `true`   | Enable/disable the plugin                 |
+| `webhook`          | String  | Required | Slack webhook URL                         |
+| `notifyOnStart`    | Boolean | `true`   | Send notification when workflow starts    |
+| `notifyOnComplete` | Boolean | `true`   | Send notification when workflow completes |
+| `notifyOnError`    | Boolean | `true`   | Send notification when workflow fails     |
 
 ### Customization Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `username` | String | `"Nextflow Bot"` | Bot display name in Slack |
-| `iconEmoji` | String | `":rocket:"` | Bot icon emoji |
-| `channel` | String | (webhook default) | Override target channel |
-| `startMessage` | String or Map | `"🚀 Pipeline started"` | Custom start message |
+| Option            | Type          | Default                                | Description               |
+| ----------------- | ------------- | -------------------------------------- | ------------------------- |
+| `username`        | String        | `"Nextflow Bot"`                       | Bot display name in Slack |
+| `iconEmoji`       | String        | `":rocket:"`                           | Bot icon emoji            |
+| `channel`         | String        | (webhook default)                      | Override target channel   |
+| `startMessage`    | String or Map | `"🚀 Pipeline started"`                | Custom start message      |
 | `completeMessage` | String or Map | `"✅ Pipeline completed successfully"` | Custom completion message |
-| `errorMessage` | String or Map | `"❌ Pipeline failed"` | Custom error message |
+| `errorMessage`    | String or Map | `"❌ Pipeline failed"`                 | Custom error message      |
 
 ### Map-Based Message Format
 
@@ -266,6 +271,7 @@ When using map format for messages:
 ```
 
 **Available `includeFields`**:
+
 - `runName` - The Nextflow run name
 - `status` - Workflow status with emoji
 - `duration` - How long the workflow ran
