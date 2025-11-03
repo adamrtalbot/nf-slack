@@ -52,14 +52,14 @@ That's it! You'll now receive Slack notifications for your workflow events.
 
 We provide **6 progressive examples** demonstrating plugin features from basic to advanced:
 
-| Example | Feature | Description |
-|---------|---------|-------------|
-| [01-minimal.config](example/configs/01-minimal.config) | Enable notifications | Just webhook, use defaults |
+| Example                                                                          | Feature                | Description                               |
+| -------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------- |
+| [01-minimal.config](example/configs/01-minimal.config)                           | Enable notifications   | Just webhook, use defaults                |
 | [02-notification-control.config](example/configs/02-notification-control.config) | Control when to notify | Choose which events trigger notifications |
-| [03-message-text.config](example/configs/03-message-text.config) | Customize message text | Change notification text with strings |
-| [04-message-colors.config](example/configs/04-message-colors.config) | Customize colors | Use custom colors (map format) |
-| [05-custom-fields.config](example/configs/05-custom-fields.config) | Add custom fields | Include your own information |
-| [06-selective-fields.config](example/configs/06-selective-fields.config) | Choose default fields | Select which workflow info to show |
+| [03-message-text.config](example/configs/03-message-text.config)                 | Customize message text | Change notification text with strings     |
+| [04-message-colors.config](example/configs/04-message-colors.config)             | Customize colors       | Use custom colors (map format)            |
+| [05-custom-fields.config](example/configs/05-custom-fields.config)               | Add custom fields      | Include your own information              |
+| [06-selective-fields.config](example/configs/06-selective-fields.config)         | Choose default fields  | Select which workflow info to show        |
 
 Each example focuses on **one specific feature** and builds upon the previous ones.
 
@@ -112,7 +112,7 @@ slack {
 
 ### Message Customization
 
-You can customize notification messages in two ways: **simple text** or **advanced map format**.
+You can customize notification messages in two ways: **simple text** or **rich formatted messages**.
 
 #### Simple Text Messages
 
@@ -139,11 +139,12 @@ slack {
 ```
 
 **Default messages** (if not customized):
+
 - **Start**: `🚀 *Pipeline started*`
 - **Complete**: `✅ *Pipeline completed successfully*`
 - **Error**: `❌ *Pipeline failed*`
 
-#### Advanced Map Format
+#### Rich Formatted Messages
 
 For full control over colors, fields, and layout:
 
@@ -190,21 +191,24 @@ slack {
 ```
 
 **Available color codes:**
+
 - **Success**: `#2EB887` (green)
 - **Error**: `#A30301` (red)
 - **Info**: `#3AA3E3` (blue)
 
 **Available includeFields options:**
+
 - `runName` - The Nextflow run name
 - `status` - Workflow status with emoji
-- `duration` - How long the workflow ran *(not available for start messages)*
+- `duration` - How long the workflow ran _(not available for start messages)_
 - `commandLine` - The command used to launch the workflow
-- `workDir` - The work directory *(only for start messages)*
-- `errorMessage` - Error details *(only for error messages)*
-- `failedProcess` - Which process failed *(only for error messages)*
-- `tasks` - Task statistics *(only for completion messages)*
+- `workDir` - The work directory _(only for start messages)_
+- `errorMessage` - Error details _(only for error messages)_
+- `failedProcess` - Which process failed _(only for error messages)_
+- `tasks` - Task statistics _(only for completion messages)_
 
 **Custom field structure:**
+
 - `title` (required) - Field label
 - `value` (required) - Field content
 - `short` (optional) - If `true`, field appears in column layout (default: `false`)
@@ -290,6 +294,7 @@ workflow {
 ### Message Field Structure
 
 Each field in the `fields` array can have:
+
 - `title` (required): Field label
 - `value` (required): Field content
 - `short` (optional): If `true`, field appears in a column layout (default: `false`)
@@ -356,6 +361,7 @@ The plugin sends messages using Slack's attachment format with Block Kit element
 - **Workflow Error**: Red color, includes error message, failed process, and command line
 
 All messages include:
+
 - Workflow name as the author
 - Nextflow icon
 - Timestamp footer
@@ -389,6 +395,7 @@ All messages include:
 ### Rate Limiting
 
 The plugin includes built-in rate limiting (max 1 message per second) and retry logic. If you're hitting Slack rate limits:
+
 - Reduce the frequency of custom messages
 - Consider batching notifications
 - Check Slack workspace limits
@@ -440,6 +447,7 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for detai
 ## Support
 
 For issues, questions, or contributions:
+
 - 📖 [Configuration Reference](docs/CONFIG.md)
 - 📚 [Example Configurations](example/configs/README.md)
 - 🐛 [Report bugs](https://github.com/adamrtalbot/nf-slack/issues)

@@ -14,22 +14,26 @@ Thank you for your interest in contributing to nf-slack! This document provides 
 ### Development Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/nf-slack.git
    cd nf-slack
    ```
 
 2. **Build the plugin**
+
    ```bash
    make assemble
    ```
 
 3. **Run tests**
+
    ```bash
    make test
    ```
 
 4. **Install locally**
+
    ```bash
    make install
    ```
@@ -44,27 +48,32 @@ Thank you for your interest in contributing to nf-slack! This document provides 
 ### Making Changes
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
 
 2. **Make your changes**
+
    - Write clean, well-documented code
    - Follow existing code style and conventions
    - Add tests for new functionality
 
 3. **Test your changes**
+
    ```bash
    make test
    ```
 
 4. **Commit your changes**
+
    ```bash
    git add .
    git commit -m "feat: description of your changes"
    ```
 
    Follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages:
+
    - `feat:` - New features
    - `fix:` - Bug fixes
    - `docs:` - Documentation changes
@@ -94,11 +103,13 @@ All contributions should include appropriate tests:
 - **Configuration tests** for new config options
 
 Run the test suite:
+
 ```bash
 make test
 ```
 
 Run specific tests:
+
 ```bash
 ./gradlew test --tests "nextflow.slack.SlackConfigTest"
 ```
@@ -173,6 +184,7 @@ nf-slack/
 To publish the plugin to the Nextflow Plugin Registry:
 
 1. **Create `$HOME/.gradle/gradle.properties`** with your API key:
+
    ```properties
    npr.apiKey=YOUR_NEXTFLOW_PLUGIN_REGISTRY_TOKEN
    ```
@@ -182,6 +194,7 @@ To publish the plugin to the Nextflow Plugin Registry:
 ### Creating a Release
 
 1. **Update version number** in `build.gradle`
+
    ```groovy
    version = '0.2.0'
    ```
@@ -189,17 +202,20 @@ To publish the plugin to the Nextflow Plugin Registry:
 2. **Update CHANGELOG** (if applicable) with new version details
 
 3. **Create and push a tag**
+
    ```bash
    git tag v0.2.0
    git push origin v0.2.0
    ```
 
 4. **Publish to registry**
+
    ```bash
    make release
    ```
 
    Or manually:
+
    ```bash
    ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
    ```

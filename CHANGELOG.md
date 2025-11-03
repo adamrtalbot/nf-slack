@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Message Customization
 
 - **Simple String Format**: `startMessage = "🚀 Pipeline started"`
-- **Advanced Map Format**:
+- **Formatted Message**:
   ```groovy
   startMessage = [
       text: "Custom message",

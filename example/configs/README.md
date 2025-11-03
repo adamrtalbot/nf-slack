@@ -6,20 +6,21 @@ Each example focuses on **one specific aspect** of the plugin, building upon the
 
 ## 📋 Quick Reference
 
-| Example | Feature | Lines |
-|---------|---------|-------|
-| [01-minimal.config](#example-1-minimal-setup) | Enable notifications | ~25 |
-| [02-notification-control.config](#example-2-notification-control) | Control when to notify | ~30 |
-| [03-message-text.config](#example-3-message-text-customization) | Customize message text | ~35 |
-| [04-message-colors.config](#example-4-message-colors) | Customize message colors | ~45 |
-| [05-custom-fields.config](#example-5-custom-fields) | Add custom fields | ~55 |
-| [06-selective-fields.config](#example-6-selective-default-fields) | Choose which default fields to show | ~70 |
+| Example                                                           | Feature                             | Lines |
+| ----------------------------------------------------------------- | ----------------------------------- | ----- |
+| [01-minimal.config](#example-1-minimal-setup)                     | Enable notifications                | ~25   |
+| [02-notification-control.config](#example-2-notification-control) | Control when to notify              | ~30   |
+| [03-message-text.config](#example-3-message-text-customization)   | Customize message text              | ~35   |
+| [04-message-colors.config](#example-4-message-colors)             | Customize message colors            | ~45   |
+| [05-custom-fields.config](#example-5-custom-fields)               | Add custom fields                   | ~55   |
+| [06-selective-fields.config](#example-6-selective-default-fields) | Choose which default fields to show | ~70   |
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 Set up your Slack webhook:
+
 ```bash
 export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
 ```
@@ -46,6 +47,7 @@ slack {
 ```
 
 **What you get**:
+
 - Notifications on start, complete, and error
 - Default message templates
 - Default bot name: "Nextflow Bot"
@@ -61,6 +63,7 @@ slack {
 **Concept**: Choose which events trigger notifications
 
 **New configuration options**:
+
 - `onStart.enabled` - Send notification when workflow starts
 - `onComplete.enabled` - Send notification when workflow completes
 - `onError.enabled` - Send notification when workflow fails
@@ -95,6 +98,7 @@ slack {
 **Concept**: Customize the text in notification messages
 
 **New configuration options**:
+
 - `onStart.message` - Custom text for start notifications
 - `onComplete.message` - Custom text for completion notifications
 - `onError.message` - Custom text for error notifications
@@ -162,6 +166,7 @@ slack {
 ```
 
 **Map structure**:
+
 - `text` - Message text (same as string format)
 - `color` - Hex color code (e.g., `'#FF5733'`)
 
@@ -197,6 +202,7 @@ slack {
 ```
 
 **Field structure**:
+
 - `title` - Field label (required)
 - `value` - Field content (required)
 - `short` - Layout: `true` = columns (2 per row), `false` = full width
@@ -247,18 +253,22 @@ slack {
 **Available fields**:
 
 **All messages**:
+
 - `runName` - Nextflow run name
 - `status` - Workflow status with emoji
 
 **Start messages only**:
+
 - `commandLine` - Command used to launch workflow
 - `workDir` - Work directory path
 
 **Complete messages only**:
+
 - `duration` - How long the workflow ran
 - `tasks` - Task statistics (cached, completed, failed)
 
 **Error messages only**:
+
 - `duration` - How long before failure
 - `errorMessage` - Error details
 - `failedProcess` - Which process failed
@@ -323,30 +333,31 @@ slack {
 
 ### Basic Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `webhook.url` | String | (required) | Slack webhook URL |
-| `enabled` | Boolean | `true` | Enable/disable plugin |
-| `onStart.enabled` | Boolean | `true` | Send start notifications |
-| `onComplete.enabled` | Boolean | `true` | Send completion notifications |
-| `onError.enabled` | Boolean | `true` | Send error notifications |
+| Option               | Type    | Default    | Description                   |
+| -------------------- | ------- | ---------- | ----------------------------- |
+| `webhook.url`        | String  | (required) | Slack webhook URL             |
+| `enabled`            | Boolean | `true`     | Enable/disable plugin         |
+| `onStart.enabled`    | Boolean | `true`     | Send start notifications      |
+| `onComplete.enabled` | Boolean | `true`     | Send completion notifications |
+| `onError.enabled`    | Boolean | `true`     | Send error notifications      |
 
 ### Notification Scope Options
 
 Each notification scope (`onStart`, `onComplete`, `onError`) supports:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | Boolean | `true` | Enable/disable this notification type |
-| `message` | String/Map | Default text | Notification message (string or map) |
-| `includeCommandLine` | Boolean | `true` | Include command line in message |
-| `includeResourceUsage`* | Boolean | `true` | Include task statistics |
+| Option                   | Type       | Default      | Description                           |
+| ------------------------ | ---------- | ------------ | ------------------------------------- |
+| `enabled`                | Boolean    | `true`       | Enable/disable this notification type |
+| `message`                | String/Map | Default text | Notification message (string or map)  |
+| `includeCommandLine`     | Boolean    | `true`       | Include command line in message       |
+| `includeResourceUsage`\* | Boolean    | `true`       | Include task statistics               |
 
-*Only available in `onComplete` scope
+\*Only available in `onComplete` scope
 
 ### Message Configuration
 
 **String format** (simple):
+
 ```groovy
 onStart {
     message = '🚀 *My message*'
@@ -354,6 +365,7 @@ onStart {
 ```
 
 **Map format** (advanced):
+
 ```groovy
 onStart {
     message = [

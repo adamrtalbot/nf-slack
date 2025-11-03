@@ -1,0 +1,39 @@
+# Build outputs
+build/
+.gradle/
+plugins/
+*.jar
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Dependencies
+node_modules/
+
+# Generated files
+.nextflow/
+.nextflow.log*
+work/
+
+# Test outputs
+test-output/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Git
+.git/
+
+# Documentation that shouldn't be auto-formatted
+SUMMARY.md
+DOCUMENTATION_UPDATE.md
