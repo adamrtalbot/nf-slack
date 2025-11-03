@@ -272,4 +272,4 @@ If you're still having issues:
 
 - [Configuration Reference](CONFIG.md) - Full configuration options
 - [Usage Guide](USAGE.md) - How to use the plugin
-- [Examples](../example/configs/README.md) - Working examples
+- [Examples](EXAMPLES.md) - Working examples

@@ -146,14 +146,14 @@ We provide 6 progressive configuration examples from basic to advanced:
 | [05-custom-fields.config](example/configs/05-custom-fields.config)               | Add your own information                  |
 | [06-selective-fields.config](example/configs/06-selective-fields.config)         | Select which workflow info to show        |
 
-**[View all examples with explanations →](example/configs/README.md)**
+**[View all examples with explanations →](docs/EXAMPLES.md)**
 
 ## Documentation
 
 - **[Configuration Reference](docs/CONFIG.md)** - Complete configuration options and API reference
 - **[Usage Guide](docs/USAGE.md)** - How to use the plugin and send custom messages
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
-- **[Examples](example/configs/README.md)** - Progressive configuration examples
+- **[Examples](docs/EXAMPLES.md)** - Progressive configuration examples
 - **[Contributing](docs/CONTRIBUTING.md)** - Development setup and contribution guidelines
 
 ## Support

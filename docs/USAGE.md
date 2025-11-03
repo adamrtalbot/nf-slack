@@ -142,5 +142,5 @@ The plugin includes built-in rate limiting (max 1 message per second) and retry 
 ## Next Steps
 
 - [Configuration Reference](CONFIG.md) - Full configuration options
-- [Examples](../example/configs/README.md) - Progressive examples from basic to advanced
+- [Examples](EXAMPLES.md) - Progressive examples from basic to advanced
 - [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions

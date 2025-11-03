@@ -5,7 +5,7 @@ Complete API-style reference for all nf-slack plugin configuration options.
 > **Quick Links:**
 >
 > - [Usage Guide](USAGE.md) - Learn how to send custom messages
-> - [Examples](../example/configs/README.md) - See practical examples
+> - [Examples](EXAMPLES.md) - See practical examples
 > - [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
 
 ## Table of Contents

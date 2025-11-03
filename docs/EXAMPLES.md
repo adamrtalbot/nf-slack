@@ -378,37 +378,3 @@ onStart {
     ]
 }
 ```
-
-## 🆘 Troubleshooting
-
-### Messages not appearing
-
-1. Verify webhook URL is correct
-2. Check plugin is loaded: `nextflow plugin list`
-3. Test webhook directly:
-   ```bash
-   curl -X POST -H 'Content-type: application/json' \
-     --data '{"text":"Test"}' \
-     $SLACK_WEBHOOK_URL
-   ```
-
-### Icon emoji not showing
-
-- Must be a valid Slack emoji (`:rocket:`, `:dna:`, etc.)
-- Custom emojis must be created in your Slack workspace first
-
-### Custom fields not appearing
-
-- Verify map structure is correct
-- Ensure `customFields` is an array of maps
-- Each field needs `title` and `value`
-
-## 📖 Additional Resources
-
-- [Main README](../../README.md) - Full plugin documentation
-- [Slack Emoji Cheat Sheet](https://www.webfx.com/tools/emoji-cheat-sheet/) - Valid emoji names
-- [Slack API Docs](https://api.slack.com/messaging/webhooks) - Webhook details
-
-## License
-
-Apache 2.0 - Same as the nf-slack plugin
