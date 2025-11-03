@@ -143,7 +143,7 @@ workflow {
 
 ![Workflow Slack message](./docs/imgs/nf-slack-04.png)
 
-**Want more control?** See the full [Configuration Reference](docs/CONFIG.md) for all available options.
+**Want more control?** See the [API Reference](docs/REFERENCE.md) and [detailed examples](docs/EXAMPLES.md) for all available options.
 
 ## Examples
 
@@ -162,7 +162,7 @@ We provide 6 progressive configuration examples from basic to advanced:
 
 ## Documentation
 
-- **[Configuration Reference](docs/CONFIG.md)** - Complete configuration options and API reference
+- **[API Reference](docs/REFERENCE.md)** - Complete configuration options and API reference
 - **[Usage Guide](docs/USAGE.md)** - How to use the plugin and send custom messages
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 - **[Examples](docs/EXAMPLES.md)** - Progressive configuration examples

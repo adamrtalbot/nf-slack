@@ -270,6 +270,6 @@ If you're still having issues:
 
 ## Related Documentation
 
-- [Configuration Reference](CONFIG.md) - Full configuration options
+- [API Reference](REFERENCE.md) - Full configuration options
 - [Usage Guide](USAGE.md) - How to use the plugin
 - [Examples](EXAMPLES.md) - Working examples

@@ -12,7 +12,7 @@ Once configured, nf-slack automatically sends notifications for workflow events.
 - ✅ Notification when workflow completes successfully
 - ❌ Notification when workflow fails
 
-See [Configuration Reference](CONFIG.md) to customize which notifications are sent.
+See [API Reference](REFERENCE.md) to customize which notifications are sent.
 
 ## Custom Messages from Workflows
 
@@ -141,6 +141,6 @@ The plugin includes built-in rate limiting (max 1 message per second) and retry 
 
 ## Next Steps
 
-- [Configuration Reference](CONFIG.md) - Full configuration options
+- [API Reference](REFERENCE.md) - Full configuration options
 - [Examples](EXAMPLES.md) - Progressive examples from basic to advanced
 - [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions

@@ -60,7 +60,6 @@ Configuration examples show how to set up automatic workflow notifications using
 
 ```groovy
 slack {
-    enabled = true
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
     }
@@ -318,6 +317,8 @@ slack {
 
 **Use when**: You want fine-grained control over what information appears
 
+**See also**: [API Reference](REFERENCE.md) for complete field documentation and all available options.
+
 **Example output**:
 
 ![Selective Fields Example](imgs/nf-slack-examples-06.png)
@@ -356,6 +357,13 @@ nextflow run scripts/01-message-in-workflow.nf -c nextflow.config
 ```groovy
 #!/usr/bin/env nextflow
 
+/*
+ * Simple example demonstrating nf-slack plugin
+ *
+ * This workflow sends Slack messages:
+ * - AFTER: At workflow completion
+ */
+
 // Import the Slack messaging function
 include { slackMessage } from 'plugin/nf-slack'
 
@@ -369,6 +377,8 @@ process HELLO {
     script:
     """
     echo "Processing sample: ${sample_id}"
+    sleep 2  # Simulate some work
+    echo "${sample_id}_processed"
     """
 }
 
@@ -376,7 +386,9 @@ workflow {
     inputs = channel.of('sample_1', 'sample_2', 'sample_3')
     HELLO(inputs)
 
-    // Send a custom message after processing
+    // ==============================================================
+    // AFTER: Send rich formatted completion message in workflow body
+    // ==============================================================
     slackMessage([
         message: "Example workflow complete! 🎉",
         color: "#2EB887",  // Green for success

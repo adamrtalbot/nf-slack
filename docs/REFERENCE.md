@@ -1,6 +1,6 @@
-# Configuration Reference
+# API Reference
 
-Complete API-style reference for all nf-slack plugin configuration options.
+Complete API reference for nf-slack plugin configuration options and functions.
 
 > **Quick Links:**
 >
@@ -10,8 +10,9 @@ Complete API-style reference for all nf-slack plugin configuration options.
 
 ## Table of Contents
 
-- [Configuration Reference](#configuration-reference)
+- [API Reference](#api-reference)
   - [Table of Contents](#table-of-contents)
+- [Configuration](#configuration)
   - [`slack`](#slack)
     - [Example](#example)
   - [`slack.webhook`](#slackwebhook)
@@ -28,12 +29,24 @@ Complete API-style reference for all nf-slack plugin configuration options.
     - [Properties](#properties-2)
     - [Message Available Fields](#message-available-fields-2)
     - [Example](#example-4)
-  - [`slack.<scope>.message (String)`](#slackscopemessage-string)
+  - [`slack.<scope>.message`](#slackscopemessage)
+    - [`slack.<scope>.message (String)`](#slackscopemessage-string)
     - [`slack.<scope>.message (Map)`](#slackscopemessage-map)
+      - [Example](#example-5)
   - [`slack.<scope>.message.includeFields`](#slackscopemessageincludefields)
   - [Color Reference](#color-reference)
+- [Functions](#functions)
+  - [`slackMessage()`](#slackmessage)
+    - [`slackMessage(String message)`](#slackmessagestring-message)
+      - [Example](#example-6)
+    - [`slackMessage(Map options)`](#slackmessagemap-options)
+      - [Example](#example-7)
+      - [Fields](#fields)
+    - [Return Value](#return-value)
 
 ---
+
+# Configuration
 
 ## `slack`
 
@@ -195,7 +208,9 @@ onError {
 
 ---
 
-## `slack.<scope>.message (String)`
+## `slack.<scope>.message`
+
+### `slack.<scope>.message (String)`
 
 Use a string for quick, simple message customization. Supports Slack markdown (`*bold*`, `_italic_`, `` `code` ``), emojis, and newlines (`\n`).
 
@@ -218,7 +233,7 @@ Use a map for full control with colors, fields, and custom data.
 - `includeFields` - List of default fields (see [Field Reference](#field-reference))
 - `customFields` - List of custom fields with `title`, `value`, and optional `short` (boolean for 2-column layout)
 
-**Example:**
+#### Example
 
 ```groovy
 onComplete {
@@ -264,5 +279,86 @@ Standard color codes for Slack message attachments:
 | Info Blue      | `#3AA3E3` | Informational, start messages |
 | Warning Orange | `#FFA500` | Warnings                      |
 | Neutral Gray   | `#808080` | Neutral information           |
+
+---
+
+# Functions
+
+## `slackMessage()`
+
+### `slackMessage(String message)`
+
+| Parameter | Type   | Required | Description           |
+| --------- | ------ | -------- | --------------------- |
+| `message` | String | Yes      | Text to send to Slack |
+
+#### Example
+
+```groovy
+slackMessage("Processing sample ${sample_id}")
+```
+
+### `slackMessage(Map options)`
+
+| Property  | Type        | Required | Description                            |
+| --------- | ----------- | -------- | -------------------------------------- |
+| `message` | String      | Yes      | Message text (supports Slack markdown) |
+| `color`   | String      | No       | Hex color code (e.g., `"#2EB887"`)     |
+| `fields`  | List\<Map\> | No       | Array of custom field objects          |
+
+#### Example
+
+```groovy
+slackMessage([
+    message: "Analysis complete!",
+    color: "#2EB887",
+    fields: [
+        [
+            title: "Status",
+            value: "Success",
+            short: true
+        ],
+        [
+            title: "Samples Processed",
+            value: "42",
+            short: true
+        ]
+    ]
+])
+```
+
+#### Fields
+
+When using the map format with custom `fields`, each field object supports:
+
+| Property | Type    | Required | Description                                      |
+| -------- | ------- | -------- | ------------------------------------------------ |
+| `title`  | String  | Yes      | Field label/name                                 |
+| `value`  | String  | Yes      | Field content                                    |
+| `short`  | Boolean | No       | Layout: `true` = 2 columns, `false` = full width |
+
+**With workflow metadata**:
+
+```groovy
+workflow {
+    workflow.onComplete = {
+        def status = workflow.success ? "✅ SUCCESS" : "❌ FAILED"
+        def color = workflow.success ? "#2EB887" : "#A30301"
+
+        slackMessage([
+            message: "Workflow ${status}",
+            color: color,
+            fields: [
+                [title: "Duration", value: "${workflow.duration}", short: true],
+                [title: "Exit Status", value: "${workflow.exitStatus}", short: true]
+            ]
+        ])
+    }
+}
+```
+
+### Return Value
+
+The function does not return anything.
 
 ---
