@@ -10,6 +10,10 @@ jobs:
     name: Publish plugin to Nextflow registry
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: write
+      actions: write
+      attestations: write
 
     steps:
       - name: Checkout
