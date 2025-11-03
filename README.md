@@ -39,21 +39,10 @@ slack {
     webhook {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
-
-    // Notification settings (all optional - defaults shown)
-    onStart {
-        enabled = true
-    }
-
-    onComplete {
-        enabled = true
-    }
-
-    onError {
-        enabled = true
-    }
 }
 ```
+
+> **Note**: All notifications (start, complete, error) are enabled by default. See [Configuration](#configuration) to customize.
 
 ### 3. Run Your Pipeline
 
@@ -78,44 +67,27 @@ Each example focuses on **one specific feature** and builds upon the previous on
 
 ## Configuration
 
-### Basic Configuration
+> **📖 For complete API reference, see [Configuration Reference](docs/CONFIG.md)**
+
+### Basic Setup
 
 ```groovy
+plugins {
+    id 'nf-slack@0.1.0'
+}
+
 slack {
-    // Required: Webhook configuration
+    enabled = true
+
     webhook {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-    }
-
-    // Configure start notifications
-    onStart {
-        enabled = true                  // Send notification when workflow starts
-        message = '🚀 *Pipeline started*'  // Custom message (optional)
-        includeCommandLine = true       // Include command line in message
-    }
-
-    // Configure completion notifications
-    onComplete {
-        enabled = true                  // Send notification when workflow completes
-        message = '✅ *Pipeline completed*'  // Custom message (optional)
-        includeCommandLine = true       // Include command line in message
-        includeResourceUsage = true     // Include task statistics
-    }
-
-    // Configure error notifications
-    onError {
-        enabled = true                  // Send notification when workflow fails
-        message = '❌ *Pipeline failed*'  // Custom message (optional)
-        includeCommandLine = true       // Include command line in message
     }
 }
 ```
 
-### Customizing Default Messages
+### Notification Control
 
-You can customize the default notification messages in two ways:
-
-#### Simple Text Customization
+Control which events trigger Slack notifications. All are enabled by default.
 
 ```groovy
 slack {
@@ -123,7 +95,35 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    // Simple string templates (supports Slack markdown formatting)
+    // Enable or disable specific notifications
+    onStart {
+        enabled = true    // Send notification when workflow starts
+    }
+
+    onComplete {
+        enabled = true    // Send notification when workflow completes
+    }
+
+    onError {
+        enabled = true    // Send notification when workflow fails
+    }
+}
+```
+
+### Message Customization
+
+You can customize notification messages in two ways: **simple text** or **advanced map format**.
+
+#### Simple Text Messages
+
+Use strings for quick customization (supports Slack markdown):
+
+```groovy
+slack {
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
+
     onStart {
         message = '🎬 *My analysis pipeline is starting!*'
     }
@@ -138,9 +138,14 @@ slack {
 }
 ```
 
-#### Advanced Message Customization
+**Default messages** (if not customized):
+- **Start**: `🚀 *Pipeline started*`
+- **Complete**: `✅ *Pipeline completed successfully*`
+- **Error**: `❌ *Pipeline failed*`
 
-For full control over message design, colors, and fields, use map-based configuration:
+#### Advanced Map Format
+
+For full control over colors, fields, and layout:
 
 ```groovy
 slack {
@@ -148,12 +153,11 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    // Customize start message with specific fields
     onStart {
         message = [
             text: '🚀 *Production Pipeline Starting*',
             color: '#3AA3E3',  // Custom blue color
-            includeFields: ['runName', 'status', 'commandLine'],  // Choose which default fields to include
+            includeFields: ['runName', 'status', 'commandLine'],
             customFields: [
                 [title: 'Environment', value: 'Production', short: true],
                 [title: 'Priority', value: 'High', short: true]
@@ -161,7 +165,6 @@ slack {
         ]
     }
 
-    // Customize completion message
     onComplete {
         message = [
             text: '✅ *Analysis Complete*',
@@ -173,7 +176,6 @@ slack {
         ]
     }
 
-    // Customize error message
     onError {
         message = [
             text: '❌ *Pipeline Failed*',
@@ -187,25 +189,55 @@ slack {
 }
 ```
 
+**Available color codes:**
+- **Success**: `#2EB887` (green)
+- **Error**: `#A30301` (red)
+- **Info**: `#3AA3E3` (blue)
+
 **Available includeFields options:**
 - `runName` - The Nextflow run name
 - `status` - Workflow status with emoji
-- `duration` - How long the workflow ran (not available for start messages)
+- `duration` - How long the workflow ran *(not available for start messages)*
 - `commandLine` - The command used to launch the workflow
-- `workDir` - The work directory (only for start messages)
-- `errorMessage` - Error details (only for error messages)
-- `failedProcess` - Which process failed (only for error messages)
-- `tasks` - Task statistics (only for completion messages)
+- `workDir` - The work directory *(only for start messages)*
+- `errorMessage` - Error details *(only for error messages)*
+- `failedProcess` - Which process failed *(only for error messages)*
+- `tasks` - Task statistics *(only for completion messages)*
 
-**Field structure for customFields:**
+**Custom field structure:**
 - `title` (required) - Field label
 - `value` (required) - Field content
 - `short` (optional) - If `true`, field appears in column layout (default: `false`)
 
-Default messages (if not customized):
-- **Start**: `🚀 *Pipeline started*`
-- **Complete**: `✅ *Pipeline completed successfully*`
-- **Error**: `❌ *Pipeline failed*`
+### Per-Notification Settings
+
+You can control what information is included in each notification type:
+
+```groovy
+slack {
+    webhook {
+        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    }
+
+    onStart {
+        enabled = true
+        includeCommandLine = true   // Include command line in start messages
+    }
+
+    onComplete {
+        enabled = true
+        includeCommandLine = true       // Include command line in completion messages
+        includeResourceUsage = true     // Include task statistics (onComplete only)
+    }
+
+    onError {
+        enabled = true
+        includeCommandLine = true   // Include command line in error messages
+    }
+}
+```
+
+> **Note**: `includeResourceUsage` is only available for `onComplete` notifications.
 
 ### Disabling the Plugin
 
@@ -219,7 +251,7 @@ Or simply don't configure a webhook - the plugin will disable itself if no webho
 
 ## Custom Messages from Workflows
 
-You can send custom messages from within your workflow scripts:
+You can send custom messages from within your workflow scripts. The plugin must be enabled and configured for custom messages to work.
 
 ### Simple Text Messages
 
@@ -255,13 +287,7 @@ workflow {
 }
 ```
 
-### Color Codes
-
-- **Success**: `#2EB887` (green)
-- **Error**: `#A30301` (red)
-- **Info**: `#3AA3E3` (blue)
-
-### Message Fields
+### Message Field Structure
 
 Each field in the `fields` array can have:
 - `title` (required): Field label
@@ -270,30 +296,11 @@ Each field in the `fields` array can have:
 
 ## Example Use Cases
 
-### Notify on Long-Running Process
-
-```groovy
-process LONG_ANALYSIS {
-    input:
-    path input_file
-
-    script:
-    """
-    # Start notification
-    slackMessage("⏱️ Starting long analysis on ${input_file}")
-
-    # Run your analysis
-    run_analysis.py ${input_file}
-
-    # Completion notification
-    slackMessage("✅ Analysis complete for ${input_file}")
-    """
-}
-```
-
 ### Send Results Summary
 
 ```groovy
+include { slackMessage } from 'plugin/nf-slack'
+
 workflow {
     ANALYZE_DATA(input_ch)
 
@@ -315,6 +322,8 @@ workflow {
 ### Error Notifications with Context
 
 ```groovy
+include { slackMessage } from 'plugin/nf-slack'
+
 process CRITICAL_STEP {
     errorStrategy 'ignore'
 
@@ -352,32 +361,6 @@ All messages include:
 - Timestamp footer
 - Configurable bot username and icon
 
-## Building & Development
-
-### Build the Plugin
-
-```bash
-make assemble
-```
-
-### Run Tests
-
-```bash
-make test
-```
-
-### Install Locally
-
-```bash
-make install
-```
-
-### Test with Nextflow
-
-```bash
-nextflow run hello -plugins nf-slack@0.1.0
-```
-
 ## Troubleshooting
 
 ### No Messages Received
@@ -410,24 +393,33 @@ The plugin includes built-in rate limiting (max 1 message per second) and retry 
 - Consider batching notifications
 - Check Slack workspace limits
 
-## Publishing
+## Development
 
-Plugins can be published to the Nextflow Plugin Registry to make them accessible to the community.
+### Build the Plugin
 
-### Prerequisites
+```bash
+make assemble
+```
 
-1. Create `$HOME/.gradle/gradle.properties` with:
-   ```properties
-   npr.apiKey=YOUR_NEXTFLOW_PLUGIN_REGISTRY_TOKEN
-   ```
+### Run Tests
 
-2. Create a release:
-   ```bash
-   make release
-   ```
+```bash
+make test
+```
 
-> [!NOTE]
-> The Nextflow Plugin Registry is currently available as preview technology. Contact info@nextflow.io to learn how to get access.
+### Install Locally
+
+```bash
+make install
+```
+
+### Test with Nextflow
+
+```bash
+nextflow run hello -plugins nf-slack@0.1.0
+```
+
+For information on publishing the plugin and contributing, see [CONTRIBUTING.md](docs/CONTRIBUTING.md).
 
 ## Contributing
 
@@ -448,6 +440,7 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for detai
 ## Support
 
 For issues, questions, or contributions:
-- 🐛 [Report bugs](https://github.com/yourusername/nf-slack/issues)
-- 💡 [Request features](https://github.com/yourusername/nf-slack/issues)
-- 📖 [View documentation](https://github.com/yourusername/nf-slack/wiki)
+- 📖 [Configuration Reference](docs/CONFIG.md)
+- 📚 [Example Configurations](example/configs/README.md)
+- 🐛 [Report bugs](https://github.com/adamrtalbot/nf-slack/issues)
+- 💡 [Request features](https://github.com/adamrtalbot/nf-slack/issues)
