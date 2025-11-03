@@ -35,6 +35,10 @@ slack {
 }
 ```
 
+Will post these messages to Slack:
+
+![default Slack message](./docs/imgs/nf-slack-00.png)
+
 ### 3. Run Your Pipeline
 
 That's it! You'll automatically receive notifications when your pipeline starts, completes, or fails.
@@ -62,11 +66,15 @@ slack {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 
-    onStart.enabled = true      // Notify when pipeline starts
+    onStart.enabled = false     // Do not notify when pipeline starts
     onComplete.enabled = true   // Notify on successful completion
     onError.enabled = true      // Notify on failures
 }
 ```
+
+Will post this message to Slack:
+
+![Slack message on completion or error](./docs/imgs/nf-slack-01.png)
 
 ### Customize Message Text
 
@@ -92,6 +100,10 @@ slack {
 }
 ```
 
+Will post these messages to Slack, note the text has changed:
+
+![Custom Slack messages](./docs/imgs/nf-slack-02.png)
+
 ### Add Colors and Custom Fields
 
 For richer messages with colors and additional information:
@@ -115,12 +127,18 @@ slack {
 }
 ```
 
+Will post these formatted messages to Slack:
+
+![Custom Slack blocks](./docs/imgs/nf-slack-03.png)
+
 ### Send Custom Messages from Your Workflow
 
 Send notifications from within your pipeline code:
 
 ```groovy
 include { slackMessage } from 'plugin/nf-slack'
+
+params.sample_id = "SAMPLE_001"
 
 workflow {
     slackMessage("🔬 Starting analysis for sample ${params.sample_id}")
@@ -131,7 +149,11 @@ workflow {
 }
 ```
 
-**Want more control?** See the full [Configuration Reference](docs/CONFIG.md) for all available options.
+Will post these short messages to Slack within the workflow:
+
+![Workflow Slack message](./docs/imgs/nf-slack-04.png)
+
+**Want more control?** See the [API Reference](docs/REFERENCE.md) and [detailed examples](docs/EXAMPLES.md) for all available options.
 
 ## Examples
 
@@ -150,7 +172,7 @@ We provide 6 progressive configuration examples from basic to advanced:
 
 ## Documentation
 
-- **[Configuration Reference](docs/CONFIG.md)** - Complete configuration options and API reference
+- **[API Reference](docs/REFERENCE.md)** - Complete configuration options and API reference
 - **[Usage Guide](docs/USAGE.md)** - How to use the plugin and send custom messages
 - **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
 - **[Examples](docs/EXAMPLES.md)** - Progressive configuration examples
