@@ -8,6 +8,7 @@ nextflowPlugin {
     nextflowVersion = '24.10.0'
 
     provider = 'Seqera'
+    description = 'Get Slack notifications from your Nextflow workflows'
     className = 'nextflow.slack.SlackPlugin'
     extensionPoints = [
         'nextflow.slack.SlackExtension',
