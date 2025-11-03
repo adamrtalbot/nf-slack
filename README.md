@@ -35,6 +35,8 @@ slack {
 }
 ```
 
+Will post these messages to Slack:
+
 ![default Slack message](./docs/imgs/nf-slack-00.png)
 
 ### 3. Run Your Pipeline
@@ -70,6 +72,8 @@ slack {
 }
 ```
 
+Will post this message to Slack:
+
 ![Slack message on completion or error](./docs/imgs/nf-slack-01.png)
 
 ### Customize Message Text
@@ -96,6 +100,8 @@ slack {
 }
 ```
 
+Will post these messages to Slack, note the text has changed:
+
 ![Custom Slack messages](./docs/imgs/nf-slack-02.png)
 
 ### Add Colors and Custom Fields
@@ -121,6 +127,8 @@ slack {
 }
 ```
 
+Will post these formatted messages to Slack:
+
 ![Custom Slack blocks](./docs/imgs/nf-slack-03.png)
 
 ### Send Custom Messages from Your Workflow
@@ -140,6 +148,8 @@ workflow {
     slackMessage("✅ Analysis complete!")
 }
 ```
+
+Will post these short messages to Slack within the workflow:
 
 ![Workflow Slack message](./docs/imgs/nf-slack-04.png)
 
