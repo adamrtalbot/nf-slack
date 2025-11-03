@@ -60,16 +60,6 @@ class SlackConfig {
     final boolean notifyOnError
 
     /**
-     * Custom username for bot messages
-     */
-    final String username
-
-    /**
-     * Custom emoji icon for bot messages
-     */
-    final String iconEmoji
-
-    /**
      * Include command line in messages
      */
     final boolean includeCommandLine
@@ -103,8 +93,6 @@ class SlackConfig {
         this.notifyOnStart = config.notifyOnStart != null ? config.notifyOnStart as boolean : true
         this.notifyOnComplete = config.notifyOnComplete != null ? config.notifyOnComplete as boolean : true
         this.notifyOnError = config.notifyOnError != null ? config.notifyOnError as boolean : true
-        this.username = config.username ?: 'Nextflow Bot'
-        this.iconEmoji = config.iconEmoji ?: ':rocket:'
         this.includeCommandLine = config.includeCommandLine != null ? config.includeCommandLine as boolean : true
         this.includeResourceUsage = config.includeResourceUsage != null ? config.includeResourceUsage as boolean : true
         this.startMessage = config.startMessage ?: '🚀 *Pipeline started*'

@@ -31,7 +31,6 @@ plugins {
 slack {
     enabled = true
     webhook = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-    channel = '#my-pipeline-alerts'   // optional
 
     // Notification settings
     notifyOnStart = true
@@ -74,10 +73,6 @@ slack {
     notifyOnStart = true
     notifyOnComplete = true
     notifyOnError = true
-
-    // Customize bot appearance
-    username = 'Nextflow Bot'
-    iconEmoji = ':rocket:'
 
     // Control message content
     includeCommandLine = true

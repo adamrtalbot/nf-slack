@@ -35,8 +35,6 @@ class SlackMessageBuilderTest extends Specification {
         config = new SlackConfig([
             enabled: true,
             webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
-            username: 'Test Bot',
-            iconEmoji: ':test:',
             includeCommandLine: true,
             includeResourceUsage: true
         ])
@@ -59,8 +57,6 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.username == 'Test Bot'
-        json.icon_emoji == ':test:'
         json.attachments.size() == 1
         json.attachments[0].author_name == 'test-workflow.nf'
         json.attachments[0].text.contains('Pipeline started')
@@ -87,7 +83,6 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.username == 'Test Bot'
         json.attachments.size() == 1
         json.attachments[0].text.contains('Pipeline completed successfully')
         json.attachments[0].color == '#2EB887' // success color
@@ -121,7 +116,6 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.username == 'Test Bot'
         json.attachments.size() == 1
         json.attachments[0].text.contains('Pipeline failed')
         json.attachments[0].color == '#A30301' // error color
@@ -139,8 +133,6 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.username == 'Test Bot'
-        json.icon_emoji == ':test:'
         json.text == 'Hello from workflow!'
     }
 
@@ -160,7 +152,6 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.username == 'Test Bot'
         json.attachments.size() == 1
         json.attachments[0].text == 'Analysis complete'
         json.attachments[0].color == '#2EB887'

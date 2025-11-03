@@ -100,8 +100,6 @@ class SlackMessageBuilder {
         def messageText = config.startMessage instanceof String ? config.startMessage : '🚀 *Pipeline started*'
 
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             attachments: [
                 [
                     fallback: "Pipeline ${workflowName} started",
@@ -178,8 +176,6 @@ class SlackMessageBuilder {
         def messageText = config.completeMessage instanceof String ? config.completeMessage : '✅ *Pipeline completed successfully*'
 
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             attachments: [
                 [
                     fallback: "Pipeline ${workflowName} completed successfully",
@@ -266,8 +262,6 @@ class SlackMessageBuilder {
         def messageText = config.errorMessage instanceof String ? config.errorMessage : '❌ *Pipeline failed*'
 
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             attachments: [
                 [
                     fallback: "Pipeline ${workflowName} failed",
@@ -290,8 +284,6 @@ class SlackMessageBuilder {
      */
     String buildSimpleMessage(String text) {
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             text: text
         ]
 
@@ -312,8 +304,6 @@ class SlackMessageBuilder {
         def color = options.color as String ?: COLOR_INFO
 
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             attachments: [
                 [
                     fallback: options.message as String,
@@ -400,8 +390,6 @@ class SlackMessageBuilder {
         def footerText = "Workflow ${status} at ${formatTimestamp(timestamp)}"
 
         def message = [
-            username: config.username,
-            icon_emoji: config.iconEmoji,
             attachments: [
                 [
                     fallback: "Pipeline ${workflowName} ${status}",

@@ -279,8 +279,6 @@ slack {
 | `notifyOnStart` | Boolean | `true` | Send start notifications |
 | `notifyOnComplete` | Boolean | `true` | Send completion notifications |
 | `notifyOnError` | Boolean | `true` | Send error notifications |
-| `username` | String | `'Nextflow Bot'` | Bot display name |
-| `iconEmoji` | String | `':rocket:'` | Bot icon emoji |
 | `includeCommandLine` | Boolean | `true` | Include command in messages |
 | `includeResourceUsage` | Boolean | `true` | Include resource stats |
 

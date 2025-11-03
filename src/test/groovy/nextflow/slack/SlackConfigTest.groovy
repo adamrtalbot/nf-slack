@@ -32,9 +32,7 @@ class SlackConfigTest extends Specification {
                 webhook: 'https://hooks.slack.com/services/TEST/TEST/TEST',
                 notifyOnStart: false,
                 notifyOnComplete: true,
-                notifyOnError: true,
-                username: 'Custom Bot',
-                iconEmoji: ':robot_face:'
+                notifyOnError: true
             ]
         ]
 
@@ -48,8 +46,6 @@ class SlackConfigTest extends Specification {
         config.notifyOnStart == false
         config.notifyOnComplete == true
         config.notifyOnError == true
-        config.username == 'Custom Bot'
-        config.iconEmoji == ':robot_face:'
     }
 
     def 'should use default values when not specified'() {
@@ -70,8 +66,6 @@ class SlackConfigTest extends Specification {
         config.notifyOnStart == true
         config.notifyOnComplete == true
         config.notifyOnError == true
-        config.username == 'Nextflow Bot'
-        config.iconEmoji == ':rocket:'
         config.includeCommandLine == true
         config.includeResourceUsage == true
     }
