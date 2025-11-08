@@ -307,7 +307,7 @@ For feature requests, please describe:
 
 If you need help:
 
-- 📖 Check the [README](README.md) and [examples](example/configs/)
+- 📖 Check the [documentation](index.md) and [examples](examples/gallery.md)
 - 🐛 [Search existing issues](https://github.com/yourusername/nf-slack/issues)
 - 💬 Open a new issue with the `question` label
 - 📧 Contact the maintainers
