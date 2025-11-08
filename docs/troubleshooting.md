@@ -270,6 +270,6 @@ If you're still having issues:
 
 ## Related Documentation
 
-- [API Reference](REFERENCE.md) - Full configuration options
-- [Usage Guide](USAGE.md) - How to use the plugin
-- [Examples](EXAMPLES.md) - Working examples
+- [API Reference](reference/api.md) - Full configuration options
+- [Usage Guide](usage/custom-messages.md) - How to use the plugin
+- [Examples](examples/gallery.md) - Working examples
