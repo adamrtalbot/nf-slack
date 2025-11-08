@@ -37,3 +37,7 @@ Thumbs.db
 # Test reports
 test-results/
 test-output/
+
+# MkDocs build artifacts
+site/
+.cache/
