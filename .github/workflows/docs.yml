@@ -48,7 +48,7 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
       - name: Install dependencies
-        run: pip install mkdocs-material pymdown-extensions pillow cairosvg mike
+        run: pip install mkdocs-material pymdown-extensions mike
 
       - name: Build and deploy docs with version
         if: github.event_name == 'release'
