@@ -12,7 +12,7 @@ The nf-slack plugin is configured through the `slack` block in your `nextflow.co
 slack {
     enabled = true
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
     onStart { /* ... */ }
     onComplete { /* ... */ }
@@ -53,7 +53,7 @@ slack {
 ```groovy
 slack {
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 }
 ```
@@ -69,7 +69,8 @@ slack {
 ```
 
 !!! tip "Security Best Practice"
-Never hardcode webhook URLs in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
+
+    Never hardcode webhook URLs in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
 
 ## Event Notification Control
 
@@ -90,27 +91,6 @@ slack {
     onError {
         enabled = true  // Notify when workflow fails
     }
-}
-```
-
-### Common Patterns
-
-#### Errors Only
-
-```groovy
-slack {
-    onStart.enabled = false
-    onComplete.enabled = false
-    onError.enabled = true
-}
-```
-
-#### No Start Notifications
-
-```groovy
-slack {
-    onStart.enabled = false
-    // onComplete and onError remain enabled (default)
 }
 ```
 
@@ -167,8 +147,7 @@ slack {
             color: '#2EB887',
             customFields: [
                 [title: 'Environment', value: 'Production', short: true],
-                [title: 'Cost', value: '$12.50', short: true],
-                [title: 'Results', value: 's3://bucket/results/', short: false]
+                [title: 'Cost', value: '$12.50', short: true]
             ]
         ]
     }
@@ -281,7 +260,7 @@ slack {
     enabled = true
 
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 
     onStart {
@@ -304,7 +283,6 @@ slack {
             color: '#2EB887',
             includeFields: ['runName', 'duration', 'tasks'],
             customFields: [
-                [title: 'Results', value: 's3://bucket/results/', short: false],
                 [title: 'Cost', value: '$12.50', short: true]
             ]
         ]

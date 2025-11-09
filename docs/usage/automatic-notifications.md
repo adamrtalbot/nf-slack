@@ -55,7 +55,7 @@ When a workflow fails, the notification includes:
 slack {
     enabled = true  // Set to false to disable all notifications
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 }
 ```
@@ -67,7 +67,7 @@ Control which events trigger notifications:
 ```groovy
 slack {
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 
     onStart.enabled = false     // Don't notify on start
@@ -87,7 +87,7 @@ Only get notified when something goes wrong:
 ```groovy
 slack {
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 
     onStart.enabled = false
@@ -103,7 +103,7 @@ Get notified when pipelines start and if they fail:
 ```groovy
 slack {
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 
     onStart.enabled = true
@@ -119,7 +119,7 @@ Disable all automatic notifications during development:
 ```groovy
 slack {
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 
     onStart.enabled = false
@@ -129,7 +129,8 @@ slack {
 ```
 
 !!! note
-Even with automatic notifications disabled, you can still send [custom messages](custom-messages.md) from your workflow.
+
+    Even with automatic notifications disabled, you can still send [custom messages](custom-messages.md) from your workflow.
 
 ## Notification Format
 

@@ -8,7 +8,7 @@ Thank you for your interest in contributing to nf-slack! This document provides 
 
 - Java 11 or higher
 - Gradle (wrapper included)
-- Nextflow 21.04.0 or higher
+- Nextflow 25.04.0 or higher
 - A Slack workspace with admin access for testing
 
 ### Development Setup
@@ -39,6 +39,7 @@ Thank you for your interest in contributing to nf-slack! This document provides 
    ```
 
 5. **Test with Nextflow**
+
    ```bash
    nextflow run hello -plugins nf-slack@0.1.0
    ```
@@ -82,6 +83,7 @@ Thank you for your interest in contributing to nf-slack! This document provides 
    - `chore:` - Maintenance tasks
 
 5. **Push and create a pull request**
+
    ```bash
    git push origin feature/your-feature-name
    ```

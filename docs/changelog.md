@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation Reorganization**: Simplified README from 455 to ~165 lines for better onboarding
   - Moved detailed content to dedicated documentation pages
   - Created `docs/USAGE.md` with comprehensive usage patterns and examples
-  - Created `docs/TROUBLESHOOTING.md` with common issues and solutions
   - Moved `example/configs/README.md` to `docs/EXAMPLES.md` for centralized documentation
   - Enhanced `docs/CONFIG.md` with cross-references to other documentation
   - README now focuses on quick start with clear paths to detailed documentation
@@ -126,14 +125,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Immutable configuration objects after initialization
 
 ## [Unreleased]
-
-### Planned
-
-- Asynchronous message sending with ExecutorService
-- Retry logic with exponential backoff (429, 5xx errors)
-- Rate limiting (1 message/second with burst capacity)
-- Channel override support per message
-- Webhook URL validation (HTTPS enforcement, format checking)
 
 ---
 

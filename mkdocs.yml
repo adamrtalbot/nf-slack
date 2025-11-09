@@ -9,6 +9,7 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quick-start.md
+      - Webhook Setup: getting-started/webhook-setup.md
   - Usage:
       - Automatic Notifications: usage/automatic-notifications.md
       - Custom Messages: usage/custom-messages.md
@@ -17,7 +18,6 @@ nav:
       - Gallery: examples/gallery.md
   - Reference:
       - API Reference: reference/api.md
-  - Troubleshooting: troubleshooting.md
   - Contributing: contributing.md
   - Changelog: changelog.md
 

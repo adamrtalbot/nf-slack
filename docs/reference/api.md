@@ -6,43 +6,6 @@ Complete API reference for nf-slack plugin configuration options and functions.
 >
 > - [Usage Guide](../usage/custom-messages.md) - Learn how to send custom messages
 > - [Examples](../examples/gallery.md) - See practical examples
-> - [Troubleshooting](../troubleshooting.md) - Common issues and solutions
-
-## Table of Contents
-
-- [API Reference](#api-reference)
-  - [Table of Contents](#table-of-contents)
-- [Configuration](#configuration)
-  - [`slack`](#slack)
-    - [Example](#example)
-  - [`slack.webhook`](#slackwebhook)
-    - [Example](#example-1)
-  - [`slack.onStart`](#slackonstart)
-    - [Properties](#properties)
-    - [Message Available Fields](#message-available-fields)
-    - [Example](#example-2)
-  - [`slack.onComplete`](#slackoncomplete)
-    - [Properties](#properties-1)
-    - [Message Available Fields](#message-available-fields-1)
-    - [Example](#example-3)
-  - [`slack.onError`](#slackonerror)
-    - [Properties](#properties-2)
-    - [Message Available Fields](#message-available-fields-2)
-    - [Example](#example-4)
-  - [`slack.<scope>.message`](#slackscopemessage)
-    - [`slack.<scope>.message (String)`](#slackscopemessage-string)
-    - [`slack.<scope>.message (Map)`](#slackscopemessage-map)
-      - [Example](#example-5)
-  - [`slack.<scope>.message.includeFields`](#slackscopemessageincludefields)
-  - [Color Reference](#color-reference)
-- [Functions](#functions)
-  - [`slackMessage()`](#slackmessage)
-    - [`slackMessage(String message)`](#slackmessagestring-message)
-      - [Example](#example-6)
-    - [`slackMessage(Map options)`](#slackmessagemap-options)
-      - [Example](#example-7)
-      - [Fields](#fields)
-    - [Return Value](#return-value)
 
 ---
 

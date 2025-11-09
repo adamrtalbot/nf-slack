@@ -16,11 +16,11 @@ Get Slack notifications for your Nextflow workflows - automatically notified whe
 
 Get started in just 3 simple steps:
 
-1. **[Set up a Slack webhook](getting-started/installation.md)** - Create an incoming webhook in your Slack workspace
+1. **[Set up a Slack webhook](getting-started/webhook-setup.md)** - Create an incoming webhook in your Slack workspace
 2. **[Configure your pipeline](getting-started/quick-start.md)** - Add the plugin to your `nextflow.config`
 3. **Run your workflow** - That's it! Notifications will be sent automatically
 
-[Get Started →](getting-started/installation.md){ .md-button .md-button--primary }
+[Get Started →](getting-started/quick-start.md){ .md-button .md-button--primary }
 
 ## What You Get
 

@@ -345,7 +345,8 @@ slack {
 - `failedProcess` - Which process failed
 
 !!! warning "Important"
-If you use map-based config without `includeFields`, NO default fields are included (only your `customFields` if specified).
+
+    If you use map-based config without `includeFields`, NO default fields are included (only your `customFields` if specified).
 
 **Use when**: You want fine-grained control over what information appears
 
@@ -360,12 +361,13 @@ If you use map-based config without `includeFields`, NO default fields are inclu
 Script examples demonstrate how to use the `slackMessage()` function programmatically within your Nextflow workflows.
 
 !!! note "Disable Automatic Notifications"
-These examples disable automatic notifications to avoid duplicate messages. Adjust your configuration:
+
+    These examples disable automatic notifications to avoid duplicate messages. Adjust your configuration:
 
     ```groovy
     slack {
         webhook {
-            url = env.SLACK_WEBHOOK_URL
+            url = "$SLACK_WEBHOOK_URL"
         }
 
         onStart.enabled = false
@@ -531,8 +533,9 @@ workflow {
 - Sends individual messages for each channel item
 - Simple string format for quick notifications
 
-!!! warning "Rate Limiting"
-Be cautious when sending messages in channel operators with many items. The plugin includes rate limiting (1 message per second).
+!!! warning "High Volume Usage"
+
+    Be cautious when sending messages in channel operators with many items. Slack has rate limits on incoming webhooks, and sending too many messages rapidly may result in throttling.
 
 **Use when**: You want to send notifications during data processing, tracking progress through a channel
 
@@ -547,7 +550,6 @@ Be cautious when sending messages in channel operators with many items. The plug
 - Explore the [API Reference](../reference/api.md) for complete configuration options
 - Learn about [automatic notifications](../usage/automatic-notifications.md)
 - Discover [custom messages](../usage/custom-messages.md)
-- Check [troubleshooting](../troubleshooting.md) for common issues
 
 ## All Example Files
 

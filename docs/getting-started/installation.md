@@ -1,123 +1,82 @@
 # Installation
 
-This guide will walk you through setting up a Slack webhook for your workspace.
+This guide covers installing the nf-slack plugin in your Nextflow pipeline.
 
 ## Prerequisites
 
-- A Slack workspace where you have permission to add apps
-- Access to your Nextflow pipeline configuration
+- Nextflow v25.04.0 or later
+- A Slack webhook URL (see [Webhook Setup guide](webhook-setup.md))
 
-## Step 1: Create a Slack App
+## Adding the Plugin
 
-1. Go to [Slack API Apps](https://api.slack.com/apps)
-2. Click **"Create New App"**
-3. Choose **"From scratch"**
-4. Give your app a name (e.g., "Nextflow Notifications")
-5. Select your workspace
-6. Click **"Create App"**
+Add the nf-slack plugin to your `nextflow.config`:
 
-## Step 2: Enable Incoming Webhooks
-
-1. In your app's settings, navigate to **"Incoming Webhooks"** in the sidebar
-2. Toggle the switch to **"On"**
-3. Click **"Add New Webhook to Workspace"**
-4. Select the channel where you want notifications to appear
-5. Click **"Allow"**
-
-## Step 3: Copy Your Webhook URL
-
-After authorization, you'll see your webhook URL. It will look like:
-
-```
-https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
+```groovy
+plugins {
+    id 'nf-slack@0.1.0'
+}
 ```
 
-!!! warning "Keep Your Webhook URL Secret"
-This URL allows anyone to post messages to your Slack channel. Never commit it to version control or share it publicly.
+!!! tip "Using Multiple Plugins?"
 
-## Step 4: Store Your Webhook URL Securely
+    If you already have a `plugins` block, just add the nf-slack entry:
 
-You have several options for managing the webhook URL securely:
+    ```groovy
+    plugins {
+        id 'nf-validation'
+        id 'nf-slack@0.1.0'  // Add this line
+    }
+    ```
 
-### Option 1: Environment Variable (Recommended)
+## Specifying a Version
 
-Set an environment variable:
+You can specify a particular version of the plugin:
+
+```groovy
+plugins {
+    id 'nf-slack@0.1.0'  // Use a specific version
+}
+```
+
+To use the latest version, omit the version number:
+
+```groovy
+plugins {
+    id 'nf-slack'  // Uses the latest version
+}
+```
+
+## Verification
+
+To verify the plugin is installed correctly, run:
 
 ```bash
-export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+nextflow plugin list
 ```
 
-Then reference it in your `nextflow.config`:
+You should see `nf-slack` in the list of installed plugins.
 
-```groovy
-slack {
-    webhook {
-        url = env.SLACK_WEBHOOK_URL
-    }
-}
-```
+## Local Installation (Development)
 
-### Option 2: Nextflow Secrets
+If you want to install a local development version of the plugin:
 
-Use [Nextflow secrets](https://www.nextflow.io/docs/latest/secrets.html):
+1. **Clone the repository**
 
-```bash
-nextflow secrets set SLACK_WEBHOOK_URL 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-```
+   ```bash
+   git clone https://github.com/adamrtalbot/nf-slack.git
+   cd nf-slack
+   ```
 
-Then reference it in your config:
+2. **Install locally**
 
-```groovy
-slack {
-    webhook {
-        url = secrets.SLACK_WEBHOOK_URL
-    }
-}
-```
+   ```bash
+   make install
+   ```
 
-### Option 3: Configuration File (Not Recommended for Production)
-
-For testing only, you can put it directly in `nextflow.config`:
-
-```groovy
-slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-    }
-}
-```
-
-!!! danger "Don't Commit Webhook URLs"
-If you use this option, add your config file to `.gitignore` to prevent accidentally committing your webhook URL.
+This will build and install the plugin to your local Nextflow plugins directory. For more details on development setup, see the [Contributing guide](../contributing.md).
 
 ## Next Steps
 
-Now that you have your webhook URL, proceed to the [Quick Start guide](quick-start.md) to configure the plugin.
-
-## Troubleshooting
-
-### I Don't See "Incoming Webhooks" in My App Settings
-
-Make sure you're creating a new app, not using an existing one. Older Slack apps may have different configuration options.
-
-### My Webhook URL Doesn't Work
-
-- Verify the URL is complete and hasn't been truncated
-- Test it using curl:
-
-```bash
-curl -X POST -H 'Content-type: application/json' \
-  --data '{"text":"Test message from nf-slack"}' \
-  YOUR_WEBHOOK_URL
-```
-
-If this works, the issue is with your Nextflow configuration.
-
-### I Need to Change the Channel
-
-You can create a new webhook for a different channel, or edit the existing webhook in your Slack app settings.
-
-## Learn More
-
-- [Slack Incoming Webhooks Documentation](https://api.slack.com/messaging/webhooks)
-- [Nextflow Secrets Documentation](https://www.nextflow.io/docs/latest/secrets.html)
+- [Set up your Slack webhook](webhook-setup.md)
+- [Get started with basic notifications](quick-start.md)
+- [Configure the plugin](../usage/configuration.md)

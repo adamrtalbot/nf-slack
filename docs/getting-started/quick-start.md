@@ -7,7 +7,7 @@ Get your first Slack notification working in minutes!
 Before you begin, make sure you have:
 
 - [x] A Slack webhook URL ([Installation guide](installation.md))
-- [x] A Nextflow pipeline (v21.04.0 or later)
+- [x] A Nextflow pipeline (v25.04.0 or later)
 - [x] Basic familiarity with Nextflow configuration
 
 ## Step 1: Add the Plugin
@@ -21,7 +21,8 @@ plugins {
 ```
 
 !!! tip "Using Multiple Plugins?"
-If you already have a `plugins` block, just add the nf-slack entry:
+
+    If you already have a `plugins` block, just add the nf-slack entry:
 
     ```groovy
     plugins {
@@ -44,13 +45,14 @@ slack {
 ```
 
 !!! warning "Security Best Practice"
-Don't hardcode your webhook URL! Use environment variables or Nextflow secrets instead:
+
+    Don't hardcode your webhook URL! Use environment variables or Nextflow secrets instead:
 
     ```groovy
     slack {
         enabled = true
         webhook {
-            url = env.SLACK_WEBHOOK_URL  // or secrets.SLACK_WEBHOOK_URL
+            url = "$SLACK_WEBHOOK_URL"  // or secrets.SLACK_WEBHOOK_URL
         }
     }
     ```
@@ -81,9 +83,8 @@ plugins {
 }
 
 slack {
-    enabled = true
     webhook {
-        url = env.SLACK_WEBHOOK_URL
+        url = "$SLACK_WEBHOOK_URL"
     }
 }
 ```
@@ -101,19 +102,19 @@ To test your configuration without running a full pipeline:
 
 1. Create a simple test workflow:
 
-```groovy title="test.nf"
-workflow {
-    println "Testing nf-slack notifications!"
-}
-```
+   ```groovy title="test.nf"
+   workflow {
+       println "Testing nf-slack notifications!"
+   }
+   ```
 
-2. Run it:
+1. Run it:
 
-```bash
-nextflow run test.nf
-```
+   ```bash
+   nextflow run test.nf
+   ```
 
-3. Check your Slack channel for the start and completion notifications.
+1. Check your Slack channel for the start and completion notifications.
 
 ## Common Issues
 
@@ -125,15 +126,18 @@ nextflow run test.nf
    echo $SLACK_WEBHOOK_URL
    ```
 
-2. **Check plugin version** - Make sure you're using a valid version:
+1. **Check Nextflow logs** - Look for any errors related to nf-slack, typically located in the `.nextflow.log` file.
+
+1. **Check plugin version** - Make sure you're using a valid version:
 
    ```groovy
    plugins {
-       id 'nf-slack@0.1.0'  // Use the latest version
+       id 'nf-slack@0.1.1'
    }
    ```
 
-3. **Check enabled flag** - Ensure Slack is enabled:
+1. **Check enabled flag** - Ensure Slack is enabled:
+
    ```groovy
    slack {
        enabled = true  // Must be true
@@ -159,6 +163,5 @@ Now that you have basic notifications working, learn how to:
 
 ## Need Help?
 
-- Check the [Troubleshooting guide](../troubleshooting.md)
 - Review the [API Reference](../reference/api.md)
 - [Open an issue](https://github.com/adamrtalbot/nf-slack/issues) on GitHub

@@ -3,7 +3,8 @@
 Send custom Slack messages from within your workflow scripts using the `slackMessage()` function.
 
 !!! tip "Prerequisites"
-The plugin must be enabled and configured for custom messages to work. See [Quick Start](../getting-started/quick-start.md) if you haven't set up the plugin yet.
+
+    The plugin must be enabled and configured for custom messages to work. See [Quick Start](../getting-started/quick-start.md) if you haven't set up the plugin yet.
 
 ## Basic Usage
 
@@ -212,70 +213,6 @@ workflow {
         }
 }
 ```
-
-## Best Practices
-
-### Rate Limiting
-
-The plugin includes built-in rate limiting (max 1 message per second) and retry logic. To avoid issues:
-
-- ✅ **Do**: Send messages at key milestones
-- ✅ **Do**: Use batch notifications for multiple items
-- ✅ **Do**: Use automatic notifications when possible
-- ❌ **Don't**: Send messages in tight loops
-- ❌ **Don't**: Send a message for every single sample in a large dataset
-
-### Message Design
-
-For better readability:
-
-- Use emojis to convey status at a glance (🚀 ✅ ❌ ⚠️)
-- Use the `short: true` flag for fields to display them in columns
-- Keep message text concise and informative
-- Use colors consistently (green for success, red for errors, etc.)
-
-### Performance
-
-- Slack notifications are sent asynchronously and won't block your workflow
-- Failed Slack messages are retried automatically
-- Slack failures never cause workflow failures (fail-safe design)
-
-## Troubleshooting
-
-### Messages Not Appearing
-
-1. **Verify plugin is enabled**:
-
-   ```groovy
-   slack {
-       enabled = true  // Must be true
-   }
-   ```
-
-2. **Check webhook configuration**:
-
-   ```groovy
-   slack {
-       webhook {
-           url = env.SLACK_WEBHOOK_URL  // Must be set
-       }
-   }
-   ```
-
-3. **Test the webhook** with curl:
-   ```bash
-   curl -X POST -H 'Content-type: application/json' \
-     --data '{"text":"Test message"}' \
-     $SLACK_WEBHOOK_URL
-   ```
-
-### Rate Limit Errors
-
-If you see rate limit errors in logs:
-
-- Reduce the frequency of messages
-- Batch notifications instead of sending individually
-- Use `.collect()` to aggregate results before notifying
 
 ## Next Steps
 
