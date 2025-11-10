@@ -23,7 +23,7 @@ Complete API reference for nf-slack plugin configuration options and functions.
 
 \*Required only if plugin is enabled. If no webhook is configured, the plugin will automatically disable itself.
 
-### Example
+#### Example
 
 ```groovy
 slack {
@@ -171,11 +171,11 @@ onError {
 
 ---
 
-### `slack.<scope>.message`
-
-#### `slack.<scope>.message (String)`
+### `slack.<scope>.message (String)`
 
 Use a string for quick, simple message customization. Supports Slack markdown (`*bold*`, `_italic_`, `` `code` ``), emojis, and newlines (`\n`).
+
+#### Example
 
 ```groovy
 onStart {
@@ -185,7 +185,7 @@ onStart {
 
 ---
 
-#### `slack.<scope>.message (Map)`
+### `slack.<scope>.message (Map)`
 
 Use a map for full control with colors, fields, and custom data.
 
@@ -196,7 +196,7 @@ Use a map for full control with colors, fields, and custom data.
 - `includeFields` - List of default fields (see [`slack.<scope>.message.includeFields`](#slackscopemessageincludefields))
 - `customFields` - List of custom fields with `title`, `value`, and optional `short` (boolean for 2-column layout)
 
-##### Example
+#### Example
 
 ```groovy
 onComplete {
@@ -231,7 +231,7 @@ The following fields can be included in the `includeFields` array when using map
 
 ---
 
-### Color Reference
+#### Color Reference
 
 Standard color codes for Slack message attachments:
 
@@ -247,9 +247,7 @@ Standard color codes for Slack message attachments:
 
 ## Functions
 
-### `slackMessage()`
-
-#### `slackMessage(String message)`
+### `slackMessage(String message)`
 
 | Parameter | Type   | Required | Description           |
 | --------- | ------ | -------- | --------------------- |
@@ -261,7 +259,7 @@ Standard color codes for Slack message attachments:
 slackMessage("Processing sample ${sample_id}")
 ```
 
-#### `slackMessage(Map options)`
+### `slackMessage(Map options)`
 
 | Property  | Type        | Required | Description                            |
 | --------- | ----------- | -------- | -------------------------------------- |
@@ -290,7 +288,7 @@ slackMessage([
 ])
 ```
 
-##### Fields
+#### Fields
 
 When using the map format with custom `fields`, each field object supports:
 

@@ -57,6 +57,7 @@ theme:
     - search.share
     - search.suggest
     - search.highlight
+    - toc.integrate
     - toc.follow
 
 extra_css:
@@ -65,7 +66,7 @@ extra_css:
 markdown_extensions:
   - toc:
       permalink: true
-      toc_depth: 4
+      toc_depth: 3
   - admonition
   - attr_list
   - def_list
