@@ -33,7 +33,8 @@ https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
 ```
 
 !!! warning "Keep Your Webhook URL Secret"
-This URL allows anyone to post messages to your Slack channel. Never commit it to version control or share it publicly.
+
+    This URL allows anyone to post messages to your Slack channel. Never commit it to version control or share it publicly.
 
 ## Step 4: Store Your Webhook URL Securely
 
@@ -57,7 +58,7 @@ slack {
 }
 ```
 
-### Option 2: Nextflow Secrets
+### Option 2: Nextflow Secrets (Better, but supported in fewer places)
 
 Use [Nextflow secrets](https://www.nextflow.io/docs/latest/secrets.html):
 
@@ -88,7 +89,8 @@ slack {
 ```
 
 !!! danger "Don't Commit Webhook URLs"
-If you use this option, add your config file to `.gitignore` to prevent accidentally committing your webhook URL.
+
+    If you use this option, add your config file to `.gitignore` to prevent accidentally committing your webhook URL.
 
 ## Testing Your Webhook
 

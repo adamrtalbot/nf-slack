@@ -116,42 +116,6 @@ To test your configuration without running a full pipeline:
 
 1. Check your Slack channel for the start and completion notifications.
 
-## Common Issues
-
-### No Notifications Received
-
-1. **Check the webhook URL** - Verify it's set correctly:
-
-   ```bash
-   echo $SLACK_WEBHOOK_URL
-   ```
-
-1. **Check Nextflow logs** - Look for any errors related to nf-slack, typically located in the `.nextflow.log` file.
-
-1. **Check plugin version** - Make sure you're using a valid version:
-
-   ```groovy
-   plugins {
-       id 'nf-slack@0.1.1'
-   }
-   ```
-
-1. **Check enabled flag** - Ensure Slack is enabled:
-
-   ```groovy
-   slack {
-       enabled = true  // Must be true
-   }
-   ```
-
-### Invalid Webhook URL
-
-If you see errors about invalid webhook URLs, verify:
-
-- The URL starts with `https://hooks.slack.com/`
-- The URL hasn't been truncated
-- The URL doesn't contain spaces or line breaks
-
 ## Next Steps
 
 Now that you have basic notifications working, learn how to:
