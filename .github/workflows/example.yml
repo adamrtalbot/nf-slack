@@ -73,62 +73,62 @@ jobs:
       - name: Run Configuration Example 1 - Minimal Setup
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/01-minimal.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/01-minimal.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Configuration Example 2 - Notification Control
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/02-notification-control.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/02-notification-control.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Configuration Example 3 - Message Text
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/03-message-text.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/03-message-text.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Configuration Example 4 - Message Colors
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/04-message-colors.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/04-message-colors.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Configuration Example 5 - Custom Fields
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/05-custom-fields.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/05-custom-fields.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Configuration Example 6 - Selective Fields
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run main.nf -plugins nf-slack@0.1.0 -c configs/06-selective-fields.config
+          nextflow run main.nf -plugins nf-slack@0.2.0 -c configs/06-selective-fields.config
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Script Example 1 - Message in Workflow
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run scripts/01-message-in-workflow.nf -plugins nf-slack@0.1.0
+          nextflow run scripts/01-message-in-workflow.nf -plugins nf-slack@0.2.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Script Example 2 - Message on Complete
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run scripts/02-message-on-complete.nf -plugins nf-slack@0.1.0
+          nextflow run scripts/02-message-on-complete.nf -plugins nf-slack@0.2.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Run Script Example 3 - Message within Channel
         run: |
           cd ${{ github.workspace }}/example
-          nextflow run scripts/03-message-within-channel.nf -plugins nf-slack@0.1.0
+          nextflow run scripts/03-message-within-channel.nf -plugins nf-slack@0.2.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
