@@ -18,7 +18,7 @@ nav:
       - Gallery: examples/gallery.md
   - Reference:
       - API Reference: reference/api.md
-  - Contributing: contributing.md
+  - Contributing: CONTRIBUTING.md
   - Changelog: changelog.md
 
 theme:
