@@ -127,6 +127,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Documentation Site**: GitHub Pages site with MkDocs Material theme
+  - Live documentation at https://adamrtalbot.github.io/nf-slack/
+  - Search, dark mode, mobile-responsive design
+  - Automated deployment from `gh-pages` branch
+  - Restructured docs with Getting Started, Usage, and API sections
+
 ### Planned
 
 - Asynchronous message sending with ExecutorService
