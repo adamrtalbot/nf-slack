@@ -48,7 +48,7 @@ slack {
 }
 ```
 
-### Using Environment Variables (Recommended)
+### Using Environment Variables
 
 ```groovy
 slack {

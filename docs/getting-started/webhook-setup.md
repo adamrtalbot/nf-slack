@@ -40,7 +40,9 @@ https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX
 
 You have several options for managing the webhook URL securely:
 
-### Option 1: Environment Variable (Recommended)
+### Option 1: Environment Variable
+
+_Recommended_
 
 Set an environment variable:
 
@@ -58,7 +60,9 @@ slack {
 }
 ```
 
-### Option 2: Nextflow Secrets (Better, but supported in fewer places)
+### Option 2: Nextflow Secret
+
+_Better, but supported in fewer places_
 
 Use [Nextflow secrets](https://www.nextflow.io/docs/latest/secrets.html):
 
@@ -76,7 +80,7 @@ slack {
 }
 ```
 
-### Option 3: Configuration File (Not Recommended for Production)
+### Option 3: Configuration File
 
 For testing only, you can put it directly in `nextflow.config`:
 
@@ -99,7 +103,7 @@ To verify your webhook is working, test it using curl:
 ```bash
 curl -X POST -H 'Content-type: application/json' \
   --data '{"text":"Test message from nf-slack"}' \
-  YOUR_WEBHOOK_URL
+  $SLACK_WEBHOOK_URL
 ```
 
 If this works, you should see a test message in your Slack channel.
