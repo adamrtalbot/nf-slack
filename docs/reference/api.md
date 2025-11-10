@@ -4,63 +4,26 @@ Complete API reference for nf-slack plugin configuration options and functions.
 
 > **Quick Links:**
 >
-> - [Usage Guide](USAGE.md) - Learn how to send custom messages
-> - [Examples](EXAMPLES.md) - See practical examples
-> - [Troubleshooting](TROUBLESHOOTING.md) - Common issues and solutions
-
-## Table of Contents
-
-- [API Reference](#api-reference)
-  - [Table of Contents](#table-of-contents)
-- [Configuration](#configuration)
-  - [`slack`](#slack)
-    - [Example](#example)
-  - [`slack.webhook`](#slackwebhook)
-    - [Example](#example-1)
-  - [`slack.onStart`](#slackonstart)
-    - [Properties](#properties)
-    - [Message Available Fields](#message-available-fields)
-    - [Example](#example-2)
-  - [`slack.onComplete`](#slackoncomplete)
-    - [Properties](#properties-1)
-    - [Message Available Fields](#message-available-fields-1)
-    - [Example](#example-3)
-  - [`slack.onError`](#slackonerror)
-    - [Properties](#properties-2)
-    - [Message Available Fields](#message-available-fields-2)
-    - [Example](#example-4)
-  - [`slack.<scope>.message`](#slackscopemessage)
-    - [`slack.<scope>.message (String)`](#slackscopemessage-string)
-    - [`slack.<scope>.message (Map)`](#slackscopemessage-map)
-      - [Example](#example-5)
-  - [`slack.<scope>.message.includeFields`](#slackscopemessageincludefields)
-  - [Color Reference](#color-reference)
-- [Functions](#functions)
-  - [`slackMessage()`](#slackmessage)
-    - [`slackMessage(String message)`](#slackmessagestring-message)
-      - [Example](#example-6)
-    - [`slackMessage(Map options)`](#slackmessagemap-options)
-      - [Example](#example-7)
-      - [Fields](#fields)
-    - [Return Value](#return-value)
+> - [Usage Guide](../usage/custom-messages.md) - Learn how to send custom messages
+> - [Examples](../examples/gallery.md) - See practical examples
 
 ---
 
-# Configuration
+## Configuration
 
-## `slack`
+### `slack`
 
-| Property     | Type    | Default                       | Required | Description                                                                       |
-| ------------ | ------- | ----------------------------- | -------- | --------------------------------------------------------------------------------- |
-| `enabled`    | Boolean | `true`                        | No       | Master switch to enable/disable the plugin                                        |
-| `webhook`    | Closure | -                             | Yes\*    | Webhook configuration block (see [Webhook Configuration](#webhook-configuration)) |
-| `onStart`    | Closure | See [onStart](#onstart)       | No       | Configuration for workflow start notifications                                    |
-| `onComplete` | Closure | See [onComplete](#oncomplete) | No       | Configuration for workflow completion notifications                               |
-| `onError`    | Closure | See [onError](#onerror)       | No       | Configuration for workflow error notifications                                    |
+| Property     | Type    | Default                                    | Required | Description                                                        |
+| ------------ | ------- | ------------------------------------------ | -------- | ------------------------------------------------------------------ |
+| `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                         |
+| `webhook`    | Closure | -                                          | Yes\*    | Webhook configuration block (see [`slack.webhook`](#slackwebhook)) |
+| `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                     |
+| `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                |
+| `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                     |
 
 \*Required only if plugin is enabled. If no webhook is configured, the plugin will automatically disable itself.
 
-### Example
+#### Example
 
 ```groovy
 slack {
@@ -74,13 +37,13 @@ slack {
 
 ---
 
-## `slack.webhook`
+### `slack.webhook`
 
 | Property | Type   | Default | Required | Description                                                             |
 | -------- | ------ | ------- | -------- | ----------------------------------------------------------------------- |
 | `url`    | String | -       | Yes      | Slack Incoming Webhook URL (must start with `https://hooks.slack.com/`) |
 
-### Example
+#### Example
 
 ```groovy
 webhook {
@@ -90,11 +53,11 @@ webhook {
 
 ---
 
-## `slack.onStart`
+### `slack.onStart`
 
 Configuration for workflow start notifications.
 
-### Properties
+#### Properties
 
 | Property             | Type          | Default                   | Description                            |
 | -------------------- | ------------- | ------------------------- | -------------------------------------- |
@@ -102,14 +65,14 @@ Configuration for workflow start notifications.
 | `message`            | String or Map | `'🚀 *Pipeline started*'` | Start notification message             |
 | `includeCommandLine` | Boolean       | `true`                    | Include command line in message        |
 
-### Message Available Fields
+#### Message Available Fields
 
 - `runName` - Workflow run name
 - `status` - Current status (always "Running" for start messages)
 - `commandLine` - Full Nextflow command
 - `workDir` - Working directory path
 
-### Example
+#### Example
 
 ```groovy
 onStart {
@@ -127,11 +90,11 @@ onStart {
 
 ---
 
-## `slack.onComplete`
+### `slack.onComplete`
 
 Configuration for workflow completion notifications.
 
-### Properties
+#### Properties
 
 | Property               | Type          | Default                                  | Description                                |
 | ---------------------- | ------------- | ---------------------------------------- | ------------------------------------------ |
@@ -142,7 +105,7 @@ Configuration for workflow completion notifications.
 
 > **Note**: `includeResourceUsage` is **only available** in the `onComplete` scope.
 
-### Message Available Fields
+#### Message Available Fields
 
 - `runName` - Workflow run name
 - `status` - Final status (e.g., "OK")
@@ -150,7 +113,7 @@ Configuration for workflow completion notifications.
 - `commandLine` - Full Nextflow command
 - `tasks` - Task execution statistics (count, succeeded, failed, cached)
 
-### Example
+#### Example
 
 ```groovy
 onComplete {
@@ -169,11 +132,11 @@ onComplete {
 
 ---
 
-## `slack.onError`
+### `slack.onError`
 
 Configuration for workflow error notifications.
 
-### Properties
+#### Properties
 
 | Property             | Type          | Default                  | Description                           |
 | -------------------- | ------------- | ------------------------ | ------------------------------------- |
@@ -181,7 +144,7 @@ Configuration for workflow error notifications.
 | `message`            | String or Map | `'❌ *Pipeline failed*'` | Error notification message            |
 | `includeCommandLine` | Boolean       | `true`                   | Include command line in message       |
 
-### Message Available Fields
+#### Message Available Fields
 
 - `runName` - Workflow run name
 - `status` - Error status
@@ -190,7 +153,7 @@ Configuration for workflow error notifications.
 - `errorMessage` - Error details
 - `failedProcess` - Name of the process that failed
 
-### Example
+#### Example
 
 ```groovy
 onError {
@@ -208,11 +171,11 @@ onError {
 
 ---
 
-## `slack.<scope>.message`
-
 ### `slack.<scope>.message (String)`
 
 Use a string for quick, simple message customization. Supports Slack markdown (`*bold*`, `_italic_`, `` `code` ``), emojis, and newlines (`\n`).
+
+#### Example
 
 ```groovy
 onStart {
@@ -230,7 +193,7 @@ Use a map for full control with colors, fields, and custom data.
 
 - `text` (required) - Main message text
 - `color` - Hex color code (e.g., `#2EB887`)
-- `includeFields` - List of default fields (see [Field Reference](#field-reference))
+- `includeFields` - List of default fields (see [`slack.<scope>.message.includeFields`](#slackscopemessageincludefields))
 - `customFields` - List of custom fields with `title`, `value`, and optional `short` (boolean for 2-column layout)
 
 #### Example
@@ -251,7 +214,7 @@ onComplete {
 
 ---
 
-## `slack.<scope>.message.includeFields`
+### `slack.<scope>.message.includeFields`
 
 The following fields can be included in the `includeFields` array when using map format:
 
@@ -268,7 +231,7 @@ The following fields can be included in the `includeFields` array when using map
 
 ---
 
-## Color Reference
+#### Color Reference
 
 Standard color codes for Slack message attachments:
 
@@ -282,9 +245,7 @@ Standard color codes for Slack message attachments:
 
 ---
 
-# Functions
-
-## `slackMessage()`
+## Functions
 
 ### `slackMessage(String message)`
 
@@ -357,7 +318,7 @@ workflow {
 }
 ```
 
-### Return Value
+#### Return Value
 
 The function does not return anything.
 

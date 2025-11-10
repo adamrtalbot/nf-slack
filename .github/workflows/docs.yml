@@ -1,0 +1,62 @@
+name: Build and Deploy Docs
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # fetch all commits/branches for version history
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - name: Cache MkDocs Material
+        run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+
+      - name: Obtain version from build.gradle
+        run: |
+          if [ -f build.gradle ]; then
+            VERSION=$(grep "version = " build.gradle | sed -e 's/version = //' | tr -d "'" | tr -d '"' | xargs)
+            echo "plugin_version=${VERSION}" >> $GITHUB_ENV
+          else
+            echo "plugin_version=dev" >> $GITHUB_ENV
+          fi
+
+      - name: Setup git user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Install dependencies
+        run: pip install mkdocs-material pymdown-extensions mike
+
+      - name: Build and deploy docs with version
+        if: github.event_name == 'release'
+        run: |
+          mike deploy --push --update-aliases ${{ env.plugin_version }} latest
+          mike set-default --push latest
+
+      - name: Build and deploy docs (dev)
+        if: github.event_name == 'push'
+        run: |
+          mike deploy --push --update-aliases dev
+          mike set-default --push latest

@@ -1,64 +1,82 @@
-# nf-slack Examples
+# Examples Gallery
 
-This directory contains comprehensive examples demonstrating the nf-slack plugin features, from basic to advanced.
+Comprehensive examples demonstrating nf-slack features, from basic to advanced.
+
+## Overview
 
 The examples are organized into two categories:
 
-- **Configuration Examples** (`configs/`): 6 examples showing automatic workflow notifications
-- **Script Examples** (`scripts/`): 3 examples showing programmatic message sending
+- **Configuration Examples**: 6 examples showing automatic workflow notifications
+- **Script Examples**: 3 examples showing programmatic message sending
 
-Each example focuses on **one specific aspect** of the plugin, building upon the previous examples.
+Each example focuses on **one specific aspect** of the plugin, building progressively in complexity.
 
-## 📋 Quick Reference
+## Quick Reference
 
 ### Configuration Examples (Automatic Notifications)
 
-| Example                                                           | Feature                             | Lines |
-| ----------------------------------------------------------------- | ----------------------------------- | ----- |
-| [01-minimal.config](#example-1-minimal-setup)                     | Enable notifications                | ~25   |
-| [02-notification-control.config](#example-2-notification-control) | Control when to notify              | ~30   |
-| [03-message-text.config](#example-3-message-text-customization)   | Customize message text              | ~35   |
-| [04-message-colors.config](#example-4-message-colors)             | Customize message colors            | ~45   |
-| [05-custom-fields.config](#example-5-custom-fields)               | Add custom fields                   | ~55   |
-| [06-selective-fields.config](#example-6-selective-default-fields) | Choose which default fields to show | ~70   |
+| Example                                                            | Feature                  | Complexity |
+| ------------------------------------------------------------------ | ------------------------ | ---------- |
+| [Example 1: Minimal Setup](#example-1-minimal-setup)               | Enable notifications     | ⭐         |
+| [Example 2: Notification Control](#example-2-notification-control) | Control when to notify   | ⭐         |
+| [Example 3: Message Text](#example-3-message-text-customization)   | Customize message text   | ⭐⭐       |
+| [Example 4: Message Colors](#example-4-message-colors)             | Customize message colors | ⭐⭐       |
+| [Example 5: Custom Fields](#example-5-custom-fields)               | Add custom fields        | ⭐⭐⭐     |
+| [Example 6: Selective Fields](#example-6-selective-default-fields) | Choose default fields    | ⭐⭐⭐     |
 
 ### Script Examples (Programmatic Messages)
 
-| Example                                                                  | Feature                              | Lines |
-| ------------------------------------------------------------------------ | ------------------------------------ | ----- |
-| [01-message-in-workflow.nf](#script-example-1-message-in-workflow)       | Send message from workflow body      | ~55   |
-| [02-message-on-complete.nf](#script-example-2-message-on-complete)       | Send message using onComplete hook   | ~48   |
-| [03-message-within-channel.nf](#script-example-3-message-within-channel) | Send messages from channel operators | ~34   |
+| Example                                                      | Feature                     | Complexity |
+| ------------------------------------------------------------ | --------------------------- | ---------- |
+| [Script Example 1](#script-example-1-message-in-workflow)    | Send from workflow body     | ⭐⭐       |
+| [Script Example 2](#script-example-2-message-on-complete)    | Send using onComplete       | ⭐⭐       |
+| [Script Example 3](#script-example-3-message-within-channel) | Send from channel operators | ⭐⭐⭐     |
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-Set up your Slack webhook:
+Set up your Slack webhook URL:
 
 ```bash
 export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
 ```
 
+See the [Installation Guide](../getting-started/installation.md) for detailed setup instructions.
+
 ### Running Examples
 
-**Configuration Examples**:
+Configuration examples are run by applying them to any workflow:
 
 ```bash
-# Run any workflow with a config example
-nextflow run main.nf -c configs/01-minimal.config
+# Clone the repository
+git clone https://github.com/adamrtalbot/nf-slack.git
+cd nf-slack
+
+# Run with a configuration example
+nextflow run example/main.nf -c example/configs/01-minimal.config
 ```
 
-## 📚 Configuration Examples Explained
+Script examples are complete workflows:
+
+```bash
+# Run a script example directly
+nextflow run example/scripts/01-message-in-workflow.nf
+```
+
+---
+
+## Configuration Examples
 
 Configuration examples show how to set up automatic workflow notifications using the plugin's configuration options.
 
 ### Example 1: Minimal Setup
 
-**File**: `01-minimal.config`
 **Concept**: Just enable notifications with defaults
 
-```groovy
+**Configuration**:
+
+```groovy title="01-minimal.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -68,31 +86,31 @@ slack {
 
 **What you get**:
 
-- Notifications on start, complete, and error
-- Default message templates
-- Default bot name: "Nextflow Bot"
-- Default icon: :rocket:
+- ✅ Notifications on start, complete, and error
+- ✅ Default message templates
+- ✅ Default formatting
 
-**Use when**: You just want to enable notifications quickly
+**Use when**: You want to enable notifications quickly without customization
 
-**Example output**:
+**Output**:
 
-![Minimal Setup Example](imgs/nf-slack-examples-01.png)
+![Minimal Setup Example](../images/nf-slack-examples-01.png)
 
 ---
 
 ### Example 2: Notification Control
 
-**File**: `02-notification-control.config`
 **Concept**: Choose which events trigger notifications
 
-**New configuration options**:
+**New concepts**:
 
-- `onStart.enabled` - Send notification when workflow starts
-- `onComplete.enabled` - Send notification when workflow completes
-- `onError.enabled` - Send notification when workflow fails
+- `onStart.enabled` - Control start notifications
+- `onComplete.enabled` - Control completion notifications
+- `onError.enabled` - Control error notifications
 
-```groovy
+**Configuration**:
+
+```groovy title="02-notification-control.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -114,24 +132,25 @@ slack {
 
 **Use when**: You want to reduce notification noise (e.g., only errors and completions)
 
-**Example output**:
+**Output**:
 
-![Notification Control Example](imgs/nf-slack-examples-02.png)
+![Notification Control Example](../images/nf-slack-examples-02.png)
 
 ---
 
 ### Example 3: Message Text Customization
 
-**File**: `03-message-text.config`
 **Concept**: Customize the text in notification messages
 
-**New configuration options**:
+**New concepts**:
 
 - `onStart.message` - Custom text for start notifications
 - `onComplete.message` - Custom text for completion notifications
 - `onError.message` - Custom text for error notifications
 
-```groovy
+**Configuration**:
+
+```groovy title="03-message-text.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -155,20 +174,24 @@ slack {
 
 **Use when**: You want different message text than the defaults
 
-**Example output**:
+**Output**:
 
-![Message Text Customization Example](imgs/nf-slack-examples-03.png)
+![Message Text Customization Example](../images/nf-slack-examples-03.png)
 
 ---
 
 ### Example 4: Message Colors
 
-**File**: `04-message-colors.config`
 **Concept**: Use custom colors for message attachments
 
-**New message format**: Map-based configuration instead of strings
+**New concepts**:
 
-```groovy
+- Map-based message configuration
+- `color` property for hex color codes
+
+**Configuration**:
+
+```groovy title="04-message-colors.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -204,20 +227,24 @@ slack {
 
 **Use when**: You want visual distinction with custom colors
 
-**Example output**:
+**Output**:
 
-![Message Colors Example](imgs/nf-slack-examples-04.png)
+![Message Colors Example](../images/nf-slack-examples-04.png)
 
 ---
 
 ### Example 5: Custom Fields
 
-**File**: `05-custom-fields.config`
 **Concept**: Add your own custom information fields
 
-**New map option**: `customFields` array
+**New concepts**:
 
-```groovy
+- `customFields` array for additional information
+- Field properties: `title`, `value`, `short`
+
+**Configuration**:
+
+```groovy title="05-custom-fields.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -245,20 +272,24 @@ slack {
 
 **Use when**: You want to add extra context to messages
 
-**Example output**:
+**Output**:
 
-![Custom Fields Example](imgs/nf-slack-examples-05.png)
+![Custom Fields Example](../images/nf-slack-examples-05.png)
 
 ---
 
 ### Example 6: Selective Default Fields
 
-**File**: `06-selective-fields.config`
 **Concept**: Choose which built-in workflow information to include
 
-**New map option**: `includeFields` array
+**New concepts**:
 
-```groovy
+- `includeFields` array to select default workflow fields
+- Fine-grained control over message content
+
+**Configuration**:
+
+```groovy title="06-selective-fields.config"
 slack {
     webhook {
         url = System.getenv('SLACK_WEBHOOK_URL')
@@ -290,12 +321,12 @@ slack {
 }
 ```
 
-**Available fields**:
+**Available fields by event**:
 
 **All messages**:
 
 - `runName` - Nextflow run name
-- `status` - Workflow status with emoji
+- `status` - Workflow status
 
 **Start messages only**:
 
@@ -313,56 +344,46 @@ slack {
 - `errorMessage` - Error details
 - `failedProcess` - Which process failed
 
-**Important**: If you use map-based config without `includeFields`, NO default fields are included (only your `customFields` if specified).
+!!! warning "Important"
+
+    If you use map-based config without `includeFields`, NO default fields are included (only your `customFields` if specified).
 
 **Use when**: You want fine-grained control over what information appears
 
-**See also**: [API Reference](REFERENCE.md) for complete field documentation and all available options.
+**Output**:
 
-**Example output**:
-
-![Selective Fields Example](imgs/nf-slack-examples-06.png)
+![Selective Fields Example](../images/nf-slack-examples-06.png)
 
 ---
 
-## 📝 Script Examples Explained
+## Script Examples
 
-Script examples demonstrate how to use the `slackMessage` function programmatically within your Nextflow workflows. These examples show you can send custom messages at any point during workflow execution.
+Script examples demonstrate how to use the `slackMessage()` function programmatically within your Nextflow workflows.
 
-> [!NOTE]
-> We have disabled the automatic notifications in the main `nextflow.config` to avoid duplicate messages when running these script examples. Make sure to adjust your configuration accordingly:
->
-> ```groovy
-> slack {
->     // Rest of content...
->
->     onStart.enabled = false
->     onComplete.enabled = false
->     onError.enabled = false
-> }
-> ```
+!!! note "Disable Automatic Notifications"
 
-**Script Examples** (programmatic messages):
+    These examples disable automatic notifications to avoid duplicate messages. Adjust your configuration:
 
-```bash
-# Run a script example directly
-nextflow run scripts/01-message-in-workflow.nf -c nextflow.config
-```
+    ```groovy
+    slack {
+        webhook {
+            url = "$SLACK_WEBHOOK_URL"
+        }
+
+        onStart.enabled = false
+        onComplete.enabled = false
+        onError.enabled = false
+    }
+    ```
 
 ### Script Example 1: Message in Workflow
 
-**File**: `scripts/01-message-in-workflow.nf`
 **Concept**: Send a message from the workflow body after processes complete
 
-```groovy
-#!/usr/bin/env nextflow
+**Code**:
 
-/*
- * Simple example demonstrating nf-slack plugin
- *
- * This workflow sends Slack messages:
- * - AFTER: At workflow completion
- */
+```groovy title="01-message-in-workflow.nf"
+#!/usr/bin/env nextflow
 
 // Import the Slack messaging function
 include { slackMessage } from 'plugin/nf-slack'
@@ -386,23 +407,13 @@ workflow {
     inputs = channel.of('sample_1', 'sample_2', 'sample_3')
     HELLO(inputs)
 
-    // ==============================================================
-    // AFTER: Send rich formatted completion message in workflow body
-    // ==============================================================
+    // Send rich formatted completion message
     slackMessage([
         message: "Example workflow complete! 🎉",
         color: "#2EB887",  // Green for success
         fields: [
-            [
-                title: "Status",
-                value: "Success",
-                short: true
-            ],
-            [
-                title: "Samples",
-                value: "3",
-                short: true
-            ]
+            [title: "Status", value: "Success", short: true],
+            [title: "Samples", value: "3", short: true]
         ]
     ])
 }
@@ -412,22 +423,23 @@ workflow {
 
 - Uses `slackMessage()` function directly in workflow body
 - Sends message after processes complete
-- Supports same map format as config examples (text, color, fields)
+- Supports same map format as config examples
 
 **Use when**: You want to send a message at a specific point in your workflow logic
 
-**Example output**:
+**Output**:
 
-![Message in Workflow Example](imgs/nf-slack-examples-07.png)
+![Message in Workflow Example](../images/nf-slack-examples-07.png)
 
 ---
 
 ### Script Example 2: Message on Complete
 
-**File**: `scripts/02-message-on-complete.nf`
 **Concept**: Send a message using the `workflow.onComplete` event handler
 
-```groovy
+**Code**:
+
+```groovy title="02-message-on-complete.nf"
 #!/usr/bin/env nextflow
 
 include { slackMessage } from 'plugin/nf-slack'
@@ -458,11 +470,7 @@ workflow {
             message: "Workflow ${status}",
             color: color,
             fields: [
-                [
-                    title: "Duration",
-                    value: "${workflow.duration}",
-                    short: true
-                ]
+                [title: "Duration", value: "${workflow.duration}", short: true]
             ]
         ])
     }
@@ -477,18 +485,19 @@ workflow {
 
 **Use when**: You want to send a summary message when the workflow finishes, with access to workflow metadata
 
-**Example output**:
+**Output**:
 
-![Message on Complete Example](imgs/nf-slack-examples-08.png)
+![Message on Complete Example](../images/nf-slack-examples-08.png)
 
 ---
 
 ### Script Example 3: Message within Channel
 
-**File**: `scripts/03-message-within-channel.nf`
 **Concept**: Send messages from within channel operators during processing
 
-```groovy
+**Code**:
+
+```groovy title="03-message-within-channel.nf"
 #!/usr/bin/env nextflow
 
 include { slackMessage } from 'plugin/nf-slack'
@@ -524,8 +533,28 @@ workflow {
 - Sends individual messages for each channel item
 - Simple string format for quick notifications
 
-**Use when**: You want to send notifications during data processing, such as tracking progress through a channel
+!!! warning "High Volume Usage"
 
-**Example output**:
+    Be cautious when sending messages in channel operators with many items. Slack has rate limits on incoming webhooks, and sending too many messages rapidly may result in throttling.
 
-![Message within Channel Example](imgs/nf-slack-examples-09.png)
+**Use when**: You want to send notifications during data processing, tracking progress through a channel
+
+**Output**:
+
+![Message within Channel Example](../images/nf-slack-examples-09.png)
+
+---
+
+## Next Steps
+
+- Explore the [API Reference](../reference/api.md) for complete configuration options
+- Learn about [automatic notifications](../usage/automatic-notifications.md)
+- Discover [custom messages](../usage/custom-messages.md)
+
+## All Example Files
+
+All example files are available in the [nf-slack repository](https://github.com/adamrtalbot/nf-slack/tree/main/example):
+
+- Configuration examples: `example/configs/`
+- Script examples: `example/scripts/`
+- Base workflow: `example/main.nf`
