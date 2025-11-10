@@ -24,9 +24,17 @@ Please follow these steps to create a release PR:
 3. Read the current version from `build.gradle` to inform the user
 4. Ask the user what changes should be included in the CHANGELOG.md
 5. Update the version in `build.gradle`
-6. Update `CHANGELOG.md` with the new version section following the Keep a Changelog format
-7. Create a commit with message: `chore: release v{VERSION}`
-8. Push the branch and create a PR to main with:
+6. Search for and update old version references in documentation files:
+   - Search for the old version pattern (e.g., `@0.2.0` or `0.2.0`) in these files:
+     - `README.md`
+     - `docs/*`
+     - `example/configs/*`
+     - Any other documentation files found with version references
+   - Replace old version references with the new version
+   - Report which files were updated to the user
+7. Update `CHANGELOG.md` with the new version section following the Keep a Changelog format
+8. Create a commit with message: `chore: release v{VERSION}`
+9. Push the branch and create a PR to main with:
    - Title: `Release v{VERSION}`
    - Body including:
      - Summary of changes from CHANGELOG
@@ -53,6 +61,7 @@ When this PR is merged to `main`, the GitHub Actions workflow will automatically
 ### Checklist
 
 - [ ] Version updated in `build.gradle`
+- [ ] Version references updated in documentation files
 - [ ] CHANGELOG.md updated with release notes
 - [ ] Tests passing
 - [ ] Documentation updated (if needed)

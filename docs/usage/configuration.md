@@ -253,7 +253,7 @@ Use consistent colors for different message types:
 
 ```groovy
 plugins {
-    id 'nf-slack@0.1.0'
+    id 'nf-slack@0.2.0'
 }
 
 slack {
