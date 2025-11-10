@@ -37,7 +37,7 @@ slack {
 
 Will post these messages to Slack:
 
-![default Slack message](./docs/imgs/nf-slack-00.png)
+![default Slack message](./docs/images/nf-slack-00.png)
 
 ### 3. Run Your Pipeline
 
@@ -54,6 +54,8 @@ Once configured, you'll automatically receive Slack messages for:
 Each message includes relevant details like run name, duration, and error information.
 
 ## Basic Customization
+
+:book: Full documentation: <https://nextflow-io.github.io/nf-schema>
 
 ### Choose Which Events to Notify
 
@@ -74,7 +76,7 @@ slack {
 
 Will post this message to Slack:
 
-![Slack message on completion or error](./docs/imgs/nf-slack-01.png)
+![Slack message on completion or error](./docs/images/nf-slack-01.png)
 
 ### Customize Message Text
 
@@ -102,7 +104,7 @@ slack {
 
 Will post these messages to Slack, note the text has changed:
 
-![Custom Slack messages](./docs/imgs/nf-slack-02.png)
+![Custom Slack messages](./docs/images/nf-slack-02.png)
 
 ### Add Colors and Custom Fields
 
@@ -129,7 +131,7 @@ slack {
 
 Will post these formatted messages to Slack:
 
-![Custom Slack blocks](./docs/imgs/nf-slack-03.png)
+![Custom Slack blocks](./docs/images/nf-slack-03.png)
 
 ### Send Custom Messages from Your Workflow
 
@@ -151,7 +153,7 @@ workflow {
 
 Will post these short messages to Slack within the workflow:
 
-![Workflow Slack message](./docs/imgs/nf-slack-04.png)
+![Workflow Slack message](./docs/images/nf-slack-04.png)
 
 **Want more control?** See the [API Reference](docs/REFERENCE.md) and [detailed examples](docs/EXAMPLES.md) for all available options.
 
