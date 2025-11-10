@@ -125,7 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Thread-safe error logging with synchronized collections
 - Immutable configuration objects after initialization
 
-## [Unreleased]
+## [0.2.0] - 2025-11-10
 
 ### Added
 
@@ -134,6 +134,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Search, dark mode, mobile-responsive design
   - Automated deployment from `gh-pages` branch
   - Restructured docs with Getting Started, Usage, and API sections
+
+## [Unreleased]
 
 ### Planned
 
@@ -147,8 +149,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
+- **[0.2.0]** - Documentation site with GitHub Pages
 - **[0.1.1]** - Release automation and documentation improvements
 - **[0.1.0]** - Initial release with automatic notifications, custom messages, and progressive configuration examples
 
+[0.2.0]: https://github.com/adamrtalbot/nf-slack/releases/tag/v0.2.0
 [0.1.1]: https://github.com/adamrtalbot/nf-slack/releases/tag/v0.1.1
 [0.1.0]: https://github.com/adamrtalbot/nf-slack/releases/tag/v0.1.0
