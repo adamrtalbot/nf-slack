@@ -19,3 +19,7 @@ install:
 # Publish the plugin
 release:
 	./gradlew releasePlugin
+
+run:
+	./gradlew install
+	cd example && nextflow run .
