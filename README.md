@@ -55,7 +55,7 @@ Each message includes relevant details like run name, duration, and error inform
 
 ## Basic Customization
 
-:book: Full documentation: <https://nextflow-io.github.io/nf-schema>
+:book: Full documentation: <https://adamrtalbot.github.io/nf-slack/>
 
 ### Choose Which Events to Notify
 
