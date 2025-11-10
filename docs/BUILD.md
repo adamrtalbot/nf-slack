@@ -72,7 +72,7 @@ docs/
 │   └── gallery.md             # 9 progressive examples
 ├── reference/
 │   └── api.md                 # Complete API reference
-├── contributing.md
+├── CONTRIBUTING.md
 ├── changelog.md
 └── images/                    # Screenshots and diagrams
 ```

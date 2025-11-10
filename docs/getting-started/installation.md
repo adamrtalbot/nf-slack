@@ -73,7 +73,7 @@ If you want to install a local development version of the plugin:
    make install
    ```
 
-This will build and install the plugin to your local Nextflow plugins directory. For more details on development setup, see the [Contributing guide](../contributing.md).
+This will build and install the plugin to your local Nextflow plugins directory. For more details on development setup, see the [Contributing guide](../CONTRIBUTING.md).
 
 ## Next Steps
 

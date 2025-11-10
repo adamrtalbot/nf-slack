@@ -59,4 +59,4 @@ jobs:
         if: github.event_name == 'push'
         run: |
           mike deploy --push --update-aliases dev
-          mike set-default --push latest
+          mike set-default --push dev
