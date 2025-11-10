@@ -46,12 +46,12 @@ plugins {
 }
 ```
 
-## Verification
+## Manual Installation
 
-To verify the plugin is installed correctly, run:
+Nextflow will automatically download and install the plugin when you run your pipeline. However, if you want to manually install it, you can do so using the Nextflow CLI:
 
 ```bash
-nextflow plugin list
+nextflow plugin install nf-slack
 ```
 
 You should see `nf-slack` in the list of installed plugins.
@@ -67,7 +67,7 @@ If you want to install a local development version of the plugin:
    cd nf-slack
    ```
 
-2. **Install locally**
+1. **Install locally**
 
    ```bash
    make install
