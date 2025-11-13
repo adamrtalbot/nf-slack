@@ -10,6 +10,15 @@ on:
       - completed
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: "Type of docs to deploy"
+        required: true
+        type: choice
+        options:
+          - dev
+          - versioned
 
 concurrency:
   group: docs-deployment
@@ -62,14 +71,19 @@ jobs:
         run: pip install mkdocs-material pymdown-extensions mike
 
       - name: Build and deploy versioned docs
-        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+        if: |
+          (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+          (github.event_name == 'workflow_dispatch' && inputs.deployment_type == 'versioned')
         run: |
           mike deploy --push --update-aliases ${{ steps.get_version.outputs.version }} latest
           mike set-default --push latest
           echo "✅ Deployed versioned docs for v${{ steps.get_version.outputs.version }}"
 
       - name: Build and deploy dev docs
-        if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'success'
+        if: |
+          (github.event_name == 'push') ||
+          (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success') ||
+          (github.event_name == 'workflow_dispatch' && inputs.deployment_type == 'dev')
         run: |
           mike deploy --push --update-aliases dev
           echo "✅ Deployed dev docs"
