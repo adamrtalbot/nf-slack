@@ -13,7 +13,7 @@ Add the nf-slack plugin to your `nextflow.config`:
 
 ```groovy
 plugins {
-    id 'nf-slack@0.2.0'
+    id 'nf-slack@0.2.1'
 }
 ```
 
