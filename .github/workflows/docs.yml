@@ -4,8 +4,16 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Publish Plugin"]
+    types:
+      - completed
+    branches:
+      - main
+
+concurrency:
+  group: docs-deployment
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -33,12 +41,16 @@ jobs:
             mkdocs-material-
 
       - name: Obtain version from build.gradle
+        id: get_version
         run: |
           if [ -f build.gradle ]; then
             VERSION=$(grep "version = " build.gradle | sed -e 's/version = //' | tr -d "'" | tr -d '"' | xargs)
-            echo "plugin_version=${VERSION}" >> $GITHUB_ENV
+            echo "version=${VERSION}" >> $GITHUB_OUTPUT
+            echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+            echo "Detected version: $VERSION"
           else
-            echo "plugin_version=dev" >> $GITHUB_ENV
+            echo "version=dev" >> $GITHUB_OUTPUT
+            echo "tag=dev" >> $GITHUB_OUTPUT
           fi
 
       - name: Setup git user
@@ -49,13 +61,15 @@ jobs:
       - name: Install dependencies
         run: pip install mkdocs-material pymdown-extensions mike
 
-      - name: Build and deploy docs with version
-        if: github.event_name == 'release'
+      - name: Build and deploy versioned docs
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
         run: |
-          mike deploy --push --update-aliases ${{ env.plugin_version }} latest
+          mike deploy --push --update-aliases ${{ steps.get_version.outputs.version }} latest
           mike set-default --push latest
+          echo "✅ Deployed versioned docs for v${{ steps.get_version.outputs.version }}"
 
-      - name: Build and deploy docs (dev)
-        if: github.event_name == 'push'
+      - name: Build and deploy dev docs
+        if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion != 'success'
         run: |
           mike deploy --push --update-aliases dev
+          echo "✅ Deployed dev docs"
