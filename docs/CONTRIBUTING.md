@@ -41,7 +41,7 @@ Thank you for your interest in contributing to nf-slack! This document provides 
 5. **Test with Nextflow**
 
    ```bash
-   nextflow run hello -plugins nf-slack@0.2.0 // Make sure to have the correct version!
+   nextflow run hello -plugins nf-slack@0.2.1 // Make sure to have the correct version!
    ```
 
 ## Development Workflow
@@ -200,13 +200,13 @@ Releases are fully automated via GitHub Actions when you merge a PR that updates
 1. **Create a release PR**
 
    ```bash
-   git checkout -b release/v0.2.0
+   git checkout -b release/v0.2.1
    ```
 
 2. **Update version number** in `build.gradle`
 
    ```groovy
-   version = '0.2.0'
+   version = '0.2.1'
    ```
 
 3. **Update CHANGELOG.md** with release notes
@@ -227,8 +227,8 @@ Releases are fully automated via GitHub Actions when you merge a PR that updates
 
    ```bash
    git add build.gradle CHANGELOG.md
-   git commit -m "chore: release v0.2.0"
-   git push origin release/v0.2.0
+   git commit -m "chore: release v0.2.1"
+   git push origin release/v0.2.1
    ```
 
 5. **Create and merge PR**
@@ -236,7 +236,7 @@ Releases are fully automated via GitHub Actions when you merge a PR that updates
    Open a pull request to `main` branch. Once merged, the automation will:
 
    - ✅ Publish plugin to Nextflow Plugin Registry
-   - ✅ Create git tag (e.g., `v0.2.0`)
+   - ✅ Create git tag (e.g., `v0.2.1`)
    - ✅ Create GitHub release with changelog
 
 **That's it!** No manual steps required after merging the PR.
