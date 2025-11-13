@@ -12,7 +12,7 @@ Based on the repository's release workflow:
 
    - Extract the version from `build.gradle`
    - Publish the plugin to Nextflow Plugin Registry
-   - Create a git tag (e.g., `v0.2.0`)
+   - Create a git tag (e.g., `v0.2.1`)
    - Create a GitHub release with changelog notes
 
 3. The workflow is idempotent - it skips if the version tag already exists.
@@ -25,7 +25,7 @@ Please follow these steps to create a release PR:
 4. Ask the user what changes should be included in the CHANGELOG.md
 5. Update the version in `build.gradle`
 6. Search for and update old version references in documentation files:
-   - Search for the old version pattern (e.g., `@0.2.0` or `0.2.0`) in these files:
+   - Search for the old version pattern (e.g., `@0.2.1` or `0.2.1`) in these files:
      - `README.md`
      - `docs/*`
      - `example/configs/*`

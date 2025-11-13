@@ -27,7 +27,7 @@ plugins {
     ```groovy
     plugins {
         id 'nf-validation'
-        id 'nf-slack@0.2.0'  // Add this line
+        id 'nf-slack@0.2.1'  // Add this line
     }
     ```
 
