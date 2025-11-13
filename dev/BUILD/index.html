@@ -851,7 +851,7 @@
 <h2 id="deploying-with-versioning">Deploying with Versioning<a class="headerlink" href="#deploying-with-versioning" title="Permanent link">&para;</a></h2>
 <p>This documentation uses <code>mike</code> for version management:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Deploy a new version</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mike<span class="w"> </span>deploy<span class="w"> </span>--push<span class="w"> </span>--update-aliases<span class="w"> </span>v0.1.1<span class="w"> </span>latest
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mike<span class="w"> </span>deploy<span class="w"> </span>--push<span class="w"> </span>--update-aliases<span class="w"> </span>v0.2.0<span class="w"> </span>latest
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set the default version</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mike<span class="w"> </span>set-default<span class="w"> </span>--push<span class="w"> </span>latest
@@ -881,11 +881,12 @@
 </span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>└── images/                    # Screenshots and diagrams
 </span></code></pre></div>
 <h2 id="github-actions-deployment">GitHub Actions Deployment<a class="headerlink" href="#github-actions-deployment" title="Permanent link">&para;</a></h2>
-<p>The documentation is automatically deployed to GitHub Pages when:</p>
+<p>The documentation is automatically deployed to GitHub Pages using a workflow_run pattern:</p>
 <ul>
-<li>Code is pushed to <code>main</code> branch (deployed as <code>dev</code> version)</li>
-<li>A new release is published (deployed as version tag + <code>latest</code> alias)</li>
+<li><strong>Dev docs</strong>: Deployed when code is pushed to <code>main</code> branch (deployed as <code>dev</code> version)</li>
+<li><strong>Versioned docs</strong>: Deployed when the "Publish Plugin" workflow completes successfully and creates a new release (deployed as version tag + <code>latest</code> alias)</li>
 </ul>
+<p>This approach ensures that versioned documentation is only published after the plugin has been successfully released to the Nextflow registry, avoiding race conditions and ensuring consistency between plugin and documentation versions.</p>
 <p>See <code>.github/workflows/docs.yml</code> for the deployment workflow.</p>
 <h2 id="adding-new-pages">Adding New Pages<a class="headerlink" href="#adding-new-pages" title="Permanent link">&para;</a></h2>
 <ol>
