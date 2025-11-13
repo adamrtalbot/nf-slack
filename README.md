@@ -2,6 +2,8 @@
 
 Get Slack notifications for your Nextflow workflows - automatically notified when pipelines start, complete, or fail.
 
+:book: Full documentation: <https://adamrtalbot.github.io/nf-slack/>
+
 ## Features
 
 - 🚀 **Automatic Notifications**: Get notified when workflows start, complete, or fail
@@ -54,8 +56,6 @@ Once configured, you'll automatically receive Slack messages for:
 Each message includes relevant details like run name, duration, and error information.
 
 ## Basic Customization
-
-:book: Full documentation: <https://adamrtalbot.github.io/nf-slack/>
 
 ### Choose Which Events to Notify
 

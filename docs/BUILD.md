@@ -44,7 +44,7 @@ This documentation uses `mike` for version management:
 
 ```bash
 # Deploy a new version
-mike deploy --push --update-aliases v0.1.1 latest
+mike deploy --push --update-aliases v0.2.0 latest
 
 # Set the default version
 mike set-default --push latest
@@ -79,10 +79,12 @@ docs/
 
 ## GitHub Actions Deployment
 
-The documentation is automatically deployed to GitHub Pages when:
+The documentation is automatically deployed to GitHub Pages using a workflow_run pattern:
 
-- Code is pushed to `main` branch (deployed as `dev` version)
-- A new release is published (deployed as version tag + `latest` alias)
+- **Dev docs**: Deployed when code is pushed to `main` branch (deployed as `dev` version)
+- **Versioned docs**: Deployed when the "Publish Plugin" workflow completes successfully and creates a new release (deployed as version tag + `latest` alias)
+
+This approach ensures that versioned documentation is only published after the plugin has been successfully released to the Nextflow registry, avoiding race conditions and ensuring consistency between plugin and documentation versions.
 
 See `.github/workflows/docs.yml` for the deployment workflow.
 
