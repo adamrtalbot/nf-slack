@@ -25,7 +25,7 @@ You can use either a **Webhook** or a **Bot User**.
 3. Install App to Workspace and copy **Bot User OAuth Token** (`xoxb-...`)
 4. Invite the bot to your channel
 
-#### Option B: Webhook (Simpler, Less Secure)
+#### Option B: Webhook (Simpler, Fewer Features, Less Secure)
 
 1. Go to [Slack Incoming Webhooks](https://api.slack.com/messaging/webhooks)
 2. Create a new webhook for your workspace
