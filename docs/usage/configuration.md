@@ -122,23 +122,6 @@ slack {
 
 ![Custom message text](../images/nf-slack-02.png)
 
-### Rich Messages with Colors
-
-Add colors to your notifications:
-
-```groovy
-slack {
-    onComplete {
-        message = [
-            text: '✅ *Analysis Complete*',
-            color: '#2EB887'  // Green
-        ]
-    }
-}
-```
-
-![Messages with colors](../images/nf-slack-03.png)
-
 ### Adding Custom Fields
 
 Include additional information in notifications:
@@ -148,7 +131,6 @@ slack {
     onComplete {
         message = [
             text: '✅ *Analysis Complete*',
-            color: '#2EB887',
             customFields: [
                 [title: 'Environment', value: 'Production', short: true],
                 [title: 'Cost', value: '$12.50', short: true]
@@ -242,17 +224,6 @@ slack {
 }
 ```
 
-## Color Reference
-
-Use consistent colors for different message types:
-
-| Color  | Hex Code  | Use Case            |
-| ------ | --------- | ------------------- |
-| Green  | `#2EB887` | Success, completion |
-| Red    | `#A30301` | Errors, failures    |
-| Blue   | `#3AA3E3` | Info, starting      |
-| Orange | `#FFA500` | Warnings            |
-
 ## Complete Configuration Example
 
 ```groovy
@@ -272,7 +243,6 @@ slack {
         enabled = true
         message = [
             text: '🚀 *Production Pipeline Starting*',
-            color: '#3AA3E3',
             customFields: [
                 [title: 'Environment', value: 'Production', short: true],
                 [title: 'Priority', value: 'High', short: true]
@@ -285,7 +255,6 @@ slack {
         enabled = true
         message = [
             text: '✅ *Pipeline Completed*',
-            color: '#2EB887',
             includeFields: ['runName', 'duration', 'tasks'],
             customFields: [
                 [title: 'Cost', value: '$12.50', short: true]
@@ -298,7 +267,6 @@ slack {
         enabled = true
         message = [
             text: '❌ *Pipeline Failed*',
-            color: '#A30301',
             includeFields: ['runName', 'errorMessage', 'failedProcess']
         ]
         includeCommandLine = true

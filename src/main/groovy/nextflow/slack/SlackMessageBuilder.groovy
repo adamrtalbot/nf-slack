@@ -41,9 +41,6 @@ import java.time.format.DateTimeFormatter
 @CompileStatic
 class SlackMessageBuilder {
 
-    private static final String COLOR_SUCCESS = '#2EB887'
-    private static final String COLOR_ERROR = '#A30301'
-    private static final String COLOR_INFO = '#3AA3E3'
     private static final String NEXTFLOW_ICON = 'https://www.nextflow.io/docs/latest/_static/favicon.ico'
 
     private final SlackConfig config
@@ -67,51 +64,80 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onStart.message as Map, workflowName, timestamp, 'started')
         }
 
+        def blocks = []
+
+        // Header section
+        def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: messageText
+            ]
+        ]
+
         def fields = []
 
         // Add run name
         fields << [
-            title: 'Run Name',
-            value: runName,
-            short: true
+            type: 'mrkdwn',
+            text: "*Run Name*\n${runName}"
         ]
-
-        // Session ID removed for MVP - was causing test issues with UUID mocking
-        // Can be added back in future version if needed
 
         // Add command line if configured
         if (config.onStart.includeCommandLine && session.commandLine) {
-            fields << [
-                title: 'Command Line',
-                value: "```${session.commandLine}```",
-                short: false
-            ]
+            // Command line is long, maybe put it in a separate section or just append to fields if it fits?
+            // Fields in blocks are limited to 10 items.
+            // Let's put command line in a separate section to avoid cluttering the grid if it's long.
+            // But for consistency with previous design, let's try to fit it or use a separate block.
+            // The previous design had `short: false` for command line.
+            // In Block Kit, fields are always side-by-side (2 columns).
+            // If we want a full width line, we should use a separate section or context.
+            // Let's keep it in fields for now if it fits, or use a separate section.
+            // Actually, `short: false` in attachments meant it took the full width.
+            // In Block Kit fields, you can't control width per item easily.
+            // So for long items like command line, it's better to have a separate section.
         }
 
         // Add working directory
         if (session.workDir) {
-            fields << [
-                title: 'Work Directory',
-                value: "`${session.workDir}`",
-                short: false
+             fields << [
+                type: 'mrkdwn',
+                text: "*Work Directory*\n`${session.workDir}`"
             ]
         }
 
-        def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
+        if (fields) {
+            blocks << [
+                type: 'section',
+                fields: fields
+            ]
+        }
 
-        def message = [
-            attachments: [
-                [
-                    fallback: "Pipeline ${workflowName} started",
-                    color: COLOR_INFO,
-                    author_name: workflowName,
-                    author_icon: NEXTFLOW_ICON,
-                    text: messageText,
-                    fields: fields,
-                    footer: "Started at ${formatTimestamp(timestamp)}",
-                    ts: System.currentTimeMillis() / 1000 as long
+        // Add command line in a separate section if configured
+        if (config.onStart.includeCommandLine && session.commandLine) {
+            blocks << [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Command Line*\n```${session.commandLine}```"
                 ]
             ]
+        }
+
+        // Context / Footer
+        blocks << [
+            type: 'context',
+            elements: [
+                [
+                    type: 'mrkdwn',
+                    text: "Started at ${formatTimestamp(timestamp)} | ${workflowName}"
+                ]
+            ]
+        ]
+
+        def message = [
+            blocks: blocks
         ]
 
         return new JsonBuilder(message).toPrettyString()
@@ -131,27 +157,35 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onComplete.message as Map, workflowName, timestamp, 'completed')
         }
 
+        def blocks = []
+
+        def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: messageText
+            ]
+        ]
+
         def fields = []
 
         // Add run name
         fields << [
-            title: 'Run Name',
-            value: runName,
-            short: true
+            type: 'mrkdwn',
+            text: "*Run Name*\n${runName}"
         ]
 
         // Add duration
         fields << [
-            title: 'Duration',
-            value: duration.toString(),
-            short: true
+            type: 'mrkdwn',
+            text: "*Duration*\n${duration.toString()}"
         ]
 
         // Add success status
         fields << [
-            title: 'Status',
-            value: '✅ Success',
-            short: true
+            type: 'mrkdwn',
+            text: "*Status*\n✅ Success"
         ]
 
         // Add resource usage if configured
@@ -165,29 +199,33 @@ class SlackMessageBuilder {
 
                 if (resourceInfo) {
                     fields << [
-                        title: 'Tasks',
-                        value: resourceInfo.join(', '),
-                        short: true
+                        type: 'mrkdwn',
+                        text: "*Tasks*\n${resourceInfo.join(', ')}"
                     ]
                 }
             }
         }
 
-        def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
+        if (fields) {
+            blocks << [
+                type: 'section',
+                fields: fields
+            ]
+        }
 
-        def message = [
-            attachments: [
+        // Context / Footer
+        blocks << [
+            type: 'context',
+            elements: [
                 [
-                    fallback: "Pipeline ${workflowName} completed successfully",
-                    color: COLOR_SUCCESS,
-                    author_name: workflowName,
-                    author_icon: NEXTFLOW_ICON,
-                    text: messageText,
-                    fields: fields,
-                    footer: "Completed at ${formatTimestamp(timestamp)}",
-                    ts: System.currentTimeMillis() / 1000 as long
+                    type: 'mrkdwn',
+                    text: "Completed at ${formatTimestamp(timestamp)} | ${workflowName}"
                 ]
             ]
+        ]
+
+        def message = [
+            blocks: blocks
         ]
 
         return new JsonBuilder(message).toPrettyString()
@@ -208,34 +246,35 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onError.message as Map, workflowName, timestamp, 'failed', errorRecord)
         }
 
+        def blocks = []
+
+        def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: messageText
+            ]
+        ]
+
         def fields = []
 
         // Add run name
         fields << [
-            title: 'Run Name',
-            value: runName,
-            short: true
+            type: 'mrkdwn',
+            text: "*Run Name*\n${runName}"
         ]
 
         // Add duration
         fields << [
-            title: 'Duration',
-            value: duration.toString(),
-            short: true
+            type: 'mrkdwn',
+            text: "*Duration*\n${duration.toString()}"
         ]
 
         // Add status
         fields << [
-            title: 'Status',
-            value: '❌ Failed',
-            short: true
-        ]
-
-        // Add error message
-        fields << [
-            title: 'Error Message',
-            value: "```${errorMessage.take(500)}${errorMessage.length() > 500 ? '...' : ''}```",
-            short: false
+            type: 'mrkdwn',
+            text: "*Status*\n❌ Failed"
         ]
 
         // Add failed process info if available
@@ -243,37 +282,52 @@ class SlackMessageBuilder {
             def processName = errorRecord.get('process')
             if (processName) {
                 fields << [
-                    title: 'Failed Process',
-                    value: "`${processName}`",
-                    short: true
+                    type: 'mrkdwn',
+                    text: "*Failed Process*\n`${processName}`"
                 ]
             }
         }
 
-        // Add command line if configured
-        if (config.onError.includeCommandLine && session.commandLine) {
-            fields << [
-                title: 'Command Line',
-                value: "```${session.commandLine}```",
-                short: false
+        if (fields) {
+            blocks << [
+                type: 'section',
+                fields: fields
             ]
         }
 
-        def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
+        // Add error message in a separate section (it can be long)
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: "*Error Message*\n```${errorMessage.take(2000)}${errorMessage.length() > 2000 ? '...' : ''}```"
+            ]
+        ]
 
-        def message = [
-            attachments: [
-                [
-                    fallback: "Pipeline ${workflowName} failed",
-                    color: COLOR_ERROR,
-                    author_name: workflowName,
-                    author_icon: NEXTFLOW_ICON,
-                    text: messageText,
-                    fields: fields,
-                    footer: "Failed at ${formatTimestamp(timestamp)}",
-                    ts: System.currentTimeMillis() / 1000 as long
+        // Add command line if configured
+        if (config.onError.includeCommandLine && session.commandLine) {
+            blocks << [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Command Line*\n```${session.commandLine}```"
                 ]
             ]
+        }
+
+        // Context / Footer
+        blocks << [
+            type: 'context',
+            elements: [
+                [
+                    type: 'mrkdwn',
+                    text: "Failed at ${formatTimestamp(timestamp)} | ${workflowName}"
+                ]
+            ]
+        ]
+
+        def message = [
+            blocks: blocks
         ]
 
         return new JsonBuilder(message).toPrettyString()
@@ -284,33 +338,13 @@ class SlackMessageBuilder {
      */
     String buildSimpleMessage(String text) {
         def message = [
-            text: text
-        ]
-
-        return new JsonBuilder(message).toPrettyString()
-    }
-
-    /**
-     * Build a rich message with custom formatting
-     *
-     * @param options Map with keys: message (required), color, fields (list of maps with title/value/short)
-     */
-    String buildRichMessage(Map options) {
-        if (!options.message) {
-            throw new IllegalArgumentException("Message text is required")
-        }
-
-        def fields = options.fields as List ?: []
-        def color = options.color as String ?: COLOR_INFO
-
-        def message = [
-            attachments: [
+            blocks: [
                 [
-                    fallback: options.message as String,
-                    color: color,
-                    text: options.message as String,
-                    fields: fields,
-                    ts: System.currentTimeMillis() / 1000 as long
+                    type: 'section',
+                    text: [
+                        type: 'mrkdwn',
+                        text: text
+                    ]
                 ]
             ]
         ]
@@ -319,53 +353,87 @@ class SlackMessageBuilder {
     }
 
     /**
-     * Build a custom message using map configuration
+     * Build a rich message with custom formatting
      *
-     * @param customConfig Map with keys: text, color, includeFields, customFields
-     * @param workflowName Name of the workflow
-     * @param timestamp ISO timestamp
-     * @param status Workflow status (started, completed, failed)
-     * @param errorRecord Optional error record for failed workflows
+     * @param options Map with keys: message (required), fields (list of maps with title/value/short)
+     */
+    String buildRichMessage(Map options) {
+        if (!options.message) {
+            throw new IllegalArgumentException("Message text is required")
+        }
+
+        def blocks = []
+
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: options.message as String
+            ]
+        ]
+
+        def fieldsList = options.fields as List ?: []
+        if (fieldsList) {
+            def fields = []
+            fieldsList.each { field ->
+                def f = field as Map
+                fields << [
+                    type: 'mrkdwn',
+                    text: "*${f.title}*\n${f.value}"
+                ]
+            }
+            blocks << [
+                type: 'section',
+                fields: fields
+            ]
+        }
+
+        def message = [
+            blocks: blocks
+        ]
+
+        return new JsonBuilder(message).toPrettyString()
+    }
+
+    /**
+     * Build a custom message using map configuration
      */
     private String buildCustomMessage(Map customConfig, String workflowName, String timestamp, String status, TraceRecord errorRecord = null) {
         def runName = session.runName ?: 'Unknown run'
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
         def errorMessage = session.workflowMetadata?.errorMessage ?: 'Unknown error'
 
+        def blocks = []
+
         // Get message text
         def messageText = customConfig.text ?: getDefaultMessageText(status)
+        blocks << [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: messageText
+            ]
+        ]
 
-        // Get color
-        def color = customConfig.color ?: getDefaultColor(status)
-
-        // Build fields array
+        // Build fields
         def fields = []
 
         // Add default fields if specified
         def includeFields = customConfig.includeFields as List ?: []
         if (includeFields) {
             if (includeFields.contains('runName')) {
-                fields << [title: 'Run Name', value: runName, short: true]
+                fields << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
             }
             if (includeFields.contains('duration') && status != 'started') {
-                fields << [title: 'Duration', value: duration.toString(), short: true]
+                fields << [type: 'mrkdwn', text: "*Duration*\n${duration.toString()}"]
             }
             if (includeFields.contains('status')) {
-                fields << [title: 'Status', value: getStatusEmoji(status), short: true]
-            }
-            if (includeFields.contains('commandLine') && session.commandLine) {
-                fields << [title: 'Command Line', value: "```${session.commandLine}```", short: false]
-            }
-            if (includeFields.contains('workDir') && session.workDir && status == 'started') {
-                fields << [title: 'Work Directory', value: "`${session.workDir}`", short: false]
-            }
-            if (includeFields.contains('errorMessage') && status == 'failed') {
-                fields << [title: 'Error Message', value: "```${errorMessage.take(500)}${errorMessage.length() > 500 ? '...' : ''}```", short: false]
+                fields << [type: 'mrkdwn', text: "*Status*\n${getStatusEmoji(status)}"]
             }
             if (includeFields.contains('failedProcess') && errorRecord) {
                 def processName = errorRecord.get('process')
                 if (processName) {
-                    fields << [title: 'Failed Process', value: "`${processName}`", short: true]
+                    fields << [type: 'mrkdwn', text: "*Failed Process*\n`${processName}`"]
                 }
             }
             if (includeFields.contains('tasks') && status == 'completed') {
@@ -376,7 +444,7 @@ class SlackMessageBuilder {
                     if (stats.succeedCount) resourceInfo << "Completed: ${stats.succeedCount}"
                     if (stats.failedCount) resourceInfo << "Failed: ${stats.failedCount}"
                     if (resourceInfo) {
-                        fields << [title: 'Tasks', value: resourceInfo.join(', '), short: true]
+                        fields << [type: 'mrkdwn', text: "*Tasks*\n${resourceInfo.join(', ')}"]
                     }
                 }
             }
@@ -384,24 +452,63 @@ class SlackMessageBuilder {
 
         // Add custom fields
         def customFields = customConfig.customFields as List ?: []
-        fields.addAll(customFields)
+        customFields.each { field ->
+            def f = field as Map
+            fields << [
+                type: 'mrkdwn',
+                text: "*${f.title}*\n${f.value}"
+            ]
+        }
 
-        // Build footer text
-        def footerText = "Workflow ${status} at ${formatTimestamp(timestamp)}"
+        if (fields) {
+            blocks << [
+                type: 'section',
+                fields: fields
+            ]
+        }
 
-        def message = [
-            attachments: [
-                [
-                    fallback: "Pipeline ${workflowName} ${status}",
-                    color: color,
-                    author_name: workflowName,
-                    author_icon: NEXTFLOW_ICON,
-                    text: messageText,
-                    fields: fields,
-                    footer: footerText,
-                    ts: System.currentTimeMillis() / 1000 as long
+        // Handle long fields that should be their own sections
+        if (includeFields.contains('commandLine') && session.commandLine) {
+            blocks << [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Command Line*\n```${session.commandLine}```"
                 ]
             ]
+        }
+        if (includeFields.contains('workDir') && session.workDir && status == 'started') {
+            blocks << [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Work Directory*\n`${session.workDir}`"
+                ]
+            ]
+        }
+        if (includeFields.contains('errorMessage') && status == 'failed') {
+            blocks << [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Error Message*\n```${errorMessage.take(2000)}${errorMessage.length() > 2000 ? '...' : ''}```"
+                ]
+            ]
+        }
+
+        // Footer
+        blocks << [
+            type: 'context',
+            elements: [
+                [
+                    type: 'mrkdwn',
+                    text: "Workflow ${status} at ${formatTimestamp(timestamp)} | ${workflowName}"
+                ]
+            ]
+        ]
+
+        def message = [
+            blocks: blocks
         ]
 
         return new JsonBuilder(message).toPrettyString()
@@ -420,22 +527,6 @@ class SlackMessageBuilder {
                 return '❌ *Pipeline failed*'
             default:
                 return '*Pipeline event*'
-        }
-    }
-
-    /**
-     * Get default color for a status
-     */
-    private static String getDefaultColor(String status) {
-        switch (status) {
-            case 'started':
-                return COLOR_INFO
-            case 'completed':
-                return COLOR_SUCCESS
-            case 'failed':
-                return COLOR_ERROR
-            default:
-                return COLOR_INFO
         }
     }
 

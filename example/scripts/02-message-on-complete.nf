@@ -30,11 +30,9 @@ workflow {
     // ================================================================================
     workflow.onComplete = {
         def status = workflow.success ? '✅ SUCCESS' : '❌ FAILED'
-        def color = workflow.success ? '#2EB887' : '#A30301'
 
         slackMessage([
             message: "Workflow ${status}",
-            color: color,
             fields: [
                 [
                     title: "Duration",
