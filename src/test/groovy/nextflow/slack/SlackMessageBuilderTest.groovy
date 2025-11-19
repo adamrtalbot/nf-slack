@@ -117,7 +117,7 @@ class SlackMessageBuilderTest extends Specification {
 
         // Check fields section
         def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
-        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('✅ Success') }
+        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('Success') }
         fieldSection.fields.any { it.text.contains('Run Name') && it.text.contains('test-run') }
         fieldSection.fields.any { it.text.contains('Duration') }
     }
@@ -162,7 +162,7 @@ class SlackMessageBuilderTest extends Specification {
 
         // Check for status and failed process in any field section
         def allFields = fieldSections.collectMany { it.fields }
-        allFields.any { it.text.contains('Status') && it.text.contains('❌ Failed') }
+        allFields.any { it.text.contains('Status') && it.text.contains('Failed') }
         allFields.any { it.text.contains('Failed Process') && it.text.contains('FAILED_PROCESS') }
 
         // Check error message section
@@ -198,9 +198,9 @@ class SlackMessageBuilderTest extends Specification {
         json.text == 'Analysis complete'
         json.blocks.size() > 0
 
-        // Check main message section with emoji
+        // Check main message section (no emoji)
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Analysis complete') }
-        messageSection.text.text.contains('✅')  // Success emoji
+        !messageSection.text.text.contains('✅')  // No emoji
 
         // Check fields section
         def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
@@ -391,7 +391,7 @@ class SlackMessageBuilderTest extends Specification {
         // Check fields section
         def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
         fieldsSection.fields.find { it.text.contains('Run Name') && it.text.contains('test-run') }
-        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('🚀 Running') }
+        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('Running') }
         fieldsSection.fields.find { it.text.contains('Environment') && it.text.contains('Production') }
     }
 
@@ -431,7 +431,7 @@ class SlackMessageBuilderTest extends Specification {
         def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
         fieldsSection.fields.find { it.text.contains('Run Name') }
         fieldsSection.fields.find { it.text.contains('Duration') }
-        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('✅ Success') }
+        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('Success') }
         fieldsSection.fields.find { it.text.contains('Output Location') && it.text.contains('s3://bucket/results') }
     }
 

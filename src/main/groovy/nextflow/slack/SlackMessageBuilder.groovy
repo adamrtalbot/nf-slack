@@ -67,7 +67,7 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onStart.message as Map, workflowName, timestamp, 'started')
         }
 
-        def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
+        def messageText = config.onStart.message instanceof String ? config.onStart.message : '*Pipeline started*'
         def blocks = []
 
         // Header with workflow name (use project name if available, otherwise script name)
@@ -157,7 +157,7 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onComplete.message as Map, workflowName, timestamp, 'completed')
         }
 
-        def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
+        def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '*Pipeline completed successfully*'
         def blocks = []
 
         // Header with workflow name (use project name if available, otherwise script name)
@@ -187,7 +187,7 @@ class SlackMessageBuilder {
         def fieldsList = []
         fieldsList << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
         fieldsList << [type: 'mrkdwn', text: "*Duration*\n${duration.toString()}"]
-        fieldsList << [type: 'mrkdwn', text: "*Status*\n✅ Success"]
+        fieldsList << [type: 'mrkdwn', text: "*Status*\nSuccess"]
 
         // Add resource usage if configured
         if (config.onComplete.includeResourceUsage) {
@@ -250,7 +250,7 @@ class SlackMessageBuilder {
             return buildCustomMessage(config.onError.message as Map, workflowName, timestamp, 'failed', errorRecord)
         }
 
-        def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
+        def messageText = config.onError.message instanceof String ? config.onError.message : '*Pipeline failed*'
         def blocks = []
 
         // Header with workflow name (use project name if available, otherwise script name)
@@ -287,7 +287,7 @@ class SlackMessageBuilder {
 
         // Status and failed process fields
         def statusFields = []
-        statusFields << [type: 'mrkdwn', text: "*Status*\n❌ Failed"]
+        statusFields << [type: 'mrkdwn', text: "*Status*\nFailed"]
         if (errorRecord) {
             def processName = errorRecord.get('process')
             if (processName) {
@@ -375,18 +375,14 @@ class SlackMessageBuilder {
 
         def messageText = options.message as String
         def fields = options.fields as List ?: []
-        def color = options.color as String ?: COLOR_INFO
         def blocks = []
 
         // Main message section
-        def emoji = getColorEmoji(color)
-        def headerText = emoji ? "${emoji} ${messageText}" : messageText
-
         blocks << [
             type: 'section',
             text: [
                 type: 'mrkdwn',
-                text: headerText
+                text: messageText
             ]
         ]
 
@@ -599,11 +595,11 @@ class SlackMessageBuilder {
     private static String getStatusEmoji(String status) {
         switch (status) {
             case 'started':
-                return '🚀 Running'
+                return 'Running'
             case 'completed':
-                return '✅ Success'
+                return 'Success'
             case 'failed':
-                return '❌ Failed'
+                return 'Failed'
             default:
                 return 'Unknown'
         }
@@ -638,19 +634,4 @@ class SlackMessageBuilder {
         }
     }
 
-    /**
-     * Get emoji representing a color
-     */
-    private static String getColorEmoji(String color) {
-        switch (color) {
-            case COLOR_SUCCESS:
-                return '✅'
-            case COLOR_ERROR:
-                return '❌'
-            case COLOR_INFO:
-                return '🔵'
-            default:
-                return ''
-        }
-    }
 }
