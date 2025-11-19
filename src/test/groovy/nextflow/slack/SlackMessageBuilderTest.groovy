@@ -376,11 +376,19 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '🎬 *Custom pipeline starting*'
-        json.attachments[0].color == '#FF5733'
-        json.attachments[0].fields.find { it.title == 'Run Name' }?.value == 'test-run'
-        json.attachments[0].fields.find { it.title == 'Status' }?.value == '🚀 Running'
-        json.attachments[0].fields.find { it.title == 'Environment' }?.value == 'Production'
+        // Check for Block Kit format
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text == '🎬 *Custom pipeline starting*' }
+        messageSection != null
+
+        // Check header has emoji (replaces color sidebar)
+        def header = json.blocks.find { it.type == 'header' }
+        header.text.text.contains('🔴') || header.text.text.contains('test-workflow.nf')
+
+        // Check fields section
+        def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
+        fieldsSection.fields.find { it.text.contains('Run Name') && it.text.contains('test-run') }
+        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('🚀 Running') }
+        fieldsSection.fields.find { it.text.contains('Environment') && it.text.contains('Production') }
     }
 
     def 'should use map-based custom complete message with selective fields'() {
@@ -411,12 +419,16 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '🎉 *Analysis finished!*'
-        json.attachments[0].color == '#00FF00'
-        json.attachments[0].fields.find { it.title == 'Run Name' }
-        json.attachments[0].fields.find { it.title == 'Duration' }
-        json.attachments[0].fields.find { it.title == 'Status' }?.value == '✅ Success'
-        json.attachments[0].fields.find { it.title == 'Output Location' }?.value == 's3://bucket/results'
+        // Check for Block Kit format
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text == '🎉 *Analysis finished!*' }
+        messageSection != null
+
+        // Check fields section
+        def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
+        fieldsSection.fields.find { it.text.contains('Run Name') }
+        fieldsSection.fields.find { it.text.contains('Duration') }
+        fieldsSection.fields.find { it.text.contains('Status') && it.text.contains('✅ Success') }
+        fieldsSection.fields.find { it.text.contains('Output Location') && it.text.contains('s3://bucket/results') }
     }
 
     def 'should use map-based custom error message with error fields'() {
@@ -453,13 +465,20 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '💥 *Pipeline crashed!*'
-        json.attachments[0].color == '#FF0000'
-        json.attachments[0].fields.find { it.title == 'Run Name' }
-        json.attachments[0].fields.find { it.title == 'Duration' }
-        json.attachments[0].fields.find { it.title == 'Error Message' }?.value.contains('Out of memory')
-        json.attachments[0].fields.find { it.title == 'Failed Process' }?.value == '`FAILED_PROCESS`'
-        json.attachments[0].fields.find { it.title == 'Support' }?.value == 'contact@example.com'
+        // Check for Block Kit format
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text == '💥 *Pipeline crashed!*' }
+        messageSection != null
+
+        // Check fields section
+        def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
+        fieldsSection.fields.find { it.text.contains('Run Name') }
+        fieldsSection.fields.find { it.text.contains('Duration') }
+        fieldsSection.fields.find { it.text.contains('Failed Process') && it.text.contains('`FAILED_PROCESS`') }
+        fieldsSection.fields.find { it.text.contains('Support') && it.text.contains('contact@example.com') }
+
+        // Error message appears in its own section
+        def errorSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Error Message') }
+        errorSection.text.text.contains('Out of memory')
     }
 
     def 'should use default values when map config has minimal settings'() {
@@ -481,8 +500,16 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == 'Starting...'
-        json.attachments[0].color == '#3AA3E3' // default INFO color
-        json.attachments[0].fields.size() == 0 // no fields since includeFields not specified
+        // Check for Block Kit format
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text == 'Starting...' }
+        messageSection != null
+
+        // Check header has default emoji
+        def header = json.blocks.find { it.type == 'header' }
+        header.text.text.contains('🔵') // default INFO emoji
+
+        // No fields section should exist since includeFields not specified
+        def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
+        fieldsSection == null
     }
 }
