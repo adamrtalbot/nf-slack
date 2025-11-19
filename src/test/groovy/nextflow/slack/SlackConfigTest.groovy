@@ -151,4 +151,91 @@ class SlackConfigTest extends Specification {
         sender != null
         sender instanceof WebhookSlackSender
     }
+
+    def 'should parse bot configuration'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.enabled == true
+        config.botToken == 'xoxb-token'
+        config.botChannel == 'C123456'
+        config.webhook == null
+    }
+
+    def 'isConfigured should return true when enabled and bot set'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config.isConfigured() == true
+    }
+
+    def 'createSender should return BotSlackSender for bot configuration'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+        def config = SlackConfig.from(session)
+
+        when:
+        def sender = config.createSender()
+
+        then:
+        sender != null
+        sender instanceof BotSlackSender
+    }
+
+    def 'createSender should prefer BotSlackSender when both are configured'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+        def config = SlackConfig.from(session)
+
+        when:
+        def sender = config.createSender()
+
+        then:
+        sender != null
+        sender instanceof BotSlackSender
+    }
 }

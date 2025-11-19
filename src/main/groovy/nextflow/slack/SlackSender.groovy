@@ -21,7 +21,7 @@ package nextflow.slack
  *
  * Implementations include:
  * - WebhookSlackSender: Sends messages via Slack Incoming Webhooks
- * - Future: BotSlackSender: Sends messages via Slack Bot Token API
+ * - BotSlackSender: Sends messages via Slack Bot Token API
  *
  * @author Adam Talbot <adam.talbot@seqera.io>
  */

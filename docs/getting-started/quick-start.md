@@ -6,7 +6,7 @@ Get your first Slack notification working in minutes!
 
 Before you begin, make sure you have:
 
-- [x] A Slack webhook URL ([Installation guide](installation.md))
+- [x] A Bot Token ([Bot guide](bot-setup.md)) OR Slack webhook URL ([Webhook guide](webhook-setup.md))
 - [x] A Nextflow pipeline (v25.04.0 or later)
 - [x] Basic familiarity with Nextflow configuration
 
@@ -38,9 +38,17 @@ Add the Slack configuration block with your webhook URL:
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    // Option A: Bot User
+    bot {
+        token = 'xoxb-your-token'
+        channel = 'C123456'
     }
+
+    // Option B: Webhook
+    // webhook {
+    //     url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    // }
 }
 ```
 
@@ -83,8 +91,9 @@ plugins {
 }
 
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = 'C123456'
     }
 }
 ```
@@ -92,7 +101,7 @@ slack {
 And set your environment variable:
 
 ```bash
-export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+export SLACK_BOT_TOKEN='xoxb-...'
 nextflow run main.nf
 ```
 
