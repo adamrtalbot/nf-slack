@@ -70,13 +70,14 @@ class SlackMessageBuilder {
         def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
         def blocks = []
 
-        // Header with workflow name
+        // Header with workflow name (use project name if available, otherwise script name)
+        def displayName = session.workflowMetadata?.projectName ?: workflowName
         blocks << [
             type: 'header',
             text: [
                 type: 'plain_text',
-                text: "🔵 ${workflowName}",
-                emoji: true
+                text: displayName,
+                emoji: false
             ]
         ]
 
@@ -159,13 +160,14 @@ class SlackMessageBuilder {
         def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
         def blocks = []
 
-        // Header with workflow name
+        // Header with workflow name (use project name if available, otherwise script name)
+        def displayName = session.workflowMetadata?.projectName ?: workflowName
         blocks << [
             type: 'header',
             text: [
                 type: 'plain_text',
-                text: "✅ ${workflowName}",
-                emoji: true
+                text: displayName,
+                emoji: false
             ]
         ]
 
@@ -251,13 +253,14 @@ class SlackMessageBuilder {
         def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
         def blocks = []
 
-        // Header with workflow name
+        // Header with workflow name (use project name if available, otherwise script name)
+        def displayName = session.workflowMetadata?.projectName ?: workflowName
         blocks << [
             type: 'header',
             text: [
                 type: 'plain_text',
-                text: "❌ ${workflowName}",
-                emoji: true
+                text: displayName,
+                emoji: false
             ]
         ]
 
@@ -430,17 +433,17 @@ class SlackMessageBuilder {
 
         // Get color (used to determine emoji)
         def color = (customConfig.color as String) ?: getDefaultColor(status)
-        def emoji = getColorEmoji(color)
 
         def blocks = []
 
-        // Header with workflow name and status emoji
+        // Header with workflow name (use project name if available)
+        def displayName = session.workflowMetadata?.projectName ?: workflowName
         blocks << [
             type: 'header',
             text: [
                 type: 'plain_text',
-                text: "${emoji} ${workflowName}",
-                emoji: true
+                text: displayName,
+                emoji: false
             ]
         ]
 

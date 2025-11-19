@@ -71,10 +71,10 @@ class SlackMessageBuilderTest extends Specification {
         json.text == 'Pipeline test-workflow.nf started'
         json.blocks.size() > 0
 
-        // Check header
+        // Check header (should not have emoji)
         def header = json.blocks.find { it.type == 'header' }
         header.text.text.contains('test-workflow.nf')
-        header.text.text.contains('🔵')
+        !header.text.text.contains('🔵') // No emoji in header
 
         // Check main message section
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline started') }
@@ -106,10 +106,10 @@ class SlackMessageBuilderTest extends Specification {
         json.text == 'Pipeline test-workflow.nf completed successfully'
         json.blocks.size() > 0
 
-        // Check header
+        // Check header (should not have emoji)
         def header = json.blocks.find { it.type == 'header' }
         header.text.text.contains('test-workflow.nf')
-        header.text.text.contains('✅')
+        !header.text.text.contains('✅') // No emoji in header
 
         // Check main message section
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline completed successfully') }
@@ -147,10 +147,10 @@ class SlackMessageBuilderTest extends Specification {
         json.text == 'Pipeline test-workflow.nf failed'
         json.blocks.size() > 0
 
-        // Check header
+        // Check header (should not have emoji)
         def header = json.blocks.find { it.type == 'header' }
         header.text.text.contains('test-workflow.nf')
-        header.text.text.contains('❌')
+        !header.text.text.contains('❌') // No emoji in header
 
         // Check main message section
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline failed') }
@@ -508,9 +508,9 @@ class SlackMessageBuilderTest extends Specification {
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text == 'Starting...' }
         messageSection != null
 
-        // Check header has default emoji
+        // Check header (should not have emoji)
         def header = json.blocks.find { it.type == 'header' }
-        header.text.text.contains('🔵') // default INFO emoji
+        !header.text.text.contains('🔵') // No emoji in header
 
         // No fields section should exist since includeFields not specified
         def fieldsSection = json.blocks.find { it.type == 'section' && it.fields != null }
