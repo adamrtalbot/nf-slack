@@ -13,17 +13,30 @@ Complete API reference for nf-slack plugin configuration options and functions.
 
 ### `slack`
 
-| Property     | Type    | Default                                    | Required | Description                                                        |
-| ------------ | ------- | ------------------------------------------ | -------- | ------------------------------------------------------------------ |
-| `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                         |
-| `webhook`    | Closure | -                                          | Yes\*    | Webhook configuration block (see [`slack.webhook`](#slackwebhook)) |
-| `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                     |
-| `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                |
-| `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                     |
+| Property     | Type    | Default                                    | Required | Description                                                                               |
+| ------------ | ------- | ------------------------------------------ | -------- | ----------------------------------------------------------------------------------------- |
+| `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                                                |
+| `bot`        | Closure | -                                          | Yes\*    | Bot authentication configuration block (recommended, see [`slack.bot`](#slackbot))        |
+| `webhook`    | Closure | -                                          | Yes\*    | Webhook authentication configuration block (legacy, see [`slack.webhook`](#slackwebhook)) |
+| `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                                            |
+| `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                                       |
+| `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                                            |
 
-\*Required only if plugin is enabled. If no webhook is configured, the plugin will automatically disable itself.
+\*Authentication is required (either bot or webhook). If both are configured, bot takes precedence. If neither is configured, the plugin will automatically disable itself.
 
-#### Example
+#### Example (Bot Authentication)
+
+```groovy
+slack {
+    enabled = true
+    bot { /* ... */ }
+    onStart { /* ... */ }
+    onComplete { /* ... */ }
+    onError { /* ... */ }
+}
+```
+
+#### Example (Webhook Authentication - Legacy)
 
 ```groovy
 slack {
@@ -37,7 +50,32 @@ slack {
 
 ---
 
+### `slack.bot`
+
+Bot authentication configuration (recommended). See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
+
+| Property  | Type   | Default | Required | Description                                                    |
+| --------- | ------ | ------- | -------- | -------------------------------------------------------------- |
+| `token`   | String | -       | Yes      | Bot token (must start with `xoxb-` or `xoxp-`)                 |
+| `channel` | String | -       | Yes      | Channel ID (e.g., `C1234567890`). Channel names not supported. |
+
+#### Example
+
+```groovy
+bot {
+    token = System.getenv('SLACK_BOT_TOKEN')
+    channel = System.getenv('SLACK_CHANNEL_ID')
+}
+```
+
+!!! tip "Security Best Practice"
+Always use environment variables or Nextflow secrets for sensitive credentials. Never hardcode tokens in configuration files.
+
+---
+
 ### `slack.webhook`
+
+Webhook authentication configuration (legacy). Supported for backward compatibility.
 
 | Property | Type   | Default | Required | Description                                                             |
 | -------- | ------ | ------- | -------- | ----------------------------------------------------------------------- |
@@ -47,7 +85,7 @@ slack {
 
 ```groovy
 webhook {
-    url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    url = System.getenv('SLACK_WEBHOOK_URL')
 }
 ```
 

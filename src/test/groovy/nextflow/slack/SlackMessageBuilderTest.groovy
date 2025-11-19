@@ -68,16 +68,25 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments.size() == 1
-        json.attachments[0].author_name == 'test-workflow.nf'
-        json.attachments[0].text.contains('Pipeline started')
-        json.attachments[0].color == '#3AA3E3' // info color
+        json.text == 'Pipeline test-workflow.nf started'
+        json.blocks.size() > 0
 
-        // Check fields
-        def fields = json.attachments[0].fields
-        fields.find { it.title == 'Run Name' }.value == 'test-run'
-        // Session ID may or may not be present depending on mock behavior
-        fields.find { it.title == 'Command Line' }.value == '```nextflow run test.nf```'
+        // Check header
+        def header = json.blocks.find { it.type == 'header' }
+        header.text.text.contains('test-workflow.nf')
+        header.text.text.contains('🔵')
+
+        // Check main message section
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline started') }
+        messageSection != null
+
+        // Check for run name field
+        def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
+        fieldSection.fields.any { it.text.contains('Run Name') && it.text.contains('test-run') }
+
+        // Check for command line section
+        def commandSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Command Line') }
+        commandSection.text.text.contains('nextflow run test.nf')
     }
 
     def 'should build workflow complete message'() {
@@ -94,15 +103,23 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments.size() == 1
-        json.attachments[0].text.contains('Pipeline completed successfully')
-        json.attachments[0].color == '#2EB887' // success color
+        json.text == 'Pipeline test-workflow.nf completed successfully'
+        json.blocks.size() > 0
 
-        // Check basic fields
-        def fields = json.attachments[0].fields
-        fields.find { it.title == 'Status' }.value == '✅ Success'
-        fields.find { it.title == 'Run Name' }.value == 'test-run'
-        fields.find { it.title == 'Duration' }
+        // Check header
+        def header = json.blocks.find { it.type == 'header' }
+        header.text.text.contains('test-workflow.nf')
+        header.text.text.contains('✅')
+
+        // Check main message section
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline completed successfully') }
+        messageSection != null
+
+        // Check fields section
+        def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
+        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('✅ Success') }
+        fieldSection.fields.any { it.text.contains('Run Name') && it.text.contains('test-run') }
+        fieldSection.fields.any { it.text.contains('Duration') }
     }
 
     def 'should build workflow error message'() {
@@ -127,15 +144,26 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments.size() == 1
-        json.attachments[0].text.contains('Pipeline failed')
-        json.attachments[0].color == '#A30301' // error color
+        json.text == 'Pipeline test-workflow.nf failed'
+        json.blocks.size() > 0
 
-        // Check fields
-        def fields = json.attachments[0].fields
-        fields.find { it.title == 'Status' }.value == '❌ Failed'
-        fields.find { it.title == 'Error Message' }.value.contains('Process failed')
-        fields.find { it.title == 'Failed Process' }.value == '`FAILED_PROCESS`'
+        // Check header
+        def header = json.blocks.find { it.type == 'header' }
+        header.text.text.contains('test-workflow.nf')
+        header.text.text.contains('❌')
+
+        // Check main message section
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline failed') }
+        messageSection != null
+
+        // Check fields section
+        def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
+        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('❌ Failed') }
+        fieldSection.fields.any { it.text.contains('Failed Process') && it.text.contains('FAILED_PROCESS') }
+
+        // Check error message section
+        def errorSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Error Message') }
+        errorSection.text.text.contains('Process failed')
     }
 
     def 'should build simple text message'() {
@@ -163,13 +191,18 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments.size() == 1
-        json.attachments[0].text == 'Analysis complete'
-        json.attachments[0].color == '#2EB887'
-        json.attachments[0].fields.size() == 2
-        json.attachments[0].fields[0].title == 'Sample'
-        json.attachments[0].fields[0].value == 'sample123'
-        json.attachments[0].fields[0].short == true
+        json.text == 'Analysis complete'
+        json.blocks.size() > 0
+
+        // Check main message section with emoji
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Analysis complete') }
+        messageSection.text.text.contains('✅')  // Success emoji
+
+        // Check fields section
+        def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
+        fieldSection.fields.size() == 2
+        fieldSection.fields.any { it.text.contains('Sample') && it.text.contains('sample123') }
+        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('Success') }
     }
 
     def 'should throw exception for rich message without message text'() {
@@ -202,9 +235,9 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        def errorField = json.attachments[0].fields.find { it.title == 'Error Message' }
-        errorField.value.length() < 600
-        errorField.value.contains('...')
+        def errorSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Error Message') }
+        errorSection.text.text.length() < 700  // Truncated message + markup
+        errorSection.text.text.contains('...')
     }
 
     def 'should not include command line when disabled'() {
@@ -224,8 +257,8 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        def fields = json.attachments[0].fields
-        !fields.find { it.title == 'Command Line' }
+        // Should not find a section containing "Command Line"
+        !json.blocks.find { it.type == 'section' && it.text?.text?.contains('Command Line') }
     }
 
     def 'should use custom start message template'() {
@@ -245,7 +278,8 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '🎬 *Custom workflow is starting!*'
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Custom workflow is starting') }
+        messageSection.text.text == '🎬 *Custom workflow is starting!*'
     }
 
     def 'should use custom complete message template'() {
@@ -269,7 +303,8 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '🎉 *Analysis finished successfully!*'
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Analysis finished successfully') }
+        messageSection.text.text == '🎉 *Analysis finished successfully!*'
     }
 
     def 'should use custom error message template'() {
@@ -296,7 +331,8 @@ class SlackMessageBuilderTest extends Specification {
         def json = new JsonSlurper().parseText(message)
 
         then:
-        json.attachments[0].text == '💥 *Workflow encountered an error!*'
+        def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Workflow encountered an error') }
+        messageSection.text.text == '💥 *Workflow encountered an error!*'
     }
 
     def 'should use default messages when custom templates not provided'() {
@@ -312,7 +348,8 @@ class SlackMessageBuilderTest extends Specification {
         def startJson = new JsonSlurper().parseText(startMessage)
 
         then:
-        startJson.attachments[0].text == '🚀 *Pipeline started*'
+        def messageSection = startJson.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline started') }
+        messageSection.text.text == '🚀 *Pipeline started*'
     }
 
     def 'should use map-based custom start message with custom fields'() {

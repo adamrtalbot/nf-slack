@@ -36,13 +36,24 @@ Each example focuses on **one specific aspect** of the plugin, building progress
 
 ### Prerequisites
 
-Set up your Slack webhook URL:
+Set up your Slack authentication (bot recommended):
+
+**Bot Authentication:**
+
+```bash
+export SLACK_BOT_TOKEN='xoxb-your-bot-token'
+export SLACK_CHANNEL_ID='C1234567890'
+```
+
+See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
+
+**Webhook Authentication (Legacy):**
 
 ```bash
 export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
 ```
 
-See the [Installation Guide](../getting-started/installation.md) for detailed setup instructions.
+See the [Installation Guide](../getting-started/installation.md) for webhook setup.
 
 ### Running Examples
 
@@ -78,8 +89,9 @@ Configuration examples show how to set up automatic workflow notifications using
 
 ```groovy title="01-minimal.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 }
 ```
@@ -112,8 +124,9 @@ slack {
 
 ```groovy title="02-notification-control.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -152,8 +165,9 @@ slack {
 
 ```groovy title="03-message-text.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -193,8 +207,9 @@ slack {
 
 ```groovy title="04-message-colors.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -246,8 +261,9 @@ slack {
 
 ```groovy title="05-custom-fields.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -291,8 +307,9 @@ slack {
 
 ```groovy title="06-selective-fields.config"
 slack {
-    webhook {
-        url = System.getenv('SLACK_WEBHOOK_URL')
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -366,8 +383,9 @@ Script examples demonstrate how to use the `slackMessage()` function programmati
 
     ```groovy
     slack {
-        webhook {
-            url = "$SLACK_WEBHOOK_URL"
+        bot {
+            token = "$SLACK_BOT_TOKEN"
+            channel = "$SLACK_CHANNEL_ID"
         }
 
         onStart.enabled = false

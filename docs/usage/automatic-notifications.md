@@ -54,8 +54,9 @@ When a workflow fails, the notification includes:
 ```groovy
 slack {
     enabled = true  // Set to false to disable all notifications
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 }
 ```
@@ -66,8 +67,9 @@ Control which events trigger notifications:
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 
     onStart.enabled = false     // Don't notify on start
@@ -86,8 +88,9 @@ Only get notified when something goes wrong:
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 
     onStart.enabled = false
@@ -102,8 +105,9 @@ Get notified when pipelines start and if they fail:
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 
     onStart.enabled = true
@@ -118,8 +122,9 @@ Disable all automatic notifications during development:
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 
     onStart.enabled = false

@@ -14,11 +14,16 @@ Get Slack notifications for your Nextflow workflows - automatically notified whe
 
 ## Quick Start
 
-### 1. Set up a Slack Webhook
+### 1. Set up Slack Bot Authentication (Recommended)
 
-1. Go to [Slack Incoming Webhooks](https://api.slack.com/messaging/webhooks)
-2. Create a new webhook for your workspace
-3. Copy the webhook URL
+**Bot authentication is more secure and capable than webhooks.**
+
+1. Go to [https://api.slack.com/apps](https://api.slack.com/apps) and create a new app
+2. Add bot permissions: `chat:write` (and optionally `chat:write.public`)
+3. Install the app to your workspace and copy the **Bot User OAuth Token** (starts with `xoxb-`)
+4. Get your channel ID from Slack (click channel name → scroll down to see ID)
+
+See the [Bot Setup Guide](./docs/getting-started/bot-setup.md) for detailed instructions.
 
 ### 2. Add to Your Pipeline
 
@@ -30,12 +35,27 @@ plugins {
 }
 
 slack {
-    enabled = true
+    bot {
+        token = 'xoxb-your-bot-token-here'  // Or use environment variables
+        channel = 'C1234567890'              // Your channel ID
+    }
+}
+```
+
+<details>
+<summary><b>Alternative: Webhook authentication (legacy)</b></summary>
+
+```groovy
+slack {
     webhook {
         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
     }
 }
 ```
+
+Note: If both bot and webhook are configured, bot takes precedence.
+
+</details>
 
 Will post these messages to Slack:
 
@@ -63,9 +83,9 @@ By default, all notifications are enabled. You can selectively disable them:
 
 ```groovy
 slack {
-    enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token-here'
+        channel = 'C1234567890'
     }
 
     onStart.enabled = false     // Do not notify when pipeline starts
@@ -84,8 +104,9 @@ Change the notification messages to suit your needs:
 
 ```groovy
 slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token-here'
+        channel = 'C1234567890'
     }
 
     onStart {

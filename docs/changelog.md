@@ -126,6 +126,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+#### Bot Authentication Support
+
+- **Bot Token Authentication**: New recommended authentication method using Slack Bot tokens
+  - More secure than webhooks with granular permissions
+  - Tokens can be rotated and managed independently
+  - Messages posted to any channel the bot has access to
+  - Configurable via `slack.bot` configuration block:
+    ```groovy
+    slack {
+        bot {
+            token = System.getenv('SLACK_BOT_TOKEN')    // Bot token (xoxb-...)
+            channel = System.getenv('SLACK_CHANNEL_ID')  // Channel ID (C1234567890)
+        }
+    }
+    ```
+  - Bot token validation (must start with `xoxb-` or `xoxp-`)
+  - Channel ID validation (alphanumeric format)
+  - Comprehensive [Bot Setup Guide](getting-started/bot-setup.md) with step-by-step instructions
+
+#### Block Kit Message Format
+
+- **Modern Slack Message Format**: All messages now use Slack's Block Kit format
+  - Consistent formatting for both bot and webhook authentication
+  - Improved visual presentation with header blocks and structured sections
+  - Better mobile and desktop display
+  - Emoji support in headers for visual distinction
+  - All automatic notifications (start, complete, error) use Block Kit
+  - Custom messages via `slackMessage()` also use Block Kit format
+
+### Changed
+
+#### Authentication
+
+- **Configuration Precedence**: Bot authentication takes precedence over webhook when both are configured
+- **Webhook Status**: Webhooks marked as "legacy" authentication method in documentation
+- **Token Security**: Enhanced token validation and error messages
+- **Configuration Flexibility**: Both authentication methods remain fully supported
+
+#### Documentation Updates
+
+- **Bot Authentication Primary**: All documentation updated to show bot authentication as recommended method
+  - Updated README.md with bot examples
+  - Updated Quick Start guide with bot setup
+  - Updated all configuration examples to use bot auth
+  - Updated API reference with bot configuration options
+  - Updated examples gallery with bot authentication
+- **Webhook as Alternative**: Webhooks documented as legacy/alternative authentication method
+- **Security Best Practices**: Enhanced security guidance for token management
+- **Setup Instructions**: New comprehensive bot setup guide with troubleshooting
+
+### Technical Details
+
+- **New Classes**:
+
+  - `BotSlackSender` - Implements bot token authentication via Slack Web API
+  - Uses `https://slack.com/api/chat.postMessage` endpoint
+  - Bearer token authentication in Authorization header
+
+- **Updated Classes**:
+
+  - `SlackConfig` - Added bot token and channel parsing and validation
+  - `SlackMessageBuilder` - Refactored to generate Block Kit format directly
+  - `SlackObserver` - Simplified to use consistent message format
+  - `SlackExtension` - Updated to use Block Kit format for custom messages
+
+- **Interface Design**:
+  - `SlackSender` interface supports both webhook and bot implementations
+  - Unified message format regardless of authentication method
+  - Clean separation between authentication and message formatting
+
 ---
 
 ## Version History

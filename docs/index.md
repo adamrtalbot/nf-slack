@@ -16,7 +16,7 @@ Get Slack notifications for your Nextflow workflows - automatically notified whe
 
 Get started in just 3 simple steps:
 
-1. **[Set up a Slack webhook](getting-started/webhook-setup.md)** - Create an incoming webhook in your Slack workspace
+1. **[Set up Slack authentication](getting-started/bot-setup.md)** - Create a Slack bot (recommended) or use webhooks
 2. **[Configure your pipeline](getting-started/quick-start.md)** - Add the plugin to your `nextflow.config`
 3. **Run your workflow** - That's it! Notifications will be sent automatically
 
@@ -41,12 +41,22 @@ plugins {
     id 'nf-slack@0.2.1'
 }
 
+// Option 1: Bot authentication (recommended - more secure)
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 }
+
+// Option 2: Webhook authentication (legacy)
+// slack {
+//     enabled = true
+//     webhook {
+//         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+//     }
+// }
 ```
 
 That's it! Your workflow will now send notifications to Slack.
@@ -58,8 +68,9 @@ That's it! Your workflow will now send notifications to Slack.
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart.enabled = false     // Do not notify when pipeline starts
@@ -74,8 +85,9 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
 
     onStart {
@@ -114,7 +126,8 @@ workflow {
 
 ## Learn More
 
-- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks
+- **[Bot Setup Guide](getting-started/bot-setup.md)** - Set up Slack bot authentication (recommended)
+- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks (legacy)
 - **[Quick Start](getting-started/quick-start.md)** - Configure your first notification
 - **[Usage Guide](usage/automatic-notifications.md)** - Learn all the features
 - **[Examples Gallery](examples/gallery.md)** - 9 progressive examples with screenshots

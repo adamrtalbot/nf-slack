@@ -4,16 +4,25 @@ Advanced configuration options for customizing nf-slack notifications.
 
 ## Overview
 
-The nf-slack plugin is configured through the `slack` block in your `nextflow.config`. All configuration options are optional except for the webhook URL.
+The nf-slack plugin is configured through the `slack` block in your `nextflow.config`. All configuration options are optional except for authentication (either bot or webhook).
 
 ## Basic Structure
 
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+
+    // Option 1: Bot authentication (recommended)
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
+
+    // Option 2: Webhook authentication (legacy)
+    // webhook {
+    //     url = "$SLACK_WEBHOOK_URL"
+    // }
+
     onStart { /* ... */ }
     onComplete { /* ... */ }
     onError { /* ... */ }
@@ -36,9 +45,26 @@ When `enabled = false`:
 - Custom `slackMessage()` calls are silently ignored
 - No Slack API calls are made
 
-## Webhook Configuration
+## Authentication Configuration
 
-### Basic Webhook Setup
+### Bot Authentication (Recommended)
+
+Bot authentication provides better security and more features:
+
+```groovy
+slack {
+    bot {
+        token = 'xoxb-your-bot-token-here'
+        channel = 'C1234567890'  // Channel ID (not name)
+    }
+}
+```
+
+See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
+
+### Webhook Authentication (Legacy)
+
+Webhook authentication is still supported for backward compatibility:
 
 ```groovy
 slack {
@@ -48,29 +74,52 @@ slack {
 }
 ```
 
-### Using Environment Variables
+### Priority
+
+If both bot and webhook configurations are present, **bot takes precedence**.
+
+### Secure Configuration
+
+**Never hardcode tokens or URLs in configuration files committed to version control.**
+
+#### Using Environment Variables
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = System.getenv('SLACK_CHANNEL_ID')
     }
+
+    // Or for webhook:
+    // webhook {
+    //     url = System.getenv('SLACK_WEBHOOK_URL')
+    // }
 }
 ```
 
-### Using Nextflow Secrets
+#### Using Nextflow Secrets
 
 ```groovy
 slack {
-    webhook {
-        url = secrets.SLACK_WEBHOOK_URL
+    bot {
+        token = secrets.SLACK_BOT_TOKEN
+        channel = secrets.SLACK_CHANNEL_ID
     }
+
+    // Or for webhook:
+    // webhook {
+    //     url = secrets.SLACK_WEBHOOK_URL
+    // }
 }
 ```
 
-!!! tip "Security Best Practice"
+Store secrets with:
 
-    Never hardcode webhook URLs in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
+```bash
+nextflow secrets set SLACK_BOT_TOKEN xoxb-your-token
+nextflow secrets set SLACK_CHANNEL_ID C1234567890
+```
 
 ## Event Notification Control
 
