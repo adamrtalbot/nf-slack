@@ -156,10 +156,14 @@ class SlackMessageBuilderTest extends Specification {
         def messageSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Pipeline failed') }
         messageSection != null
 
-        // Check fields section
-        def fieldSection = json.blocks.find { it.type == 'section' && it.fields }
-        fieldSection.fields.any { it.text.contains('Status') && it.text.contains('❌ Failed') }
-        fieldSection.fields.any { it.text.contains('Failed Process') && it.text.contains('FAILED_PROCESS') }
+        // Check fields sections (now split into two sections)
+        def fieldSections = json.blocks.findAll { it.type == 'section' && it.fields }
+        fieldSections.size() >= 2
+
+        // Check for status and failed process in any field section
+        def allFields = fieldSections.collectMany { it.fields }
+        allFields.any { it.text.contains('Status') && it.text.contains('❌ Failed') }
+        allFields.any { it.text.contains('Failed Process') && it.text.contains('FAILED_PROCESS') }
 
         // Check error message section
         def errorSection = json.blocks.find { it.type == 'section' && it.text?.text?.contains('Error Message') }

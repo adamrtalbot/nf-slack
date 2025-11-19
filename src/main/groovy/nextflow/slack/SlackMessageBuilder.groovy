@@ -89,16 +89,24 @@ class SlackMessageBuilder {
             ]
         ]
 
-        // Run name field
+        // Divider before metadata
+        blocks << [type: 'divider']
+
+        // Metadata fields (run name and work directory together)
+        def fieldsList = []
+        fieldsList << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
+        if (session.workDir) {
+            fieldsList << [type: 'mrkdwn', text: "*Work Directory*\n`${session.workDir}`"]
+        }
+
         blocks << [
             type: 'section',
-            fields: [
-                [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
-            ]
+            fields: fieldsList
         ]
 
-        // Command line if configured
+        // Command line as separate section if configured
         if (config.onStart.includeCommandLine && session.commandLine) {
+            blocks << [type: 'divider']
             blocks << [
                 type: 'section',
                 text: [
@@ -108,24 +116,20 @@ class SlackMessageBuilder {
             ]
         }
 
-        // Working directory
-        if (session.workDir) {
-            blocks << [
-                type: 'section',
-                text: [
-                    type: 'mrkdwn',
-                    text: "*Work Directory*\n`${session.workDir}`"
-                ]
-            ]
-        }
-
-        // Footer
+        // Enhanced footer with session info and icon
+        blocks << [type: 'divider']
+        def sessionId = session.uniqueId?.toString()?.take(8) ?: 'unknown'
         blocks << [
             type: 'context',
             elements: [
                 [
+                    type: 'image',
+                    image_url: NEXTFLOW_ICON,
+                    alt_text: 'Nextflow'
+                ],
+                [
                     type: 'mrkdwn',
-                    text: "Started at ${formatTimestamp(timestamp)}"
+                    text: "Started at ${formatTimestamp(timestamp)} • Session: `${sessionId}`"
                 ]
             ]
         ]
@@ -174,6 +178,9 @@ class SlackMessageBuilder {
             ]
         ]
 
+        // Divider before metadata
+        blocks << [type: 'divider']
+
         // Fields section (run name, duration, status)
         def fieldsList = []
         fieldsList << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
@@ -200,13 +207,20 @@ class SlackMessageBuilder {
             fields: fieldsList
         ]
 
-        // Footer
+        // Enhanced footer with session info and icon
+        blocks << [type: 'divider']
+        def sessionId = session.uniqueId?.toString()?.take(8) ?: 'unknown'
         blocks << [
             type: 'context',
             elements: [
                 [
+                    type: 'image',
+                    image_url: NEXTFLOW_ICON,
+                    alt_text: 'Nextflow'
+                ],
+                [
                     type: 'mrkdwn',
-                    text: "Completed at ${formatTimestamp(timestamp)}"
+                    text: "Completed at ${formatTimestamp(timestamp)} • Session: `${sessionId}`"
                 ]
             ]
         ]
@@ -256,26 +270,35 @@ class SlackMessageBuilder {
             ]
         ]
 
-        // Fields section (run name, duration, status)
-        def fieldsList = []
-        fieldsList << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
-        fieldsList << [type: 'mrkdwn', text: "*Duration*\n${duration.toString()}"]
-        fieldsList << [type: 'mrkdwn', text: "*Status*\n❌ Failed"]
+        // Divider before metadata
+        blocks << [type: 'divider']
 
-        // Add failed process info if available
+        // Basic info fields (run name, duration)
+        blocks << [
+            type: 'section',
+            fields: [
+                [type: 'mrkdwn', text: "*Run Name*\n${runName}"],
+                [type: 'mrkdwn', text: "*Duration*\n${duration.toString()}"]
+            ]
+        ]
+
+        // Status and failed process fields
+        def statusFields = []
+        statusFields << [type: 'mrkdwn', text: "*Status*\n❌ Failed"]
         if (errorRecord) {
             def processName = errorRecord.get('process')
             if (processName) {
-                fieldsList << [type: 'mrkdwn', text: "*Failed Process*\n`${processName}`"]
+                statusFields << [type: 'mrkdwn', text: "*Failed Process*\n`${processName}`"]
             }
         }
 
         blocks << [
             type: 'section',
-            fields: fieldsList
+            fields: statusFields
         ]
 
-        // Error message
+        // Error message with divider
+        blocks << [type: 'divider']
         def truncatedError = errorMessage.take(500)
         if (errorMessage.length() > 500) {
             truncatedError += '...'
@@ -290,6 +313,7 @@ class SlackMessageBuilder {
 
         // Command line if configured
         if (config.onError.includeCommandLine && session.commandLine) {
+            blocks << [type: 'divider']
             blocks << [
                 type: 'section',
                 text: [
@@ -299,13 +323,20 @@ class SlackMessageBuilder {
             ]
         }
 
-        // Footer
+        // Enhanced footer with session info and icon
+        blocks << [type: 'divider']
+        def sessionId = session.uniqueId?.toString()?.take(8) ?: 'unknown'
         blocks << [
             type: 'context',
             elements: [
                 [
+                    type: 'image',
+                    image_url: NEXTFLOW_ICON,
+                    alt_text: 'Nextflow'
+                ],
+                [
                     type: 'mrkdwn',
-                    text: "Failed at ${formatTimestamp(timestamp)}"
+                    text: "Failed at ${formatTimestamp(timestamp)} • Session: `${sessionId}`"
                 ]
             ]
         ]
