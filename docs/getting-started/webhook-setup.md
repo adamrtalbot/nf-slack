@@ -2,6 +2,10 @@
 
 This guide will walk you through setting up a Slack webhook for your workspace.
 
+!!! note "Recommended: Use Bot User"
+
+    We recommend using a Bot User instead of a webhook for better security and features. See the [Bot Setup Guide](bot-setup.md).
+
 ## Prerequisites
 
 - A Slack workspace where you have permission to add apps

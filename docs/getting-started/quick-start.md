@@ -31,9 +31,9 @@ plugins {
     }
     ```
 
-## Step 2: Configure the Webhook
+## Step 2: Configure the Plugin
 
-Add the Slack configuration block with your webhook URL:
+Add the Slack configuration block with your Bot Token:
 
 ```groovy
 slack {
@@ -59,8 +59,9 @@ slack {
     ```groovy
     slack {
         enabled = true
-        webhook {
-            url = "$SLACK_WEBHOOK_URL"  // or secrets.SLACK_WEBHOOK_URL
+        bot {
+            token = "$SLACK_BOT_TOKEN"  // or secrets.SLACK_BOT_TOKEN
+            channel = 'C123456'
         }
     }
     ```

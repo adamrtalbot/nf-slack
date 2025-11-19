@@ -73,8 +73,11 @@ slack {
 ```
 
 !!! tip "Use Secrets"
-Store your token as a Nextflow secret:
-`nextflow secrets set SLACK_BOT_TOKEN 'xoxb-...'`
+
+    Store your token as a Nextflow secret:
+    ```bash
+    nextflow secrets set SLACK_BOT_TOKEN 'xoxb-...'
+    ```
 
 ## Next Steps
 

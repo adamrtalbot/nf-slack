@@ -11,8 +11,9 @@ The nf-slack plugin is configured through the `slack` block in your `nextflow.co
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = 'C123456'
     }
     onStart { /* ... */ }
     onComplete { /* ... */ }
@@ -36,14 +37,15 @@ When `enabled = false`:
 - Custom `slackMessage()` calls are silently ignored
 - No Slack API calls are made
 
-## Webhook Configuration
+## Bot Configuration
 
-### Basic Webhook Setup
+### Basic Bot Setup
 
 ```groovy
 slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456'
     }
 }
 ```
@@ -52,8 +54,9 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = 'C123456'
     }
 }
 ```
@@ -62,15 +65,16 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = secrets.SLACK_WEBHOOK_URL
+    bot {
+        token = secrets.SLACK_BOT_TOKEN
+        channel = 'C123456'
     }
 }
 ```
 
 !!! tip "Security Best Practice"
 
-    Never hardcode webhook URLs in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
+    Never hardcode tokens in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
 
 ## Event Notification Control
 
@@ -259,8 +263,9 @@ plugins {
 slack {
     enabled = true
 
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = 'C123456'
     }
 
     onStart {
