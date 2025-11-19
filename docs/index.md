@@ -16,7 +16,7 @@ Get Slack notifications for your Nextflow workflows - automatically notified whe
 
 Get started in just 3 simple steps:
 
-1. **[Set up a Slack webhook](getting-started/webhook-setup.md)** - Create an incoming webhook in your Slack workspace
+1. **[Set up a Bot User](getting-started/bot-setup.md)** - Create a Slack App and Bot User (Recommended)
 2. **[Configure your pipeline](getting-started/quick-start.md)** - Add the plugin to your `nextflow.config`
 3. **Run your workflow** - That's it! Notifications will be sent automatically
 
@@ -43,8 +43,9 @@ plugins {
 
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456'
     }
 }
 ```
@@ -58,8 +59,9 @@ That's it! Your workflow will now send notifications to Slack.
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456'
     }
 
     onStart.enabled = false     // Do not notify when pipeline starts
@@ -74,8 +76,9 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456'
     }
 
     onStart {
@@ -114,7 +117,7 @@ workflow {
 
 ## Learn More
 
-- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks
+- **[Installation Guide](getting-started/installation.md)** - Set up Bot User or Webhook
 - **[Quick Start](getting-started/quick-start.md)** - Configure your first notification
 - **[Usage Guide](usage/automatic-notifications.md)** - Learn all the features
 - **[Examples Gallery](examples/gallery.md)** - 9 progressive examples with screenshots
