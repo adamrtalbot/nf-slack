@@ -137,6 +137,20 @@ class SlackConfig {
         // Set values in config map for constructor
         if (webhook) config.webhook = webhook
         if (botToken) {
+            // Validate token format
+            if (!botToken.startsWith('xoxb-') && !botToken.startsWith('xoxp-')) {
+                throw new IllegalArgumentException("Slack plugin: Bot token must start with 'xoxb-' or 'xoxp-'")
+            }
+
+            // Validate channel format (basic check)
+            if (!botChannel) {
+                throw new IllegalArgumentException("Slack plugin: Bot channel is required when using bot token")
+            }
+            // Basic alphanumeric check for channel ID (allow hyphens/underscores for names)
+            if (!botChannel.matches(/^[a-zA-Z0-9\-_]+$/)) {
+                throw new IllegalArgumentException("Slack plugin: Invalid channel ID format: ${botChannel}")
+            }
+
             def botConfig = config.bot as Map
             if (botConfig == null) {
                 botConfig = [:]

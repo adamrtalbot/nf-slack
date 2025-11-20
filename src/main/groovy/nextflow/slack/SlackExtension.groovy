@@ -83,7 +83,6 @@ class SlackExtension extends PluginExtensionPoint {
      * Example:
      * slackMessage([
      *     message: "Analysis complete",
-     *     color: "#2EB887",
      *     fields: [
      *         [title: "Sample", value: sample_id, short: true],
      *         [title: "Status", value: "Success", short: true]
@@ -92,7 +91,6 @@ class SlackExtension extends PluginExtensionPoint {
      *
      * @param options Map with keys:
      *   - message (required): The main message text
-     *   - color (optional): Color bar for attachment (#2EB887 for success, #A30301 for error, #3AA3E3 for info)
      *   - fields (optional): List of field maps with title, value, and short (boolean)
      */
     @Function
