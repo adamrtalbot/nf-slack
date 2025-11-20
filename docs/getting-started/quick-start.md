@@ -6,7 +6,7 @@ Get your first Slack notification working in minutes!
 
 Before you begin, make sure you have:
 
-- [x] Slack authentication: either a [bot token](bot-setup.md) (recommended) or [webhook URL](installation.md)
+- [x] Slack authentication: either a [bot token](bot-setup.md) (recommended) or [webhook URL](webhook-setup.md)
 - [x] A Nextflow pipeline (v24.10.0 or later)
 - [x] Basic familiarity with Nextflow configuration
 
@@ -33,39 +33,31 @@ plugins {
 
 ## Step 2: Configure Authentication
 
+Choose one of the two authentication methods:
+
 ### Option 1: Bot Authentication (Recommended)
 
-Add the Slack configuration block with your bot token and channel ID:
+Bot authentication provides better security and flexibility. See the [Bot Setup Guide](bot-setup.md) for detailed instructions on creating a Slack app and getting your bot token.
 
 ```groovy
 slack {
     enabled = true
     bot {
-        token = "$SLACK_BOT_TOKEN"
-        channel = "$SLACK_CHANNEL_ID"
+        token = System.getenv("SLACK_BOT_TOKEN")
+        channel = System.getenv("SLACK_CHANNEL_ID")
     }
 }
 ```
 
-!!! tip "Why Bot Authentication?"
+### Option 2: Webhook Authentication
 
-    Bot authentication is more secure and capable than webhooks:
-
-    - **Secure**: Tokens can be rotated and have granular permissions
-    - **Flexible**: Post to any channel the bot has access to
-    - **Traceable**: Messages show as coming from your bot
-
-    See the [Bot Setup Guide](bot-setup.md) for detailed setup instructions.
-
-### Option 2: Webhook Authentication (Legacy)
-
-Alternatively, you can use a webhook URL:
+Alternatively, you can use a webhook URL. See the [Webhook Setup Guide](webhook-setup.md) for webhook setup instructions.
 
 ```groovy
 slack {
     enabled = true
     webhook {
-        url = "$SLACK_WEBHOOK_URL"
+        url = System.getenv("SLACK_WEBHOOK_URL")
     }
 }
 ```
@@ -99,72 +91,6 @@ You'll receive Slack notifications when your pipeline:
 - ❌ Fails
 
 ![Default notifications](../images/nf-slack-00.png)
-
-## Complete Minimal Example
-
-### Using Bot Authentication (Recommended)
-
-Here's a complete minimal `nextflow.config`:
-
-```groovy title="nextflow.config"
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
-slack {
-    bot {
-        token = "$SLACK_BOT_TOKEN"
-        channel = "$SLACK_CHANNEL_ID"
-    }
-}
-```
-
-Set your environment variables:
-
-```bash
-export SLACK_BOT_TOKEN='xoxb-your-bot-token'
-export SLACK_CHANNEL_ID='C1234567890'
-nextflow run main.nf
-```
-
-### Using Webhook (Legacy)
-
-```groovy title="nextflow.config"
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
-slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
-    }
-}
-```
-
-```bash
-export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-nextflow run main.nf
-```
-
-## Verify It's Working
-
-To test your configuration without running a full pipeline:
-
-1. Create a simple test workflow:
-
-   ```groovy title="test.nf"
-   workflow {
-       println "Testing nf-slack notifications!"
-   }
-   ```
-
-1. Run it:
-
-   ```bash
-   nextflow run test.nf
-   ```
-
-1. Check your Slack channel for the start and completion notifications.
 
 ## Next Steps
 
