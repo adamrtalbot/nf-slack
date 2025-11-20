@@ -83,6 +83,7 @@ Configuration for workflow start notifications.
 | `enabled`            | Boolean       | `true`                    | Send notification when workflow starts |
 | `message`            | String or Map | `'🚀 *Pipeline started*'` | Start notification message             |
 | `includeCommandLine` | Boolean       | `true`                    | Include command line in message        |
+| `showFooter`         | Boolean       | `true`                    | Show timestamp footer in message       |
 
 #### Message Available Fields
 
@@ -121,6 +122,7 @@ Configuration for workflow completion notifications.
 | `message`              | String or Map | `'✅ *Pipeline completed successfully*'` | Completion notification message            |
 | `includeCommandLine`   | Boolean       | `true`                                   | Include command line in message            |
 | `includeResourceUsage` | Boolean       | `true`                                   | Include task statistics and resource usage |
+| `showFooter`           | Boolean       | `true`                                   | Show timestamp footer in message           |
 
 > **Note**: `includeResourceUsage` is **only available** in the `onComplete` scope.
 
@@ -162,6 +164,7 @@ Configuration for workflow error notifications.
 | `enabled`            | Boolean       | `true`                   | Send notification when workflow fails |
 | `message`            | String or Map | `'❌ *Pipeline failed*'` | Error notification message            |
 | `includeCommandLine` | Boolean       | `true`                   | Include command line in message       |
+| `showFooter`         | Boolean       | `true`                   | Show timestamp footer in message      |
 
 #### Message Available Fields
 

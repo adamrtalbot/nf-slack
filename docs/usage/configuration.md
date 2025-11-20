@@ -224,6 +224,28 @@ slack {
 }
 ```
 
+### Footer Display
+
+Control whether a timestamp footer is shown at the bottom of messages:
+
+```groovy
+slack {
+    onStart {
+        showFooter = true  // Show timestamp (default)
+    }
+
+    onComplete {
+        showFooter = false  // Hide timestamp footer
+    }
+
+    onError {
+        showFooter = true  // Show timestamp
+    }
+}
+```
+
+The footer displays a human-readable timestamp (e.g., "Nov 20, 2025 at 6:54 PM").
+
 ## Next Steps
 
 - Learn about [automatic notifications](automatic-notifications.md)

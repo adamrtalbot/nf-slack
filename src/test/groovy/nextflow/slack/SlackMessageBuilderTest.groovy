@@ -172,7 +172,7 @@ class SlackMessageBuilderTest extends Specification {
         json.blocks.size() >= 2
         json.blocks[0].text.text == 'Analysis complete'
 
-        def fieldsBlock = json.blocks[1]
+        def fieldsBlock = json.blocks.find { it.type == 'section' && it.fields }
         fieldsBlock.fields.size() == 2
         fieldsBlock.fields[0].text.contains('Sample')
         fieldsBlock.fields[0].text.contains('sample123')

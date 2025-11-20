@@ -52,6 +52,89 @@ class SlackMessageBuilder {
     }
 
     /**
+     * Create a markdown field block
+     */
+    private static Map createMarkdownField(String title, String value) {
+        return [
+            type: 'mrkdwn',
+            text: "*${title}*\n${value}"
+        ]
+    }
+
+    /**
+     * Create a header section block
+     */
+    private static Map createHeaderSection(String text) {
+        return [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: text
+            ]
+        ]
+    }
+
+    /**
+     * Create a section block with fields
+     */
+    private static Map createFieldsSection(List<Map> fields) {
+        return [
+            type: 'section',
+            fields: fields
+        ]
+    }
+
+    /**
+     * Create a divider block
+     */
+    private static Map createDivider() {
+        return [type: 'divider']
+    }
+
+    /**
+     * Create a context footer block with timestamp
+     */
+    private static Map createContextFooter(String status, String timestamp, String workflowName) {
+        return [
+            type: 'context',
+            elements: [
+                [
+                    type: 'mrkdwn',
+                    text: formatTimestamp(timestamp)
+                ]
+            ]
+        ]
+    }
+
+    /**
+     * Create a command line section block
+     */
+    private static Map createCommandLineSection(String commandLine) {
+        return [
+            type: 'section',
+            text: [
+                type: 'mrkdwn',
+                text: "*Command Line*\n```${commandLine}```"
+            ]
+        ]
+    }
+
+    /**
+     * Get resource usage statistics as a formatted string
+     */
+    private String getResourceUsageStats() {
+        def stats = session.workflowMetadata?.stats
+        if (!stats) return null
+
+        def resourceInfo = []
+        if (stats.cachedCount) resourceInfo << "Cached: ${stats.cachedCount}"
+        if (stats.succeedCount) resourceInfo << "Completed: ${stats.succeedCount}"
+        if (stats.failedCount) resourceInfo << "Failed: ${stats.failedCount}"
+
+        return resourceInfo ? resourceInfo.join(', ') : null
+    }
+
+    /**
      * Build message for workflow started event
      */
     String buildWorkflowStartMessage() {
@@ -68,78 +151,40 @@ class SlackMessageBuilder {
 
         // Header section
         def messageText = config.onStart.message instanceof String ? config.onStart.message : '🚀 *Pipeline started*'
-        blocks << [
-            type: 'section',
-            text: [
-                type: 'mrkdwn',
-                text: messageText
-            ]
-        ]
+        blocks << createHeaderSection(messageText)
 
-        def fields = []
-
-        // Add run name
-        fields << [
-            type: 'mrkdwn',
-            text: "*Run Name*\n${runName}"
-        ]
-
-        // Add command line if configured
-        if (config.onStart.includeCommandLine && session.commandLine) {
-            // Command line is long, maybe put it in a separate section or just append to fields if it fits?
-            // Fields in blocks are limited to 10 items.
-            // Let's put command line in a separate section to avoid cluttering the grid if it's long.
-            // But for consistency with previous design, let's try to fit it or use a separate block.
-            // The previous design had `short: false` for command line.
-            // In Block Kit, fields are always side-by-side (2 columns).
-            // If we want a full width line, we should use a separate section or context.
-            // Let's keep it in fields for now if it fits, or use a separate section.
-            // Actually, `short: false` in attachments meant it took the full width.
-            // In Block Kit fields, you can't control width per item easily.
-            // So for long items like command line, it's better to have a separate section.
-        }
-
-        // Add working directory
-        if (session.workDir) {
-             fields << [
-                type: 'mrkdwn',
-                text: "*Work Directory*\n`${session.workDir}`"
-            ]
-        }
+        // Build fields
+        List<Map> fields = []
+        fields << createMarkdownField('Run Name', runName)
 
         if (fields) {
+            blocks << createDivider()
+            blocks << createFieldsSection(fields)
+        }
+
+        // Add work directory in a separate section if present
+        if (session.workDir) {
             blocks << [
                 type: 'section',
-                fields: fields
+                text: [
+                    type: 'mrkdwn',
+                    text: "*Work Directory*\n`${session.workDir}`"
+                ]
             ]
         }
 
         // Add command line in a separate section if configured
         if (config.onStart.includeCommandLine && session.commandLine) {
-            blocks << [
-                type: 'section',
-                text: [
-                    type: 'mrkdwn',
-                    text: "*Command Line*\n```${session.commandLine}```"
-                ]
-            ]
+            blocks << createCommandLineSection(session.commandLine)
         }
 
-        // Context / Footer
-        blocks << [
-            type: 'context',
-            elements: [
-                [
-                    type: 'mrkdwn',
-                    text: "Started at ${formatTimestamp(timestamp)} | ${workflowName}"
-                ]
-            ]
-        ]
+        // Footer
+        if (config.onStart.showFooter) {
+            blocks << createDivider()
+            blocks << createContextFooter('started', timestamp, workflowName)
+        }
 
-        def message = [
-            blocks: blocks
-        ]
-
+        def message = [blocks: blocks]
         return new JsonBuilder(message).toPrettyString()
     }
 
@@ -159,75 +204,36 @@ class SlackMessageBuilder {
 
         def blocks = []
 
+        // Header section
         def messageText = config.onComplete.message instanceof String ? config.onComplete.message : '✅ *Pipeline completed successfully*'
-        blocks << [
-            type: 'section',
-            text: [
-                type: 'mrkdwn',
-                text: messageText
-            ]
-        ]
+        blocks << createHeaderSection(messageText)
 
-        def fields = []
-
-        // Add run name
-        fields << [
-            type: 'mrkdwn',
-            text: "*Run Name*\n${runName}"
-        ]
-
-        // Add duration
-        fields << [
-            type: 'mrkdwn',
-            text: "*Duration*\n${duration.toString()}"
-        ]
-
-        // Add success status
-        fields << [
-            type: 'mrkdwn',
-            text: "*Status*\n✅ Success"
-        ]
+        // Build fields
+        List<Map> fields = []
+        fields << createMarkdownField('Run Name', runName)
+        fields << createMarkdownField('Duration', duration.toString())
+        fields << createMarkdownField('Status', '✅ Success')
 
         // Add resource usage if configured
         if (config.onComplete.includeResourceUsage) {
-            def stats = session.workflowMetadata?.stats
-            if (stats) {
-                def resourceInfo = []
-                if (stats.cachedCount) resourceInfo << "Cached: ${stats.cachedCount}"
-                if (stats.succeedCount) resourceInfo << "Completed: ${stats.succeedCount}"
-                if (stats.failedCount) resourceInfo << "Failed: ${stats.failedCount}"
-
-                if (resourceInfo) {
-                    fields << [
-                        type: 'mrkdwn',
-                        text: "*Tasks*\n${resourceInfo.join(', ')}"
-                    ]
-                }
+            def resourceStats = getResourceUsageStats()
+            if (resourceStats) {
+                fields << createMarkdownField('Tasks', resourceStats)
             }
         }
 
         if (fields) {
-            blocks << [
-                type: 'section',
-                fields: fields
-            ]
+            blocks << createDivider()
+            blocks << createFieldsSection(fields)
         }
 
-        // Context / Footer
-        blocks << [
-            type: 'context',
-            elements: [
-                [
-                    type: 'mrkdwn',
-                    text: "Completed at ${formatTimestamp(timestamp)} | ${workflowName}"
-                ]
-            ]
-        ]
+        // Footer
+        if (config.onComplete.showFooter) {
+            blocks << createDivider()
+            blocks << createContextFooter('completed', timestamp, workflowName)
+        }
 
-        def message = [
-            blocks: blocks
-        ]
-
+        def message = [blocks: blocks]
         return new JsonBuilder(message).toPrettyString()
     }
 
@@ -248,54 +254,31 @@ class SlackMessageBuilder {
 
         def blocks = []
 
+        // Header section
         def messageText = config.onError.message instanceof String ? config.onError.message : '❌ *Pipeline failed*'
-        blocks << [
-            type: 'section',
-            text: [
-                type: 'mrkdwn',
-                text: messageText
-            ]
-        ]
+        blocks << createHeaderSection(messageText)
 
-        def fields = []
-
-        // Add run name
-        fields << [
-            type: 'mrkdwn',
-            text: "*Run Name*\n${runName}"
-        ]
-
-        // Add duration
-        fields << [
-            type: 'mrkdwn',
-            text: "*Duration*\n${duration.toString()}"
-        ]
-
-        // Add status
-        fields << [
-            type: 'mrkdwn',
-            text: "*Status*\n❌ Failed"
-        ]
+        // Build fields
+        List<Map> fields = []
+        fields << createMarkdownField('Run Name', runName)
+        fields << createMarkdownField('Duration', duration.toString())
+        fields << createMarkdownField('Status', '❌ Failed')
 
         // Add failed process info if available
         if (errorRecord) {
             def processName = errorRecord.get('process')
             if (processName) {
-                fields << [
-                    type: 'mrkdwn',
-                    text: "*Failed Process*\n`${processName}`"
-                ]
+                fields << createMarkdownField('Failed Process', "`${processName}`")
             }
         }
 
         if (fields) {
-            blocks << [
-                type: 'section',
-                fields: fields
-            ]
+            blocks << createDivider()
+            blocks << createFieldsSection(fields)
         }
 
         // Add error message in a separate section (it can be long)
+        blocks << createDivider()
         blocks << [
             type: 'section',
             text: [
@@ -306,30 +289,16 @@ class SlackMessageBuilder {
 
         // Add command line if configured
         if (config.onError.includeCommandLine && session.commandLine) {
-            blocks << [
-                type: 'section',
-                text: [
-                    type: 'mrkdwn',
-                    text: "*Command Line*\n```${session.commandLine}```"
-                ]
-            ]
+            blocks << createCommandLineSection(session.commandLine)
         }
 
-        // Context / Footer
-        blocks << [
-            type: 'context',
-            elements: [
-                [
-                    type: 'mrkdwn',
-                    text: "Failed at ${formatTimestamp(timestamp)} | ${workflowName}"
-                ]
-            ]
-        ]
+        // Footer
+        if (config.onError.showFooter) {
+            blocks << createDivider()
+            blocks << createContextFooter('failed', timestamp, workflowName)
+        }
 
-        def message = [
-            blocks: blocks
-        ]
-
+        def message = [blocks: blocks]
         return new JsonBuilder(message).toPrettyString()
     }
 
@@ -363,29 +332,16 @@ class SlackMessageBuilder {
         }
 
         def blocks = []
-
-        blocks << [
-            type: 'section',
-            text: [
-                type: 'mrkdwn',
-                text: options.message as String
-            ]
-        ]
+        blocks << createHeaderSection(options.message as String)
 
         def fieldsList = options.fields as List ?: []
         if (fieldsList) {
-            def fields = []
-            fieldsList.each { field ->
+            def fields = fieldsList.collect { field ->
                 def f = field as Map
-                fields << [
-                    type: 'mrkdwn',
-                    text: "*${f.title}*\n${f.value}"
-                ]
+                createMarkdownField(f.title as String, f.value as String)
             }
-            blocks << [
-                type: 'section',
-                fields: fields
-            ]
+            blocks << createDivider()
+            blocks << createFieldsSection(fields)
         }
 
         def message = [
@@ -406,46 +362,34 @@ class SlackMessageBuilder {
         def blocks = []
 
         // Get message text
-        def messageText = customConfig.text ?: getDefaultMessageText(status)
-        blocks << [
-            type: 'section',
-            text: [
-                type: 'mrkdwn',
-                text: messageText
-            ]
-        ]
+        def messageText = customConfig.text as String ?: getDefaultMessageText(status)
+        blocks << createHeaderSection(messageText)
 
         // Build fields
-        def fields = []
+        List<Map> fields = []
 
         // Add default fields if specified
         def includeFields = customConfig.includeFields as List ?: []
         if (includeFields) {
             if (includeFields.contains('runName')) {
-                fields << [type: 'mrkdwn', text: "*Run Name*\n${runName}"]
+                fields << createMarkdownField('Run Name', runName)
             }
             if (includeFields.contains('duration') && status != 'started') {
-                fields << [type: 'mrkdwn', text: "*Duration*\n${duration.toString()}"]
+                fields << createMarkdownField('Duration', duration.toString())
             }
             if (includeFields.contains('status')) {
-                fields << [type: 'mrkdwn', text: "*Status*\n${getStatusEmoji(status)}"]
+                fields << createMarkdownField('Status', getStatusEmoji(status))
             }
             if (includeFields.contains('failedProcess') && errorRecord) {
                 def processName = errorRecord.get('process')
                 if (processName) {
-                    fields << [type: 'mrkdwn', text: "*Failed Process*\n`${processName}`"]
+                    fields << createMarkdownField('Failed Process', "`${processName}`")
                 }
             }
             if (includeFields.contains('tasks') && status == 'completed') {
-                def stats = session.workflowMetadata?.stats
-                if (stats) {
-                    def resourceInfo = []
-                    if (stats.cachedCount) resourceInfo << "Cached: ${stats.cachedCount}"
-                    if (stats.succeedCount) resourceInfo << "Completed: ${stats.succeedCount}"
-                    if (stats.failedCount) resourceInfo << "Failed: ${stats.failedCount}"
-                    if (resourceInfo) {
-                        fields << [type: 'mrkdwn', text: "*Tasks*\n${resourceInfo.join(', ')}"]
-                    }
+                def resourceStats = getResourceUsageStats()
+                if (resourceStats) {
+                    fields << createMarkdownField('Tasks', resourceStats)
                 }
             }
         }
@@ -454,28 +398,17 @@ class SlackMessageBuilder {
         def customFields = customConfig.customFields as List ?: []
         customFields.each { field ->
             def f = field as Map
-            fields << [
-                type: 'mrkdwn',
-                text: "*${f.title}*\n${f.value}"
-            ]
+            fields << createMarkdownField(f.title as String, f.value as String)
         }
 
         if (fields) {
-            blocks << [
-                type: 'section',
-                fields: fields
-            ]
+            blocks << createDivider()
+            blocks << createFieldsSection(fields)
         }
 
         // Handle long fields that should be their own sections
         if (includeFields.contains('commandLine') && session.commandLine) {
-            blocks << [
-                type: 'section',
-                text: [
-                    type: 'mrkdwn',
-                    text: "*Command Line*\n```${session.commandLine}```"
-                ]
-            ]
+            blocks << createCommandLineSection(session.commandLine)
         }
         if (includeFields.contains('workDir') && session.workDir && status == 'started') {
             blocks << [
@@ -497,20 +430,14 @@ class SlackMessageBuilder {
         }
 
         // Footer
-        blocks << [
-            type: 'context',
-            elements: [
-                [
-                    type: 'mrkdwn',
-                    text: "Workflow ${status} at ${formatTimestamp(timestamp)} | ${workflowName}"
-                ]
-            ]
-        ]
+        def shouldShowFooter = status == 'started' ? config.onStart.showFooter :
+                              (status == 'completed' ? config.onComplete.showFooter : config.onError.showFooter)
+        if (shouldShowFooter) {
+            blocks << createDivider()
+            blocks << createContextFooter(status, timestamp, workflowName)
+        }
 
-        def message = [
-            blocks: blocks
-        ]
-
+        def message = [blocks: blocks]
         return new JsonBuilder(message).toPrettyString()
     }
 
@@ -520,11 +447,11 @@ class SlackMessageBuilder {
     private static String getDefaultMessageText(String status) {
         switch (status) {
             case 'started':
-                return '🚀 *Pipeline started*'
+                return '*Pipeline started*'
             case 'completed':
-                return '✅ *Pipeline completed successfully*'
+                return '*Pipeline completed successfully*'
             case 'failed':
-                return '❌ *Pipeline failed*'
+                return '*Pipeline failed*'
             default:
                 return '*Pipeline event*'
         }
@@ -552,7 +479,7 @@ class SlackMessageBuilder {
     private static String formatTimestamp(String isoTimestamp) {
         try {
             def dateTime = OffsetDateTime.parse(isoTimestamp)
-            return dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z"))
+            return dateTime.format(DateTimeFormatter.ofPattern("MMM d, yyyy 'at' h:mm a"))
         } catch (Exception e) {
             return isoTimestamp
         }
