@@ -41,22 +41,13 @@ plugins {
     id 'nf-slack@0.2.1'
 }
 
-// Option 1: Bot authentication (recommended - more secure)
 slack {
     enabled = true
     bot {
-        token = System.getenv('SLACK_BOT_TOKEN')
-        channel = System.getenv('SLACK_CHANNEL_ID')
+        token = "xoxb-your-bot-token-here"
+        channel = "C1234567890"
     }
 }
-
-// Option 2: Webhook authentication (legacy)
-// slack {
-//     enabled = true
-//     webhook {
-//         url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-//     }
-// }
 ```
 
 That's it! Your workflow will now send notifications to Slack.
@@ -69,8 +60,8 @@ That's it! Your workflow will now send notifications to Slack.
 slack {
     enabled = true
     bot {
-        token = System.getenv('SLACK_BOT_TOKEN')
-        channel = System.getenv('SLACK_CHANNEL_ID')
+        token = "xoxb-your-bot-token-here"
+        channel = "C1234567890"
     }
 
     onStart.enabled = false     // Do not notify when pipeline starts
@@ -86,8 +77,8 @@ slack {
 ```groovy
 slack {
     bot {
-        token = System.getenv('SLACK_BOT_TOKEN')
-        channel = System.getenv('SLACK_CHANNEL_ID')
+        token = "xoxb-your-bot-token-here"
+        channel = "C1234567890"
     }
 
     onStart {
@@ -127,7 +118,7 @@ workflow {
 ## Learn More
 
 - **[Bot Setup Guide](getting-started/bot-setup.md)** - Set up Slack bot authentication (recommended)
-- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks (legacy)
+- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks
 - **[Quick Start](getting-started/quick-start.md)** - Configure your first notification
 - **[Usage Guide](usage/automatic-notifications.md)** - Learn all the features
 - **[Examples Gallery](examples/gallery.md)** - 9 progressive examples with screenshots

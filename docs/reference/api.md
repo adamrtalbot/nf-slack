@@ -13,14 +13,14 @@ Complete API reference for nf-slack plugin configuration options and functions.
 
 ### `slack`
 
-| Property     | Type    | Default                                    | Required | Description                                                                               |
-| ------------ | ------- | ------------------------------------------ | -------- | ----------------------------------------------------------------------------------------- |
-| `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                                                |
-| `bot`        | Closure | -                                          | Yes\*    | Bot authentication configuration block (recommended, see [`slack.bot`](#slackbot))        |
-| `webhook`    | Closure | -                                          | Yes\*    | Webhook authentication configuration block (legacy, see [`slack.webhook`](#slackwebhook)) |
-| `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                                            |
-| `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                                       |
-| `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                                            |
+| Property     | Type    | Default                                    | Required | Description                                                                        |
+| ------------ | ------- | ------------------------------------------ | -------- | ---------------------------------------------------------------------------------- |
+| `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                                         |
+| `bot`        | Closure | -                                          | Yes\*    | Bot authentication configuration block (recommended, see [`slack.bot`](#slackbot)) |
+| `webhook`    | Closure | -                                          | Yes\*    | Webhook authentication configuration block (see [`slack.webhook`](#slackwebhook))  |
+| `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                                     |
+| `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                                |
+| `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                                     |
 
 \*Authentication is required (either bot or webhook). If both are configured, bot takes precedence. If neither is configured, the plugin will automatically disable itself.
 
@@ -36,7 +36,7 @@ slack {
 }
 ```
 
-#### Example (Webhook Authentication - Legacy)
+#### Example (Webhook Authentication)
 
 ```groovy
 slack {
@@ -75,7 +75,7 @@ Always use environment variables or Nextflow secrets for sensitive credentials. 
 
 ### `slack.webhook`
 
-Webhook authentication configuration (legacy). Supported for backward compatibility.
+Webhook authentication configuration.
 
 | Property | Type   | Default | Required | Description                                                             |
 | -------- | ------ | ------- | -------- | ----------------------------------------------------------------------- |

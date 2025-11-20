@@ -108,16 +108,6 @@ curl -X POST -H 'Content-type: application/json' \
 
 If this works, you should see a test message in your Slack channel.
 
-## Managing Webhooks
-
-### Changing the Channel
-
-You can create a new webhook for a different channel, or edit the existing webhook in your Slack app settings.
-
-### Multiple Channels
-
-If you need to send notifications to multiple channels, create separate webhooks for each channel and configure them in your Nextflow config.
-
 ## Next Steps
 
 Now that you have your webhook URL configured, you can:

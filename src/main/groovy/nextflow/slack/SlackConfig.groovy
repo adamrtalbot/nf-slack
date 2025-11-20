@@ -37,7 +37,7 @@ import nextflow.Session
  *         channel = 'C1234567890'  // Channel ID (not #name)
  *     }
  *
- *     // Option 2: Webhook (legacy)
+ *     // Option 2: Webhook
  *     webhook {
  *         url = 'https://hooks.slack.com/services/...'
  *     }

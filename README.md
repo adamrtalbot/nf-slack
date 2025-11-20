@@ -43,7 +43,7 @@ slack {
 ```
 
 <details>
-<summary><b>Alternative: Webhook authentication (legacy)</b></summary>
+<summary><b>Alternative: Webhook authentication</b></summary>
 
 ```groovy
 slack {

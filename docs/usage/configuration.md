@@ -18,7 +18,7 @@ slack {
         channel = "$SLACK_CHANNEL_ID"
     }
 
-    // Option 2: Webhook authentication (legacy)
+    // Option 2: Webhook authentication
     // webhook {
     //     url = "$SLACK_WEBHOOK_URL"
     // }
@@ -62,9 +62,9 @@ slack {
 
 See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
 
-### Webhook Authentication (Legacy)
+### Webhook Authentication
 
-Webhook authentication is still supported for backward compatibility:
+Webhook authentication is also supported:
 
 ```groovy
 slack {

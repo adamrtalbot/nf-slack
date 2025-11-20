@@ -47,7 +47,7 @@ export SLACK_CHANNEL_ID='C1234567890'
 
 See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
 
-**Webhook Authentication (Legacy):**
+**Webhook Authentication:**
 
 ```bash
 export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
