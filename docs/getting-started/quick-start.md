@@ -60,7 +60,7 @@ slack {
     slack {
         enabled = true
         bot {
-            token = "$SLACK_BOT_TOKEN"  // or secrets.SLACK_BOT_TOKEN
+            token = System.getenv("SLACK_BOT_TOKEN") // or secrets.SLACK_BOT_TOKEN
             channel = 'C123456'
         }
     }
@@ -81,50 +81,6 @@ You'll receive Slack notifications when your pipeline:
 - ❌ Fails
 
 ![Default notifications](../images/nf-slack-00.png)
-
-## Complete Minimal Example
-
-Here's a complete minimal `nextflow.config`:
-
-```groovy title="nextflow.config"
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
-slack {
-    bot {
-        token = "$SLACK_BOT_TOKEN"
-        channel = 'C123456'
-    }
-}
-```
-
-And set your environment variable:
-
-```bash
-export SLACK_BOT_TOKEN='xoxb-...'
-nextflow run main.nf
-```
-
-## Verify It's Working
-
-To test your configuration without running a full pipeline:
-
-1. Create a simple test workflow:
-
-   ```groovy title="test.nf"
-   workflow {
-       println "Testing nf-slack notifications!"
-   }
-   ```
-
-1. Run it:
-
-   ```bash
-   nextflow run test.nf
-   ```
-
-1. Check your Slack channel for the start and completion notifications.
 
 ## Next Steps
 

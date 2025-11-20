@@ -55,7 +55,7 @@ When a workflow fails, the notification includes:
 slack {
     enabled = true  // Set to false to disable all notifications
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 }
@@ -68,7 +68,7 @@ Control which events trigger notifications:
 ```groovy
 slack {
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 
@@ -89,7 +89,7 @@ Only get notified when something goes wrong:
 ```groovy
 slack {
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 
@@ -106,7 +106,7 @@ Get notified when pipelines start and if they fail:
 ```groovy
 slack {
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 
@@ -123,7 +123,7 @@ Disable all automatic notifications during development:
 ```groovy
 slack {
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 

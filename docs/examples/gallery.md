@@ -373,7 +373,7 @@ Script examples demonstrate how to use the `slackMessage()` function programmati
     ```groovy
     slack {
         bot {
-            token = "$SLACK_BOT_TOKEN"
+            token = System.getenv("SLACK_BOT_TOKEN")
             channel = 'C123456'
         }
 

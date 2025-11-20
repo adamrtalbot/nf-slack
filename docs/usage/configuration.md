@@ -4,7 +4,7 @@ Advanced configuration options for customizing nf-slack notifications.
 
 ## Overview
 
-The nf-slack plugin is configured through the `slack` block in your `nextflow.config`. All configuration options are optional except for the webhook URL.
+The nf-slack plugin is configured through the `slack` block in your `nextflow.config`.
 
 ## Basic Structure
 
@@ -12,7 +12,7 @@ The nf-slack plugin is configured through the `slack` block in your `nextflow.co
 slack {
     enabled = true
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
     onStart { /* ... */ }
@@ -55,7 +55,7 @@ slack {
 ```groovy
 slack {
     bot {
-        token = "$SLACK_BOT_TOKEN"
+        token = System.getenv('SLACK_BOT_TOKEN')
         channel = 'C123456'
     }
 }
@@ -220,56 +220,6 @@ Control whether task statistics and resource usage are included:
 slack {
     onComplete {
         includeResourceUsage = true  // Show task stats (default)
-    }
-}
-```
-
-## Complete Configuration Example
-
-```groovy
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
-slack {
-    enabled = true
-
-    bot {
-        token = "$SLACK_BOT_TOKEN"
-        channel = 'C123456'
-    }
-
-    onStart {
-        enabled = true
-        message = [
-            text: '🚀 *Production Pipeline Starting*',
-            customFields: [
-                [title: 'Environment', value: 'Production', short: true],
-                [title: 'Priority', value: 'High', short: true]
-            ]
-        ]
-        includeCommandLine = true
-    }
-
-    onComplete {
-        enabled = true
-        message = [
-            text: '✅ *Pipeline Completed*',
-            includeFields: ['runName', 'duration', 'tasks'],
-            customFields: [
-                [title: 'Cost', value: '$12.50', short: true]
-            ]
-        ]
-        includeResourceUsage = true
-    }
-
-    onError {
-        enabled = true
-        message = [
-            text: '❌ *Pipeline Failed*',
-            includeFields: ['runName', 'errorMessage', 'failedProcess']
-        ]
-        includeCommandLine = true
     }
 }
 ```
