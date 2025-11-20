@@ -24,7 +24,7 @@ Complete API reference for nf-slack plugin configuration options and functions.
 
 \*Authentication is required (either bot or webhook). If both are configured, bot takes precedence. If neither is configured, the plugin will automatically disable itself.
 
-#### Example (Bot Authentication)
+#### Example
 
 ```groovy
 slack {
@@ -36,7 +36,7 @@ slack {
 }
 ```
 
-#### Example (Webhook Authentication)
+#### Alternative: Webhook Authentication
 
 ```groovy
 slack {

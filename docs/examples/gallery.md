@@ -36,9 +36,9 @@ Each example focuses on **one specific aspect** of the plugin, building progress
 
 ### Prerequisites
 
-Set up your Slack authentication (bot recommended):
+Set up your Slack authentication:
 
-**Bot Authentication:**
+**Bot Authentication (Recommended):**
 
 ```bash
 export SLACK_BOT_TOKEN='xoxb-your-bot-token'
@@ -47,13 +47,13 @@ export SLACK_CHANNEL_ID='C1234567890'
 
 See the [Bot Setup Guide](../getting-started/bot-setup.md) for detailed setup instructions.
 
-**Webhook Authentication:**
+**Alternative: Webhook Authentication**
 
 ```bash
 export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
 ```
 
-See the [Installation Guide](../getting-started/installation.md) for webhook setup.
+See the [Webhook Setup Guide](../getting-started/webhook-setup.md) for webhook setup instructions.
 
 ### Running Examples
 

@@ -308,8 +308,9 @@ plugins {
 slack {
     enabled = true
 
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = "$SLACK_BOT_TOKEN"
+        channel = "$SLACK_CHANNEL_ID"
     }
 
     onStart {

@@ -62,7 +62,9 @@ mike delete v0.1.0
 docs/
 ├── index.md                    # Landing page
 ├── getting-started/
-│   ├── installation.md        # Slack webhook setup
+│   ├── installation.md        # Plugin installation and setup
+│   ├── bot-setup.md           # Bot authentication setup (recommended)
+│   ├── webhook-setup.md       # Webhook authentication setup
 │   └── quick-start.md         # Basic configuration
 ├── usage/
 │   ├── automatic-notifications.md

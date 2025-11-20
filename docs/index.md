@@ -118,7 +118,7 @@ workflow {
 ## Learn More
 
 - **[Bot Setup Guide](getting-started/bot-setup.md)** - Set up Slack bot authentication (recommended)
-- **[Installation Guide](getting-started/installation.md)** - Set up Slack webhooks
+- **[Installation Guide](getting-started/installation.md)** - Plugin installation and setup
 - **[Quick Start](getting-started/quick-start.md)** - Configure your first notification
 - **[Usage Guide](usage/automatic-notifications.md)** - Learn all the features
 - **[Examples Gallery](examples/gallery.md)** - 9 progressive examples with screenshots
