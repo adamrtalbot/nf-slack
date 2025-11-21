@@ -59,27 +59,8 @@ class BotSlackSender implements SlackSender {
     @Override
     void sendMessage(String message) {
         try {
-            // Parse message to inject channel if missing (or rely on caller to have it right)
-            // For now, we assume the message might need the channel added if not present,
-            // but since we are receiving a string, we might just want to wrap it or modify it.
-            // However, the current SlackMessageBuilder produces a full JSON.
-            // We need to ensure 'channel' is in the payload.
-
-            // Let's parse, add channel, and re-serialize.
-            // This is a bit inefficient but ensures correctness.
-            def jsonSlurper = new JsonSlurper()
-            def payload = jsonSlurper.parseText(message) as Map
-
-            if (!payload.containsKey('channel')) {
-                payload.put('channel', channelId)
-            }
-
-            // If the payload has 'text' but no 'blocks' or 'attachments', it's fine.
-            // The existing builder creates 'attachments'. chat.postMessage supports them.
-
-            def finalPayload = groovy.json.JsonOutput.toJson(payload)
-
-            postToSlack(finalPayload)
+            // Message is already formatted by SlackMessageBuilder with channel ID
+            postToSlack(message)
 
         } catch (Exception e) {
             def errorMsg = "Slack plugin: Error sending bot message: ${e.message}".toString()
@@ -90,37 +71,47 @@ class BotSlackSender implements SlackSender {
     }
 
     private void postToSlack(String jsonPayload) {
-        def url = new URL(API_URL)
-        def connection = url.openConnection() as HttpURLConnection
-        connection.requestMethod = 'POST'
-        connection.doOutput = true
-        connection.setRequestProperty('Content-Type', 'application/json; charset=utf-8')
-        connection.setRequestProperty('Authorization', "Bearer ${botToken}")
+        HttpURLConnection connection = null
+        try {
+            def url = new URL(API_URL)
+            connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = 'POST'
+            connection.doOutput = true
+            connection.setRequestProperty('Content-Type', 'application/json; charset=utf-8')
+            connection.setRequestProperty('Authorization', "Bearer ${botToken}")
 
-        // Send message
-        connection.outputStream.write(jsonPayload.getBytes("UTF-8"))
-        connection.outputStream.close()
+            // Send message
+            connection.outputStream.withCloseable { out ->
+                out.write(jsonPayload.getBytes("UTF-8"))
+            }
 
-        // Check HTTP response
-        def responseCode = connection.responseCode
-        if (responseCode != 200) {
-            def errorBody = connection.errorStream?.text ?: ""
-            log.error "Slack plugin: HTTP ${responseCode}: ${errorBody}"
-            return
-        }
+            // Check HTTP response
+            def responseCode = connection.responseCode
+            if (responseCode != 200) {
+                def errorBody = connection.errorStream?.text ?: ""
+                log.error "Slack plugin: HTTP ${responseCode}: ${errorBody}"
+                return
+            }
 
-        // Check Slack API 'ok' status
-        def responseText = connection.inputStream.text
-        def response = new JsonSlurper().parseText(responseText) as Map
+            // Check Slack API 'ok' status
+            def responseText = connection.inputStream.text
+            def response = new JsonSlurper().parseText(responseText) as Map
 
-        if (!response.ok) {
-            def error = response.error
-            def errorMsg = "Slack plugin: API error: ${error}".toString()
+            if (!response.ok) {
+                def error = response.error
+                def errorMsg = "Slack plugin: API error: ${error}".toString()
+                if (loggedErrors.add(errorMsg)) {
+                    log.error errorMsg
+                }
+            }
+
+        } catch (Exception e) {
+            def errorMsg = "Slack plugin: Error sending bot message: ${e.message}".toString()
             if (loggedErrors.add(errorMsg)) {
                 log.error errorMsg
             }
+        } finally {
+            connection?.disconnect()
         }
-
-        connection.disconnect()
     }
 }

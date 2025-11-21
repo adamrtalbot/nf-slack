@@ -184,8 +184,7 @@ class SlackMessageBuilder {
             blocks << createContextFooter('started', timestamp, workflowName)
         }
 
-        def message = [blocks: blocks]
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
@@ -233,8 +232,7 @@ class SlackMessageBuilder {
             blocks << createContextFooter('completed', timestamp, workflowName)
         }
 
-        def message = [blocks: blocks]
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
@@ -298,27 +296,23 @@ class SlackMessageBuilder {
             blocks << createContextFooter('failed', timestamp, workflowName)
         }
 
-        def message = [blocks: blocks]
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
      * Build a simple text message
      */
     String buildSimpleMessage(String text) {
-        def message = [
-            blocks: [
-                [
-                    type: 'section',
-                    text: [
-                        type: 'mrkdwn',
-                        text: text
-                    ]
+        def blocks = [
+            [
+                type: 'section',
+                text: [
+                    type: 'mrkdwn',
+                    text: text
                 ]
             ]
         ]
-
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
@@ -344,11 +338,7 @@ class SlackMessageBuilder {
             blocks << createFieldsSection(fields)
         }
 
-        def message = [
-            blocks: blocks
-        ]
-
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
@@ -437,8 +427,7 @@ class SlackMessageBuilder {
             blocks << createContextFooter(status, timestamp, workflowName)
         }
 
-        def message = [blocks: blocks]
-        return new JsonBuilder(message).toPrettyString()
+        return createMessagePayload(blocks)
     }
 
     /**
@@ -483,5 +472,16 @@ class SlackMessageBuilder {
         } catch (Exception e) {
             return isoTimestamp
         }
+    }
+
+    /**
+     * Create final message payload with channel if configured
+     */
+    private String createMessagePayload(List blocks) {
+        def message = [blocks: blocks] as Map
+        if (config.botChannel) {
+            message.channel = config.botChannel
+        }
+        return new JsonBuilder(message).toPrettyString()
     }
 }
