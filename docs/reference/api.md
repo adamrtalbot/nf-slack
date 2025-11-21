@@ -40,17 +40,19 @@ slack {
 
 ### `slack.bot`
 
-| Property  | Type   | Default | Required | Description                                        |
-| --------- | ------ | ------- | -------- | -------------------------------------------------- |
-| `token`   | String | -       | Yes      | Bot User OAuth Token (starts with `xoxb-`)         |
-| `channel` | String | -       | Yes      | Channel ID (e.g., `C12345678`) to send messages to |
+| Property     | Type    | Default | Required | Description                                                                                        |
+| ------------ | ------- | ------- | -------- | -------------------------------------------------------------------------------------------------- |
+| `token`      | String  | -       | Yes      | Bot User OAuth Token (starts with `xoxb-`)                                                         |
+| `channel`    | String  | -       | Yes      | Channel ID (e.g., `C12345678`) or Name (e.g., `general`) to send messages to                       |
+| `useThreads` | Boolean | `false` | No       | Group all workflow messages (including custom `slackMessage()` calls) in threads (bot tokens only) |
 
 #### Example
 
 ```groovy
 bot {
     token = 'xoxb-your-token'
-    channel = 'C12345678'
+    channel = 'general'
+    useThreads = true  // Optional: group messages in threads
 }
 ```
 
