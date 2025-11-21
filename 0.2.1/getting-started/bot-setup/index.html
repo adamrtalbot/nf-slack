@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://adamrtalbot.github.io/nf-slack/latest/0.2.1/getting-started/installation/">
+        <link rel="canonical" href="https://adamrtalbot.github.io/nf-slack/latest/0.2.1/getting-started/bot-setup/">
       
       
-        <link rel="prev" href="../..">
+        <link rel="prev" href="../quick-start/">
       
       
-        <link rel="next" href="../quick-start/">
+        <link rel="next" href="../webhook-setup/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Installation - nf-slack</title>
+        <title>Bot Setup - nf-slack</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installation" class="md-skip">
+        <a href="#slack-bot-setup" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Installation
+              Bot Setup
             
           </span>
         </div>
@@ -351,37 +351,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
         
   
   
@@ -397,92 +370,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adding-the-plugin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding the Plugin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#specifying-a-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Specifying a Version
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manual-installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual Installation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-installation-development" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local Installation (Development)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -520,10 +407,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../bot-setup/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bot Setup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -539,6 +453,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-create-a-slack-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Create a Slack App
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-add-bot-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add Bot Permissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-install-app-and-copy-bot-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Install App and Copy Bot Token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-get-the-channel-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Get the Channel ID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 4: Get the Channel ID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-via-slack-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Via Slack App
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-via-slack-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Via Slack URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-store-your-bot-token-securely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Store Your Bot Token Securely
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 5: Store Your Bot Token Securely">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-nextflow-secret" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Nextflow Secret
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-3-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 3: Configuration File
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-your-bot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Your Bot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learn-more" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learn More
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -967,7 +1067,7 @@
 
 
   
-    <a href="https://github.com/adamrtalbot/nf-slack/edit/main/docs/getting-started/installation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/adamrtalbot/nf-slack/edit/main/docs/getting-started/bot-setup.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -975,63 +1075,123 @@
   
 
 
-<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<p>This guide covers installing the nf-slack plugin in your Nextflow pipeline.</p>
+<h1 id="slack-bot-setup">Slack Bot Setup<a class="headerlink" href="#slack-bot-setup" title="Permanent link">&para;</a></h1>
+<p>This guide will walk you through setting up Slack Bot authentication for your workspace. Bot authentication is the <strong>recommended method</strong> as it's more secure, more capable, and easier to manage than webhooks.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Nextflow v25.04.0 or later</li>
-<li>A Bot Token (see <a href="../bot-setup/">Bot Setup guide</a>) OR Slack webhook URL (see <a href="../webhook-setup/">Webhook Setup guide</a>)</li>
+<li>A Slack workspace where you have permission to add apps</li>
+<li>Access to your Nextflow pipeline configuration</li>
 </ul>
-<h2 id="adding-the-plugin">Adding the Plugin<a class="headerlink" href="#adding-the-plugin" title="Permanent link">&para;</a></h2>
-<p>Add the nf-slack plugin to your <code>nextflow.config</code>:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s1">&#39;nf-slack@0.2.1&#39;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">}</span>
+<h2 id="step-1-create-a-slack-app">Step 1: Create a Slack App<a class="headerlink" href="#step-1-create-a-slack-app" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Go to <a href="https://api.slack.com/apps">Slack API Apps</a></li>
+<li>Click <strong>"Create New App"</strong></li>
+<li>Choose <strong>"From scratch"</strong></li>
+<li>Give your app a name (e.g., "Nextflow Notifications")</li>
+<li>Select your workspace</li>
+<li>Click <strong>"Create App"</strong></li>
+</ol>
+<h2 id="step-2-add-bot-permissions">Step 2: Add Bot Permissions<a class="headerlink" href="#step-2-add-bot-permissions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In your app's settings, navigate to <strong>"OAuth &amp; Permissions"</strong> in the sidebar</li>
+<li>Scroll down to <strong>"Scopes"</strong> → <strong>"Bot Token Scopes"</strong></li>
+<li>Click <strong>"Add an OAuth Scope"</strong> and add the following scopes:</li>
+<li><code>chat:write</code> - Required to send messages</li>
+<li><code>chat:write.public</code> - Optional, allows posting to channels without joining them first</li>
+</ol>
+<h2 id="step-3-install-app-and-copy-bot-token">Step 3: Install App and Copy Bot Token<a class="headerlink" href="#step-3-install-app-and-copy-bot-token" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In <strong>"OAuth &amp; Permissions"</strong>, scroll to the top</li>
+<li>Click <strong>"Install to Workspace"</strong></li>
+<li>Review the permissions and click <strong>"Allow"</strong></li>
+<li>You'll see a <strong>"Bot User OAuth Token"</strong> starting with <code>xoxb-</code></li>
+</ol>
+<p>Copy this token - you'll need it for configuration. It will look like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>xoxb-1234567890-1234567890123-xxxxxxxxxxxxxxxxxxxx
 </span></code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Using Multiple Plugins?</p>
-<p>If you already have a <code>plugins</code> block, just add the nf-slack entry:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s1">&#39;nf-validation&#39;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s1">&#39;nf-slack@0.2.1&#39;</span><span class="w">  </span><span class="c1">// Add this line</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">}</span>
-</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Keep Your Bot Token Secret</p>
+<p>This token allows anyone to post messages as your bot. Never commit it to version control or share it publicly.</p>
 </div>
-<h2 id="specifying-a-version">Specifying a Version<a class="headerlink" href="#specifying-a-version" title="Permanent link">&para;</a></h2>
-<p>You can specify a particular version of the plugin:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s1">&#39;nf-slack@0.2.1&#39;</span><span class="w">  </span><span class="c1">// Use a specific version</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">}</span>
-</span></code></pre></div>
-<p>To use the latest version, omit the version number:</p>
-<div class="language-groovy highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">plugins</span><span class="w"> </span><span class="o">{</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="s1">&#39;nf-slack&#39;</span><span class="w">  </span><span class="c1">// Uses the latest version</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="o">}</span>
-</span></code></pre></div>
-<h2 id="manual-installation">Manual Installation<a class="headerlink" href="#manual-installation" title="Permanent link">&para;</a></h2>
-<p>Nextflow will automatically download and install the plugin when you run your pipeline. However, if you want to manually install it, you can do so using the Nextflow CLI:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>nextflow<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>nf-slack
-</span></code></pre></div>
-<p>You should see <code>nf-slack</code> in the list of installed plugins.</p>
-<h2 id="local-installation-development">Local Installation (Development)<a class="headerlink" href="#local-installation-development" title="Permanent link">&para;</a></h2>
-<p>If you want to install a local development version of the plugin:</p>
+<h2 id="step-4-get-the-channel-id">Step 4: Get the Channel ID<a class="headerlink" href="#step-4-get-the-channel-id" title="Permanent link">&para;</a></h2>
+<p>You need the channel ID (not the channel name) for configuration.</p>
+<h3 id="method-1-via-slack-app">Method 1: Via Slack App<a class="headerlink" href="#method-1-via-slack-app" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Clone the repository</strong></li>
+<li>Open Slack and navigate to the channel where you want notifications</li>
+<li>Click the channel name at the top</li>
+<li>Scroll down in the "About" tab</li>
+<li>At the bottom, you'll see the <strong>Channel ID</strong> (e.g., <code>C1234567890</code>)</li>
+<li>Copy this ID</li>
 </ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/adamrtalbot/nf-slack.git
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">cd</span><span class="w"> </span>nf-slack
-</span></code></pre></div>
+<h3 id="method-2-via-slack-url">Method 2: Via Slack URL<a class="headerlink" href="#method-2-via-slack-url" title="Permanent link">&para;</a></h3>
 <ol>
-<li><strong>Install locally</strong></li>
+<li>Open the channel in your web browser</li>
+<li>Look at the URL: <code>https://app.slack.com/client/T.../C1234567890</code></li>
+<li>The part starting with <code>C</code> is your channel ID</li>
 </ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>make<span class="w"> </span>install
+<h2 id="step-5-store-your-bot-token-securely">Step 5: Store Your Bot Token Securely<a class="headerlink" href="#step-5-store-your-bot-token-securely" title="Permanent link">&para;</a></h2>
+<p>You have several options for managing the bot token and channel ID securely:</p>
+<h3 id="option-1-environment-variables">Option 1: Environment Variables<a class="headerlink" href="#option-1-environment-variables" title="Permanent link">&para;</a></h3>
+<p><em>Recommended</em></p>
+<p>Set environment variables:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SLACK_BOT_TOKEN</span><span class="o">=</span><span class="s1">&#39;xoxb-your-bot-token-here&#39;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SLACK_CHANNEL_ID</span><span class="o">=</span><span class="s1">&#39;C1234567890&#39;</span>
 </span></code></pre></div>
-<p>This will build and install the plugin to your local Nextflow plugins directory. For more details on development setup, see the <a href="../../CONTRIBUTING/">Contributing guide</a>.</p>
+<p>Then reference them in your <code>nextflow.config</code>:</p>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">slack</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">bot</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="o">.</span><span class="na">getenv</span><span class="o">(</span><span class="s1">&#39;SLACK_BOT_TOKEN&#39;</span><span class="o">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="o">.</span><span class="na">getenv</span><span class="o">(</span><span class="s1">&#39;SLACK_CHANNEL_ID&#39;</span><span class="o">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="o">}</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="option-2-nextflow-secret">Option 2: Nextflow Secret<a class="headerlink" href="#option-2-nextflow-secret" title="Permanent link">&para;</a></h3>
+<p><em>Better, but supported in fewer places</em></p>
+<p>Use <a href="https://www.nextflow.io/docs/latest/secrets.html">Nextflow secrets</a>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>nextflow<span class="w"> </span>secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SLACK_BOT_TOKEN<span class="w"> </span><span class="s1">&#39;xoxb-your-bot-token-here&#39;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nextflow<span class="w"> </span>secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span>SLACK_CHANNEL_ID<span class="w"> </span><span class="s1">&#39;C1234567890&#39;</span>
+</span></code></pre></div>
+<p>Then reference it in your config:</p>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">slack</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">bot</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">secrets</span><span class="o">.</span><span class="na">SLACK_BOT_TOKEN</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">secrets</span><span class="o">.</span><span class="na">SLACK_CHANNEL_ID</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="o">}</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="o">}</span>
+</span></code></pre></div>
+<h3 id="option-3-configuration-file">Option 3: Configuration File<a class="headerlink" href="#option-3-configuration-file" title="Permanent link">&para;</a></h3>
+<p>For testing only, you can put it directly in <code>nextflow.config</code>:</p>
+<div class="language-groovy highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">slack</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">bot</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">        </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;xoxb-your-bot-token-here&#39;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;C1234567890&#39;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="o">}</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="o">}</span>
+</span></code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">Don't Commit Bot Tokens</p>
+<p>If you use this option, add your config file to <code>.gitignore</code> to prevent accidentally committing your bot token.</p>
+</div>
+<h2 id="testing-your-bot">Testing Your Bot<a class="headerlink" href="#testing-your-bot" title="Permanent link">&para;</a></h2>
+<p>To verify your bot is working, you can use the Slack API tester or test it with curl:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://slack.com/api/chat.postMessage<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$SLACK_BOT_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--data<span class="w"> </span><span class="s2">&quot;{\&quot;channel\&quot;:\&quot;</span><span class="nv">$SLACK_CHANNEL_ID</span><span class="s2">\&quot;,\&quot;text\&quot;:\&quot;Test message from nf-slack\&quot;}&quot;</span>
+</span></code></pre></div>
+<p>If this works, you should see a test message in your Slack channel.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Now that you have your bot configured, you can:</p>
 <ul>
-<li><a href="../bot-setup/">Set up your Bot User</a> or <a href="../webhook-setup/">Slack webhook</a></li>
-<li><a href="../quick-start/">Get started with basic notifications</a></li>
-<li><a href="../../usage/configuration/">Configure the plugin</a></li>
+<li>Return to the <a href="../quick-start/">Quick Start guide</a> to configure the plugin</li>
+<li>Learn about <a href="../../usage/automatic-notifications/">automatic notifications</a></li>
+<li>Explore <a href="../../usage/custom-messages/">custom messages</a></li>
+</ul>
+<h2 id="learn-more">Learn More<a class="headerlink" href="#learn-more" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://api.slack.com/bot-users">Slack Bot Users Documentation</a></li>
+<li><a href="https://api.slack.com/authentication/oauth-v2">Slack OAuth &amp; Permissions</a></li>
+<li><a href="https://www.nextflow.io/docs/latest/secrets.html">Nextflow Secrets Documentation</a></li>
 </ul>
 
 
@@ -1068,7 +1228,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+          <a href="../quick-start/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Quick Start">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1078,20 +1238,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Home
+                Quick Start
               </div>
             </div>
           </a>
         
         
           
-          <a href="../quick-start/" class="md-footer__link md-footer__link--next" aria-label="Next: Quick Start">
+          <a href="../webhook-setup/" class="md-footer__link md-footer__link--next" aria-label="Next: Webhook Setup">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Quick Start
+                Webhook Setup
               </div>
             </div>
             <div class="md-footer__button md-icon">
