@@ -23,6 +23,8 @@ Each example focuses on **one specific aspect** of the plugin, building progress
 | [Example 4: Message Colors](#example-4-message-colors)             | Customize message colors | ⭐⭐       |
 | [Example 5: Custom Fields](#example-5-custom-fields)               | Add custom fields        | ⭐⭐⭐     |
 | [Example 6: Selective Fields](#example-6-selective-default-fields) | Choose default fields    | ⭐⭐⭐     |
+| [Example 7: Footer Control](#example-7-footer-control)             | Control timestamp footer | ⭐         |
+| [Example 8: Specific Channel ID](#example-8-specific-channel-id)   | Send to specific channel | ⭐         |
 
 ### Script Examples (Programmatic Messages)
 
@@ -80,7 +82,7 @@ Configuration examples show how to set up automatic workflow notifications using
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 }
 ```
@@ -115,7 +117,7 @@ slack {
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 
     onStart {
@@ -156,7 +158,7 @@ slack {
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 
     onStart {
@@ -198,7 +200,7 @@ slack {
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 
     onStart {
@@ -252,7 +254,7 @@ slack {
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 
     onStart {
@@ -298,7 +300,7 @@ slack {
 slack {
     bot {
         token = System.getenv('SLACK_BOT_TOKEN')
-        channel = 'C123456'
+        channel = 'general'
     }
 
     onStart {
@@ -362,6 +364,61 @@ slack {
 
 ---
 
+### Example 7: Footer Control
+
+**Concept**: Control whether messages include a timestamp footer
+
+**New concepts**:
+
+- `showFooter` - Enable/disable timestamp footer per event
+
+**Configuration**:
+
+```groovy title="07-footer-control.config"
+slack {
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = 'general'
+    }
+
+    onStart {
+        showFooter = true    // Show timestamp (default)
+    }
+
+    onComplete {
+        showFooter = false   // Hide footer for cleaner look
+    }
+
+    onError {
+        showFooter = true    // Show timestamp on errors
+    }
+}
+```
+
+**Use when**: You want to reduce visual clutter by hiding timestamps on routine notifications.
+
+---
+
+### Example 8: Specific Channel ID
+
+**Concept**: Send notifications to a specific channel by ID
+
+**Configuration**:
+
+```groovy title="08-channel-id.config"
+slack {
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        // You can use a channel ID (e.g. 'C12345678') or a channel name
+        channel = 'C12345678'
+    }
+}
+```
+
+**Use when**: You want to send notifications to a specific channel by ID instead of name.
+
+---
+
 ## Script Examples
 
 Script examples demonstrate how to use the `slackMessage()` function programmatically within your Nextflow workflows.
@@ -374,7 +431,7 @@ Script examples demonstrate how to use the `slackMessage()` function programmati
     slack {
         bot {
             token = System.getenv("SLACK_BOT_TOKEN")
-            channel = 'C123456'
+            channel = 'general'
         }
 
         onStart.enabled = false
