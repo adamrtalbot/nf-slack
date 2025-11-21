@@ -297,4 +297,43 @@ class SlackConfigTest extends Specification {
         def e = thrown(IllegalArgumentException)
         e.message.contains("Invalid channel ID format")
     }
+    def 'should allow channel name with hash'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: '#general'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.botChannel == '#general'
+    }
+
+    def 'should allow user token (xoxp-)'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxp-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.botToken == 'xoxp-token'
+    }
 }

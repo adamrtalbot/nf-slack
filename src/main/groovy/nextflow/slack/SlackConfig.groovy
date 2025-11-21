@@ -141,13 +141,17 @@ class SlackConfig {
             if (!botToken.startsWith('xoxb-') && !botToken.startsWith('xoxp-')) {
                 throw new IllegalArgumentException("Slack plugin: Bot token must start with 'xoxb-' or 'xoxp-'")
             }
+            if (botToken.startsWith('xoxp-')) {
+                log.warn "Slack plugin: You are using a User Token (xoxp-). It is recommended to use a Bot Token (xoxb-) for better security and granular permissions."
+            }
 
             // Validate channel format (basic check)
             if (!botChannel) {
                 throw new IllegalArgumentException("Slack plugin: Bot channel is required when using bot token")
             }
             // Basic alphanumeric check for channel ID (allow hyphens/underscores for names)
-            if (!botChannel.matches(/^[a-zA-Z0-9\-_]+$/)) {
+            // Also allow # for channel names
+            if (!botChannel.matches(/^[#a-zA-Z0-9\-_]+$/)) {
                 throw new IllegalArgumentException("Slack plugin: Invalid channel ID format: ${botChannel}")
             }
 
