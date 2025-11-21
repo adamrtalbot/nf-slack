@@ -40,14 +40,19 @@ jobs:
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
+            Please review the code changes in this pull request.
 
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+            Your review must be CONCISE. Avoid verbose explanations.
+
+            Focus ONLY on the code changes and verify:
+            - Documentation: Is it included and accurate?
+            - Examples: Are they included/updated?
+            - Tests: Are they included and sufficient?
+            - UX: Is the user experience easy to follow?
+
+            Do not comment on general code style or minor nits unless they severely impact the above.
+
+            Use the repository's CLAUDE.md for guidance on style and conventions.
 
             Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
 
