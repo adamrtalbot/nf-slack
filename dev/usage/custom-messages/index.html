@@ -408,6 +408,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../getting-started/bot-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Bot Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../getting-started/webhook-setup/" class="md-nav__link">
         
   
@@ -625,10 +653,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adding-colors-and-fields" class="md-nav__link">
+  <a href="#adding-custom-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding Colors and Fields
+        Adding Custom Fields
       
     </span>
   </a>
@@ -659,17 +687,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#color-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Color Reference
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1064,22 +1081,21 @@
 </span></code></pre></div>
 <p><img alt="Simple custom messages" src="../../images/nf-slack-04.png" /></p>
 <h2 id="rich-formatted-messages">Rich Formatted Messages<a class="headerlink" href="#rich-formatted-messages" title="Permanent link">&para;</a></h2>
-<h3 id="adding-colors-and-fields">Adding Colors and Fields<a class="headerlink" href="#adding-colors-and-fields" title="Permanent link">&para;</a></h3>
-<p>Create rich messages with colors and custom fields:</p>
+<h3 id="adding-custom-fields">Adding Custom Fields<a class="headerlink" href="#adding-custom-fields" title="Permanent link">&para;</a></h3>
+<p>Create rich messages with custom fields:</p>
 <div class="language-groovy highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">include</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">slackMessage</span><span class="w"> </span><span class="o">}</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="s1">&#39;plugin/nf-slack&#39;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">workflow</span><span class="w"> </span><span class="o">{</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">slackMessage</span><span class="o">([</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;Analysis Results&quot;</span><span class="o">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#2EB887&quot;</span><span class="o">,</span><span class="w">  </span><span class="c1">// green</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">params</span><span class="o">.</span><span class="na">sample_id</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Status&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;Success&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Total Variants&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;1,234&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Duration&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;2h 30m&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="o">]</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="o">])</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">}</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">params</span><span class="o">.</span><span class="na">sample_id</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Status&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;Success&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Total Variants&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;1,234&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Duration&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="s2">&quot;2h 30m&quot;</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="o">]</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="o">])</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">}</span>
 </span></code></pre></div>
 <h3 id="message-structure">Message Structure<a class="headerlink" href="#message-structure" title="Permanent link">&para;</a></h3>
 <p>When using the map format, you can specify:</p>
@@ -1098,12 +1114,6 @@
 <td>String</td>
 <td>Main message text</td>
 <td>Yes</td>
-</tr>
-<tr>
-<td><code>color</code></td>
-<td>String</td>
-<td>Hex color code (e.g., "#2EB887")</td>
-<td>No</td>
 </tr>
 <tr>
 <td><code>fields</code></td>
@@ -1145,37 +1155,25 @@
 </tr>
 </tbody>
 </table>
-<h2 id="color-reference">Color Reference<a class="headerlink" href="#color-reference" title="Permanent link">&para;</a></h2>
-<p>Use these colors for consistent message styling:</p>
-<ul>
-<li><strong>Success</strong>: <code>#2EB887</code> (green) - For successful operations</li>
-<li><strong>Error</strong>: <code>#A30301</code> (red) - For errors or failures</li>
-<li><strong>Info</strong>: <code>#3AA3E3</code> (blue) - For informational messages</li>
-<li><strong>Warning</strong>: <code>#FFA500</code> (orange) - For warnings</li>
-</ul>
 <div class="language-groovy highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// Success message</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">slackMessage</span><span class="o">([</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ Pipeline completed successfully&quot;</span><span class="o">,</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#2EB887&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">])</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">// Error message</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">slackMessage</span><span class="o">([</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ Quality control failed&quot;</span><span class="o">,</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#A30301&quot;</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="o">])</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">// Info message</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">slackMessage</span><span class="o">([</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;ℹ️ Processing 100 samples&quot;</span><span class="o">,</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#3AA3E3&quot;</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="o">])</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1">// Warning message</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">slackMessage</span><span class="o">([</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;⚠️ Low coverage detected&quot;</span><span class="o">,</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#FFA500&quot;</span>
-</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="o">])</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;✅ Pipeline completed successfully&quot;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">])</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// Error message</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">slackMessage</span><span class="o">([</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;❌ Quality control failed&quot;</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="o">])</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">// Info message</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">slackMessage</span><span class="o">([</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;ℹ️ Processing 100 samples&quot;</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="o">])</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1">// Warning message</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">slackMessage</span><span class="o">([</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;⚠️ Low coverage detected&quot;</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="o">])</span>
 </span></code></pre></div>
 <h2 id="common-use-cases">Common Use Cases<a class="headerlink" href="#common-use-cases" title="Permanent link">&para;</a></h2>
 <h3 id="send-results-summary">Send Results Summary<a class="headerlink" href="#send-results-summary" title="Permanent link">&para;</a></h3>
@@ -1189,15 +1187,14 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="o">.</span><span class="na">map</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="n">vcf</span><span class="o">,</span><span class="w"> </span><span class="n">stats</span><span class="w"> </span><span class="o">-&gt;</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">            </span><span class="n">slackMessage</span><span class="o">([</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;Sample ${sample} analyzed&quot;</span><span class="o">,</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#2EB887&quot;</span><span class="o">,</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Variants&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="na">variant_count</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Quality&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="na">mean_quality</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">                </span><span class="o">]</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">            </span><span class="o">])</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="o">}</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="o">}</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Variants&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="na">variant_count</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Quality&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">stats</span><span class="o">.</span><span class="na">mean_quality</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">                </span><span class="o">]</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">            </span><span class="o">])</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="o">}</span>
 </span></code></pre></div>
 <h3 id="progress-updates">Progress Updates<a class="headerlink" href="#progress-updates" title="Permanent link">&para;</a></h3>
 <p>Send notifications at key workflow milestones:</p>
@@ -1236,14 +1233,13 @@
 </span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="o">.</span><span class="na">map</span><span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="n">qc</span><span class="w"> </span><span class="o">-&gt;</span>
 </span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">            </span><span class="n">slackMessage</span><span class="o">([</span>
 </span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;⚠️ Quality check failed for ${sample}&quot;</span><span class="o">,</span>
-</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="s2">&quot;#FFA500&quot;</span><span class="o">,</span>
-</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Score&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">qc</span><span class="o">.</span><span class="na">score</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
-</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">                </span><span class="o">]</span>
-</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="o">])</span>
-</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="o">}</span>
-</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="o">}</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Sample&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">sample</span><span class="o">,</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Score&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">qc</span><span class="o">.</span><span class="na">score</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">                </span><span class="o">]</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">            </span><span class="o">])</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="o">}</span>
 </span></code></pre></div>
 <h3 id="batch-notifications">Batch Notifications<a class="headerlink" href="#batch-notifications" title="Permanent link">&para;</a></h3>
 <p>Collect results and send a summary:</p>
@@ -1259,15 +1255,14 @@
 </span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
 </span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">            </span><span class="n">slackMessage</span><span class="o">([</span>
 </span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">                </span><span class="nl">message:</span><span class="w"> </span><span class="s2">&quot;Batch processing complete&quot;</span><span class="o">,</span>
-</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">                </span><span class="nl">color:</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s2">&quot;#FFA500&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;#2EB887&quot;</span><span class="o">,</span>
-</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
-</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Total Samples&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">total</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Successful&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">success</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
-</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Failed&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">failed</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
-</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">                </span><span class="o">]</span>
-</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">            </span><span class="o">])</span>
-</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">        </span><span class="o">}</span>
-</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="o">}</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">                </span><span class="nl">fields:</span><span class="w"> </span><span class="o">[</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Total Samples&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">total</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Successful&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">success</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">],</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">                    </span><span class="o">[</span><span class="nl">title:</span><span class="w"> </span><span class="s2">&quot;Failed&quot;</span><span class="o">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">failed</span><span class="o">.</span><span class="na">toString</span><span class="o">(),</span><span class="w"> </span><span class="kt">short</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="o">]</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">                </span><span class="o">]</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">            </span><span class="o">])</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="o">}</span>
 </span></code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
