@@ -137,14 +137,14 @@ class SlackMessageBuilder {
     /**
      * Build message for workflow started event
      */
-    String buildWorkflowStartMessage() {
+    String buildWorkflowStartMessage(String threadTs = null) {
         def workflowName = session.workflowMetadata?.scriptName ?: 'Unknown workflow'
         def runName = session.runName ?: 'Unknown run'
         def timestamp = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
         // Check if using custom message configuration
         if (config.onStart.message instanceof Map) {
-            return buildCustomMessage(config.onStart.message as Map, workflowName, timestamp, 'started')
+            return buildCustomMessage(config.onStart.message as Map, workflowName, timestamp, 'started', null, threadTs)
         }
 
         def blocks = []
@@ -184,13 +184,13 @@ class SlackMessageBuilder {
             blocks << createContextFooter('started', timestamp, workflowName)
         }
 
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
      * Build message for workflow completed successfully
      */
-    String buildWorkflowCompleteMessage() {
+    String buildWorkflowCompleteMessage(String threadTs = null) {
         def workflowName = session.workflowMetadata?.scriptName ?: 'Unknown workflow'
         def runName = session.runName ?: 'Unknown run'
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
@@ -198,7 +198,7 @@ class SlackMessageBuilder {
 
         // Check if using custom message configuration
         if (config.onComplete.message instanceof Map) {
-            return buildCustomMessage(config.onComplete.message as Map, workflowName, timestamp, 'completed')
+            return buildCustomMessage(config.onComplete.message as Map, workflowName, timestamp, 'completed', null, threadTs)
         }
 
         def blocks = []
@@ -232,13 +232,13 @@ class SlackMessageBuilder {
             blocks << createContextFooter('completed', timestamp, workflowName)
         }
 
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
      * Build message for workflow error
      */
-    String buildWorkflowErrorMessage(TraceRecord errorRecord) {
+    String buildWorkflowErrorMessage(TraceRecord errorRecord, String threadTs = null) {
         def workflowName = session.workflowMetadata?.scriptName ?: 'Unknown workflow'
         def runName = session.runName ?: 'Unknown run'
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
@@ -247,7 +247,7 @@ class SlackMessageBuilder {
 
         // Check if using custom message configuration
         if (config.onError.message instanceof Map) {
-            return buildCustomMessage(config.onError.message as Map, workflowName, timestamp, 'failed', errorRecord)
+            return buildCustomMessage(config.onError.message as Map, workflowName, timestamp, 'failed', errorRecord, threadTs)
         }
 
         def blocks = []
@@ -296,13 +296,13 @@ class SlackMessageBuilder {
             blocks << createContextFooter('failed', timestamp, workflowName)
         }
 
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
      * Build a simple text message
      */
-    String buildSimpleMessage(String text) {
+    String buildSimpleMessage(String text, String threadTs = null) {
         def blocks = [
             [
                 type: 'section',
@@ -312,7 +312,7 @@ class SlackMessageBuilder {
                 ]
             ]
         ]
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
@@ -320,7 +320,7 @@ class SlackMessageBuilder {
      *
      * @param options Map with keys: message (required), fields (list of maps with title/value/short)
      */
-    String buildRichMessage(Map options) {
+    String buildRichMessage(Map options, String threadTs = null) {
         if (!options.message) {
             throw new IllegalArgumentException("Message text is required")
         }
@@ -338,13 +338,13 @@ class SlackMessageBuilder {
             blocks << createFieldsSection(fields)
         }
 
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
      * Build a custom message using map configuration
      */
-    private String buildCustomMessage(Map customConfig, String workflowName, String timestamp, String status, TraceRecord errorRecord = null) {
+    private String buildCustomMessage(Map customConfig, String workflowName, String timestamp, String status, TraceRecord errorRecord = null, String threadTs = null) {
         def runName = session.runName ?: 'Unknown run'
         def duration = session.workflowMetadata?.duration ?: Duration.of(0)
         def errorMessage = session.workflowMetadata?.errorMessage ?: 'Unknown error'
@@ -427,7 +427,7 @@ class SlackMessageBuilder {
             blocks << createContextFooter(status, timestamp, workflowName)
         }
 
-        return createMessagePayload(blocks)
+        return createMessagePayload(blocks, threadTs)
     }
 
     /**
@@ -475,12 +475,15 @@ class SlackMessageBuilder {
     }
 
     /**
-     * Create final message payload with channel if configured
+     * Create final message payload with channel and optional thread_ts
      */
-    private String createMessagePayload(List blocks) {
+    private String createMessagePayload(List blocks, String threadTs = null) {
         def message = [blocks: blocks] as Map
         if (config.botChannel) {
             message.channel = config.botChannel
+        }
+        if (threadTs) {
+            message.thread_ts = threadTs
         }
         return new JsonBuilder(message).toPrettyString()
     }

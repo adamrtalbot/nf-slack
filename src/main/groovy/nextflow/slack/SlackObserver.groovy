@@ -81,7 +81,9 @@ class SlackObserver implements TraceObserver {
         if (!isConfigured()) return
 
         if (config.onComplete.enabled) {
-            def message = messageBuilder.buildWorkflowCompleteMessage()
+            // Get thread timestamp if threading is enabled and we're using bot sender
+            def threadTs = getThreadTsIfEnabled()
+            def message = messageBuilder.buildWorkflowCompleteMessage(threadTs)
             sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow complete notification"
         }
@@ -95,10 +97,22 @@ class SlackObserver implements TraceObserver {
         if (!isConfigured()) return
 
         if (config.onError.enabled) {
-            def message = messageBuilder.buildWorkflowErrorMessage(trace)
+            // Get thread timestamp if threading is enabled and we're using bot sender
+            def threadTs = getThreadTsIfEnabled()
+            def message = messageBuilder.buildWorkflowErrorMessage(trace, threadTs)
             sender.sendMessage(message)
             log.debug "Slack plugin: Sent workflow error notification"
         }
+    }
+
+    /**
+     * Get thread timestamp if threading is enabled
+     */
+    private String getThreadTsIfEnabled() {
+        if (config.useThreads && sender instanceof BotSlackSender) {
+            return (sender as BotSlackSender).getThreadTs()
+        }
+        return null
     }
 
     /**
