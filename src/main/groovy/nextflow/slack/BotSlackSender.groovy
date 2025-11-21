@@ -105,13 +105,24 @@ class BotSlackSender implements SlackSender {
                 }
             }
 
+        } catch (java.net.UnknownHostException e) {
+            logError("Slack plugin: Unknown host (network issue): ${e.message}")
+        } catch (java.net.SocketTimeoutException e) {
+            logError("Slack plugin: Connection timeout: ${e.message}")
+        } catch (IOException e) {
+            logError("Slack plugin: Network error sending bot message: ${e.message}")
+        } catch (groovy.json.JsonException e) {
+            logError("Slack plugin: Error parsing Slack response: ${e.message}")
         } catch (Exception e) {
-            def errorMsg = "Slack plugin: Error sending bot message: ${e.message}".toString()
-            if (loggedErrors.add(errorMsg)) {
-                log.error errorMsg
-            }
+            logError("Slack plugin: Unexpected error sending bot message: ${e.message}")
         } finally {
             connection?.disconnect()
+        }
+    }
+
+    private void logError(String message) {
+        if (loggedErrors.add(message)) {
+            log.error message
         }
     }
 }
