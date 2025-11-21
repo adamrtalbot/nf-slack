@@ -68,6 +68,16 @@ class SlackConfig {
     final String webhook
 
     /**
+     * Slack bot token (xoxb-...)
+     */
+    final String botToken
+
+    /**
+     * Slack bot channel ID or name
+     */
+    final String botChannel
+
+    /**
      * Configuration for workflow start notifications
      */
     final OnStartConfig onStart
@@ -88,6 +98,9 @@ class SlackConfig {
     private SlackConfig(Map config) {
         this.enabled = config.enabled != null ? config.enabled as boolean : true
         this.webhook = config.webhook as String
+        def botConfig = config.bot as Map
+        this.botToken = botConfig?.token as String
+        this.botChannel = botConfig?.channel as String
         this.onStart = new OnStartConfig(config.onStart as Map)
         this.onComplete = new OnCompleteConfig(config.onComplete as Map)
         this.onError = new OnErrorConfig(config.onError as Map)
@@ -111,16 +124,48 @@ class SlackConfig {
 
         // Get webhook URL from nested structure
         def webhook = getWebhookUrl(session)
-        if (!webhook) {
-            log.debug "Slack plugin: No webhook URL configured, plugin will be disabled"
+
+        // Get bot config from nested structure
+        def botToken = session.config?.navigate('slack.bot.token') as String
+        def botChannel = session.config?.navigate('slack.bot.channel') as String
+
+        if (!webhook && !botToken) {
+            log.debug "Slack plugin: No webhook URL or Bot Token configured, plugin will be disabled"
             return null
         }
 
-        // Set webhook string in config for constructor (replaces nested map)
-        config.webhook = webhook
+        // Set values in config map for constructor
+        if (webhook) config.webhook = webhook
+        if (botToken) {
+            // Validate token format
+            if (!botToken.startsWith('xoxb-') && !botToken.startsWith('xoxp-')) {
+                throw new IllegalArgumentException("Slack plugin: Bot token must start with 'xoxb-' or 'xoxp-'")
+            }
+            if (botToken.startsWith('xoxp-')) {
+                log.warn "Slack plugin: You are using a User Token (xoxp-). It is recommended to use a Bot Token (xoxb-) for better security and granular permissions."
+            }
+
+            // Validate channel format (basic check)
+            if (!botChannel) {
+                throw new IllegalArgumentException("Slack plugin: Bot channel is required when using bot token")
+            }
+            // Basic alphanumeric check for channel ID (allow hyphens/underscores for names)
+            // Also allow # for channel names
+            if (!botChannel.matches(/^[#a-zA-Z0-9\-_]+$/)) {
+                throw new IllegalArgumentException("Slack plugin: Invalid channel ID format: ${botChannel}")
+            }
+
+            def botConfig = config.bot as Map
+            if (botConfig == null) {
+                botConfig = [:]
+                config.bot = botConfig
+            }
+            botConfig.token = botToken
+            botConfig.channel = botChannel
+        }
 
         def slackConfig = new SlackConfig(config)
-        log.info "Slack plugin: Enabled with webhook notifications"
+        log.info "Slack plugin: Enabled with ${botToken ? 'Bot' : 'Webhook'} notifications"
         return slackConfig
     }
 
@@ -137,27 +182,31 @@ class SlackConfig {
      * Check if plugin is configured and enabled
      */
     boolean isConfigured() {
-        return enabled && webhook != null
+        return enabled && (webhook != null || (botToken != null && botChannel != null))
     }
 
     /**
      * Create the appropriate SlackSender based on configuration
      *
-     * @return SlackSender instance (WebhookSlackSender for now, future: BotSlackSender)
+     * @return SlackSender instance
      */
     SlackSender createSender() {
         if (!isConfigured()) {
             throw new IllegalStateException("Cannot create sender: Slack plugin not configured")
         }
 
-        // For now, only webhook sender is supported
-        // Future: Check if bot config exists and create BotSlackSender
+        if (botToken) {
+            return new BotSlackSender(botToken, botChannel)
+        }
+
         return new WebhookSlackSender(webhook)
     }
 
     @Override
     String toString() {
-        return "SlackConfig[enabled=${enabled}, webhook=${webhook ? '***configured***' : 'null'}, " +
+        return "SlackConfig[enabled=${enabled}, " +
+               "webhook=${webhook ? '***configured***' : 'null'}, " +
+               "botToken=${botToken ? '***configured***' : 'null'}, " +
                "onStart=${onStart}, onComplete=${onComplete}, onError=${onError}]"
     }
 }

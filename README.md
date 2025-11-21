@@ -14,7 +14,18 @@ Get Slack notifications for your Nextflow workflows - automatically notified whe
 
 ## Quick Start
 
-### 1. Set up a Slack Webhook
+### 1. Set up a Slack Integration
+
+You can use either a **Webhook** or a **Bot User**.
+
+#### Option A: Bot User (Recommended)
+
+1. Create a Slack App at [api.slack.com/apps](https://api.slack.com/apps)
+2. Add `chat:write` scope to **Bot Token Scopes**
+3. Install App to Workspace and copy **Bot User OAuth Token** (`xoxb-...`)
+4. Invite the bot to your channel
+
+#### Option B: Webhook (Simpler, Fewer Features, Less Secure)
 
 1. Go to [Slack Incoming Webhooks](https://api.slack.com/messaging/webhooks)
 2. Create a new webhook for your workspace
@@ -31,9 +42,17 @@ plugins {
 
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    // Option A: Bot User
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456' // Channel ID
     }
+
+    // Option B: Webhook
+    // webhook {
+    //     url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    // }
 }
 ```
 

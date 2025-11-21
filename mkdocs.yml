@@ -9,6 +9,7 @@ nav:
   - Getting Started:
       - Installation: getting-started/installation.md
       - Quick Start: getting-started/quick-start.md
+      - Bot Setup: getting-started/bot-setup.md
       - Webhook Setup: getting-started/webhook-setup.md
   - Usage:
       - Automatic Notifications: usage/automatic-notifications.md

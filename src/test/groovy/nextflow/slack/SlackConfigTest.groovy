@@ -151,4 +151,189 @@ class SlackConfigTest extends Specification {
         sender != null
         sender instanceof WebhookSlackSender
     }
+
+    def 'should parse bot configuration'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.enabled == true
+        config.botToken == 'xoxb-token'
+        config.botChannel == 'C123456'
+        config.webhook == null
+    }
+
+    def 'isConfigured should return true when enabled and bot set'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config.isConfigured() == true
+    }
+
+    def 'createSender should return BotSlackSender for bot configuration'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+        def config = SlackConfig.from(session)
+
+        when:
+        def sender = config.createSender()
+
+        then:
+        sender != null
+        sender instanceof BotSlackSender
+    }
+
+    def 'createSender should prefer BotSlackSender when both are configured'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+        def config = SlackConfig.from(session)
+
+        when:
+        def sender = config.createSender()
+
+        then:
+        sender != null
+        sender instanceof BotSlackSender
+    }
+
+    def 'should throw exception for invalid bot token'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'invalid-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        SlackConfig.from(session)
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("Bot token must start with 'xoxb-' or 'xoxp-'")
+    }
+
+    def 'should throw exception for missing bot channel'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token'
+                ]
+            ]
+        ]
+
+        when:
+        SlackConfig.from(session)
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("Bot channel is required")
+    }
+
+    def 'should throw exception for invalid bot channel'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'Invalid Channel Name'
+                ]
+            ]
+        ]
+
+        when:
+        SlackConfig.from(session)
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        e.message.contains("Invalid channel ID format")
+    }
+    def 'should allow channel name with hash'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: '#general'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.botChannel == '#general'
+    }
+
+    def 'should allow user token (xoxp-)'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxp-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.botToken == 'xoxp-token'
+    }
 }

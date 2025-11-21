@@ -51,6 +51,11 @@ class OnStartConfig {
     final boolean includeCommandLine
 
     /**
+     * Show footer with timestamp in message
+     */
+    final boolean showFooter
+
+    /**
      * Create OnStartConfig from configuration map
      *
      * @param config Configuration map from slack.onStart scope
@@ -59,6 +64,7 @@ class OnStartConfig {
         this.enabled = config?.enabled != null ? config.enabled as boolean : true
         this.message = config?.message ?: '🚀 *Pipeline started*'
         this.includeCommandLine = config?.includeCommandLine != null ? config.includeCommandLine as boolean : true
+        this.showFooter = config?.showFooter != null ? config.showFooter as boolean : true
     }
 
     @Override

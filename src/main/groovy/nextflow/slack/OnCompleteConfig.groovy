@@ -57,6 +57,11 @@ class OnCompleteConfig {
     final boolean includeResourceUsage
 
     /**
+     * Show footer with timestamp in message
+     */
+    final boolean showFooter
+
+    /**
      * Create OnCompleteConfig from configuration map
      *
      * @param config Configuration map from slack.onComplete scope
@@ -66,6 +71,7 @@ class OnCompleteConfig {
         this.message = config?.message ?: '✅ *Pipeline completed successfully*'
         this.includeCommandLine = config?.includeCommandLine != null ? config.includeCommandLine as boolean : true
         this.includeResourceUsage = config?.includeResourceUsage != null ? config.includeResourceUsage as boolean : true
+        this.showFooter = config?.showFooter != null ? config.showFooter as boolean : true
     }
 
     @Override

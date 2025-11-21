@@ -4,15 +4,16 @@ Advanced configuration options for customizing nf-slack notifications.
 
 ## Overview
 
-The nf-slack plugin is configured through the `slack` block in your `nextflow.config`. All configuration options are optional except for the webhook URL.
+The nf-slack plugin is configured through the `slack` block in your `nextflow.config`.
 
 ## Basic Structure
 
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = 'C123456'
     }
     onStart { /* ... */ }
     onComplete { /* ... */ }
@@ -36,14 +37,15 @@ When `enabled = false`:
 - Custom `slackMessage()` calls are silently ignored
 - No Slack API calls are made
 
-## Webhook Configuration
+## Bot Configuration
 
-### Basic Webhook Setup
+### Basic Bot Setup
 
 ```groovy
 slack {
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    bot {
+        token = 'xoxb-your-bot-token'
+        channel = 'C123456'
     }
 }
 ```
@@ -52,8 +54,9 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = 'C123456'
     }
 }
 ```
@@ -62,15 +65,16 @@ slack {
 
 ```groovy
 slack {
-    webhook {
-        url = secrets.SLACK_WEBHOOK_URL
+    bot {
+        token = secrets.SLACK_BOT_TOKEN
+        channel = 'C123456'
     }
 }
 ```
 
 !!! tip "Security Best Practice"
 
-    Never hardcode webhook URLs in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
+    Never hardcode tokens in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
 
 ## Event Notification Control
 
@@ -118,23 +122,6 @@ slack {
 
 ![Custom message text](../images/nf-slack-02.png)
 
-### Rich Messages with Colors
-
-Add colors to your notifications:
-
-```groovy
-slack {
-    onComplete {
-        message = [
-            text: '✅ *Analysis Complete*',
-            color: '#2EB887'  // Green
-        ]
-    }
-}
-```
-
-![Messages with colors](../images/nf-slack-03.png)
-
 ### Adding Custom Fields
 
 Include additional information in notifications:
@@ -144,7 +131,6 @@ slack {
     onComplete {
         message = [
             text: '✅ *Analysis Complete*',
-            color: '#2EB887',
             customFields: [
                 [title: 'Environment', value: 'Production', short: true],
                 [title: 'Cost', value: '$12.50', short: true]
@@ -238,68 +224,27 @@ slack {
 }
 ```
 
-## Color Reference
+### Footer Display
 
-Use consistent colors for different message types:
-
-| Color  | Hex Code  | Use Case            |
-| ------ | --------- | ------------------- |
-| Green  | `#2EB887` | Success, completion |
-| Red    | `#A30301` | Errors, failures    |
-| Blue   | `#3AA3E3` | Info, starting      |
-| Orange | `#FFA500` | Warnings            |
-
-## Complete Configuration Example
+Control whether a timestamp footer is shown at the bottom of messages:
 
 ```groovy
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
 slack {
-    enabled = true
-
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
-    }
-
     onStart {
-        enabled = true
-        message = [
-            text: '🚀 *Production Pipeline Starting*',
-            color: '#3AA3E3',
-            customFields: [
-                [title: 'Environment', value: 'Production', short: true],
-                [title: 'Priority', value: 'High', short: true]
-            ]
-        ]
-        includeCommandLine = true
+        showFooter = true  // Show timestamp (default)
     }
 
     onComplete {
-        enabled = true
-        message = [
-            text: '✅ *Pipeline Completed*',
-            color: '#2EB887',
-            includeFields: ['runName', 'duration', 'tasks'],
-            customFields: [
-                [title: 'Cost', value: '$12.50', short: true]
-            ]
-        ]
-        includeResourceUsage = true
+        showFooter = false  // Hide timestamp footer
     }
 
     onError {
-        enabled = true
-        message = [
-            text: '❌ *Pipeline Failed*',
-            color: '#A30301',
-            includeFields: ['runName', 'errorMessage', 'failedProcess']
-        ]
-        includeCommandLine = true
+        showFooter = true  // Show timestamp
     }
 }
 ```
+
+The footer displays a human-readable timestamp (e.g., "Nov 20, 2025 at 6:54 PM").
 
 ## Next Steps
 

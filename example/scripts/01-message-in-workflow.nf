@@ -37,7 +37,6 @@ workflow {
     // ==============================================================
     slackMessage([
         message: "Example workflow complete! 🎉",
-        color: "#2EB887",  // Green for success
         fields: [
             [
                 title: "Status",

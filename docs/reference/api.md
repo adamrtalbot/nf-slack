@@ -16,22 +16,41 @@ Complete API reference for nf-slack plugin configuration options and functions.
 | Property     | Type    | Default                                    | Required | Description                                                        |
 | ------------ | ------- | ------------------------------------------ | -------- | ------------------------------------------------------------------ |
 | `enabled`    | Boolean | `true`                                     | No       | Master switch to enable/disable the plugin                         |
-| `webhook`    | Closure | -                                          | Yes\*    | Webhook configuration block (see [`slack.webhook`](#slackwebhook)) |
+| `bot`        | Closure | -                                          | No\*     | Bot configuration block (see [`slack.bot`](#slackbot))             |
+| `webhook`    | Closure | -                                          | No\*     | Webhook configuration block (see [`slack.webhook`](#slackwebhook)) |
 | `onStart`    | Closure | See [`slack.onStart`](#slackonstart)       | No       | Configuration for workflow start notifications                     |
 | `onComplete` | Closure | See [`slack.onComplete`](#slackoncomplete) | No       | Configuration for workflow completion notifications                |
 | `onError`    | Closure | See [`slack.onError`](#slackonerror)       | No       | Configuration for workflow error notifications                     |
 
-\*Required only if plugin is enabled. If no webhook is configured, the plugin will automatically disable itself.
+\*Either `webhook` or `bot` is required. If neither is configured, the plugin will automatically disable itself.
 
 #### Example
 
 ```groovy
 slack {
     enabled = true
-    webhook { /* ... */ }
+    bot { /* ... */ }
     onStart { /* ... */ }
     onComplete { /* ... */ }
     onError { /* ... */ }
+}
+```
+
+---
+
+### `slack.bot`
+
+| Property  | Type   | Default | Required | Description                                        |
+| --------- | ------ | ------- | -------- | -------------------------------------------------- |
+| `token`   | String | -       | Yes      | Bot User OAuth Token (starts with `xoxb-`)         |
+| `channel` | String | -       | Yes      | Channel ID (e.g., `C12345678`) to send messages to |
+
+#### Example
+
+```groovy
+bot {
+    token = 'xoxb-your-token'
+    channel = 'C12345678'
 }
 ```
 
@@ -64,6 +83,7 @@ Configuration for workflow start notifications.
 | `enabled`            | Boolean       | `true`                    | Send notification when workflow starts |
 | `message`            | String or Map | `'🚀 *Pipeline started*'` | Start notification message             |
 | `includeCommandLine` | Boolean       | `true`                    | Include command line in message        |
+| `showFooter`         | Boolean       | `true`                    | Show timestamp footer in message       |
 
 #### Message Available Fields
 
@@ -102,6 +122,7 @@ Configuration for workflow completion notifications.
 | `message`              | String or Map | `'✅ *Pipeline completed successfully*'` | Completion notification message            |
 | `includeCommandLine`   | Boolean       | `true`                                   | Include command line in message            |
 | `includeResourceUsage` | Boolean       | `true`                                   | Include task statistics and resource usage |
+| `showFooter`           | Boolean       | `true`                                   | Show timestamp footer in message           |
 
 > **Note**: `includeResourceUsage` is **only available** in the `onComplete` scope.
 
@@ -143,6 +164,7 @@ Configuration for workflow error notifications.
 | `enabled`            | Boolean       | `true`                   | Send notification when workflow fails |
 | `message`            | String or Map | `'❌ *Pipeline failed*'` | Error notification message            |
 | `includeCommandLine` | Boolean       | `true`                   | Include command line in message       |
+| `showFooter`         | Boolean       | `true`                   | Show timestamp footer in message      |
 
 #### Message Available Fields
 

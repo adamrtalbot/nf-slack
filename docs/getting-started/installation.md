@@ -5,7 +5,7 @@ This guide covers installing the nf-slack plugin in your Nextflow pipeline.
 ## Prerequisites
 
 - Nextflow v25.04.0 or later
-- A Slack webhook URL (see [Webhook Setup guide](webhook-setup.md))
+- A Bot Token (see [Bot Setup guide](bot-setup.md)) OR Slack webhook URL (see [Webhook Setup guide](webhook-setup.md))
 
 ## Adding the Plugin
 
@@ -77,6 +77,6 @@ This will build and install the plugin to your local Nextflow plugins directory.
 
 ## Next Steps
 
-- [Set up your Slack webhook](webhook-setup.md)
+- [Set up your Bot User](bot-setup.md) or [Slack webhook](webhook-setup.md)
 - [Get started with basic notifications](quick-start.md)
 - [Configure the plugin](../usage/configuration.md)

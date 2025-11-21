@@ -29,9 +29,9 @@ workflow {
 
 ## Rich Formatted Messages
 
-### Adding Colors and Fields
+### Adding Custom Fields
 
-Create rich messages with colors and custom fields:
+Create rich messages with custom fields:
 
 ```groovy
 include { slackMessage } from 'plugin/nf-slack'
@@ -39,7 +39,6 @@ include { slackMessage } from 'plugin/nf-slack'
 workflow {
     slackMessage([
         message: "Analysis Results",
-        color: "#2EB887",  // green
         fields: [
             [title: "Sample", value: params.sample_id, short: true],
             [title: "Status", value: "Success", short: true],
@@ -54,11 +53,10 @@ workflow {
 
 When using the map format, you can specify:
 
-| Property  | Type   | Description                      | Required |
-| --------- | ------ | -------------------------------- | -------- |
-| `message` | String | Main message text                | Yes      |
-| `color`   | String | Hex color code (e.g., "#2EB887") | No       |
-| `fields`  | List   | Array of field objects           | No       |
+| Property  | Type   | Description            | Required |
+| --------- | ------ | ---------------------- | -------- |
+| `message` | String | Main message text      | Yes      |
+| `fields`  | List   | Array of field objects | No       |
 
 ### Field Structure
 
@@ -70,38 +68,25 @@ Each field in the `fields` array can have:
 | `value`  | String  | Field content                          | Yes      |
 | `short`  | Boolean | Show in column layout (default: false) | No       |
 
-## Color Reference
-
-Use these colors for consistent message styling:
-
-- **Success**: `#2EB887` (green) - For successful operations
-- **Error**: `#A30301` (red) - For errors or failures
-- **Info**: `#3AA3E3` (blue) - For informational messages
-- **Warning**: `#FFA500` (orange) - For warnings
-
 ```groovy
 // Success message
 slackMessage([
-    message: "✅ Pipeline completed successfully",
-    color: "#2EB887"
+    message: "✅ Pipeline completed successfully"
 ])
 
 // Error message
 slackMessage([
-    message: "❌ Quality control failed",
-    color: "#A30301"
+    message: "❌ Quality control failed"
 ])
 
 // Info message
 slackMessage([
-    message: "ℹ️ Processing 100 samples",
-    color: "#3AA3E3"
+    message: "ℹ️ Processing 100 samples"
 ])
 
 // Warning message
 slackMessage([
-    message: "⚠️ Low coverage detected",
-    color: "#FFA500"
+    message: "⚠️ Low coverage detected"
 ])
 ```
 
@@ -121,7 +106,6 @@ workflow {
         .map { sample, vcf, stats ->
             slackMessage([
                 message: "Sample ${sample} analyzed",
-                color: "#2EB887",
                 fields: [
                     [title: "Sample", value: sample, short: true],
                     [title: "Variants", value: stats.variant_count, short: true],
@@ -176,7 +160,6 @@ workflow {
         .map { sample, qc ->
             slackMessage([
                 message: "⚠️ Quality check failed for ${sample}",
-                color: "#FFA500",
                 fields: [
                     [title: "Sample", value: sample, short: true],
                     [title: "Score", value: qc.score.toString(), short: true]
@@ -203,7 +186,6 @@ workflow {
 
             slackMessage([
                 message: "Batch processing complete",
-                color: failed > 0 ? "#FFA500" : "#2EB887",
                 fields: [
                     [title: "Total Samples", value: total.toString(), short: true],
                     [title: "Successful", value: success.toString(), short: true],

@@ -6,7 +6,7 @@ Get your first Slack notification working in minutes!
 
 Before you begin, make sure you have:
 
-- [x] A Slack webhook URL ([Installation guide](installation.md))
+- [x] A Bot Token ([Bot guide](bot-setup.md)) OR Slack webhook URL ([Webhook guide](webhook-setup.md))
 - [x] A Nextflow pipeline (v25.04.0 or later)
 - [x] Basic familiarity with Nextflow configuration
 
@@ -31,16 +31,24 @@ plugins {
     }
     ```
 
-## Step 2: Configure the Webhook
+## Step 2: Configure the Plugin
 
-Add the Slack configuration block with your webhook URL:
+Add the Slack configuration block with your Bot Token:
 
 ```groovy
 slack {
     enabled = true
-    webhook {
-        url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+
+    // Option A: Bot User
+    bot {
+        token = 'xoxb-your-token'
+        channel = 'C123456'
     }
+
+    // Option B: Webhook
+    // webhook {
+    //     url = 'https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
+    // }
 }
 ```
 
@@ -51,8 +59,9 @@ slack {
     ```groovy
     slack {
         enabled = true
-        webhook {
-            url = "$SLACK_WEBHOOK_URL"  // or secrets.SLACK_WEBHOOK_URL
+        bot {
+            token = System.getenv("SLACK_BOT_TOKEN") // or secrets.SLACK_BOT_TOKEN
+            channel = 'C123456'
         }
     }
     ```
@@ -72,49 +81,6 @@ You'll receive Slack notifications when your pipeline:
 - ❌ Fails
 
 ![Default notifications](../images/nf-slack-00.png)
-
-## Complete Minimal Example
-
-Here's a complete minimal `nextflow.config`:
-
-```groovy title="nextflow.config"
-plugins {
-    id 'nf-slack@0.2.1'
-}
-
-slack {
-    webhook {
-        url = "$SLACK_WEBHOOK_URL"
-    }
-}
-```
-
-And set your environment variable:
-
-```bash
-export SLACK_WEBHOOK_URL='https://hooks.slack.com/services/YOUR/WEBHOOK/URL'
-nextflow run main.nf
-```
-
-## Verify It's Working
-
-To test your configuration without running a full pipeline:
-
-1. Create a simple test workflow:
-
-   ```groovy title="test.nf"
-   workflow {
-       println "Testing nf-slack notifications!"
-   }
-   ```
-
-1. Run it:
-
-   ```bash
-   nextflow run test.nf
-   ```
-
-1. Check your Slack channel for the start and completion notifications.
 
 ## Next Steps
 
