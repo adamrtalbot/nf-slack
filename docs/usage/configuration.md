@@ -79,6 +79,35 @@ slack {
 
     Never hardcode tokens in configuration files that are committed to version control. Use environment variables or Nextflow secrets.
 
+### Threading
+
+Group all workflow notifications (start, complete, error) into a single thread to reduce channel clutter:
+
+```groovy
+slack {
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = 'general'
+        useThreads = true  // Enable threading
+    }
+}
+```
+
+**How it works:**
+
+- The initial "workflow started" message creates a new thread
+- Subsequent messages (complete/error) are posted as replies to that thread
+- **Custom messages** sent via `slackMessage()` are also posted in the thread
+- Each new workflow run creates a separate thread
+
+!!! warning "Bot Tokens Only"
+
+    Threading **only works with bot tokens**, not webhooks. Webhooks do not support thread creation or replies.
+
+!!! note "Default Behavior"
+
+    Threading is **disabled by default** (`useThreads = false`) to maintain backward compatibility.
+
 ## Event Notification Control
 
 ### Enable/Disable Individual Events

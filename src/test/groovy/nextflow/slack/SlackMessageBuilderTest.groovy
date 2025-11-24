@@ -458,4 +458,144 @@ class SlackMessageBuilderTest extends Specification {
         json.blocks[0].text.text == 'Starting...'
         !json.blocks.any { it.type == 'section' && it.fields } // no fields since includeFields not specified
     }
+
+    def 'should include thread_ts in workflow start message when provided'() {
+        when:
+        def message = messageBuilder.buildWorkflowStartMessage('1234567890.123456')
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.thread_ts == '1234567890.123456'
+    }
+
+    def 'should omit thread_ts from workflow start message when null'() {
+        when:
+        def message = messageBuilder.buildWorkflowStartMessage(null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        !json.containsKey('thread_ts')
+    }
+
+    def 'should include thread_ts in workflow complete message when provided'() {
+        given:
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('1h')
+        session.workflowMetadata >> metadata
+
+        when:
+        def message = messageBuilder.buildWorkflowCompleteMessage('1234567890.123456')
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.thread_ts == '1234567890.123456'
+    }
+
+    def 'should omit thread_ts from workflow complete message when null'() {
+        given:
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('1h')
+        session.workflowMetadata >> metadata
+
+        when:
+        def message = messageBuilder.buildWorkflowCompleteMessage(null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        !json.containsKey('thread_ts')
+    }
+
+    def 'should include thread_ts in workflow error message when provided'() {
+        given:
+        def errorSession = Mock(Session)
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('30m')
+        metadata.errorMessage >> 'Test error'
+        errorSession.workflowMetadata >> metadata
+        errorSession.runName >> 'test-run'
+
+        def builder = new SlackMessageBuilder(config, errorSession)
+
+        when:
+        def message = builder.buildWorkflowErrorMessage(null, '1234567890.123456')
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.thread_ts == '1234567890.123456'
+    }
+
+    def 'should omit thread_ts from workflow error message when null'() {
+        given:
+        def errorSession = Mock(Session)
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test-workflow.nf'
+        metadata.duration >> Duration.of('30m')
+        metadata.errorMessage >> 'Test error'
+        errorSession.workflowMetadata >> metadata
+        errorSession.runName >> 'test-run'
+
+        def builder = new SlackMessageBuilder(config, errorSession)
+
+        when:
+        def message = builder.buildWorkflowErrorMessage(null, null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        !json.containsKey('thread_ts')
+    }
+
+    def 'should include thread_ts in simple message when provided'() {
+        when:
+        def message = messageBuilder.buildSimpleMessage('Test message', '1234567890.123456')
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.thread_ts == '1234567890.123456'
+    }
+
+    def 'should omit thread_ts from simple message when null'() {
+        when:
+        def message = messageBuilder.buildSimpleMessage('Test message', null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        !json.containsKey('thread_ts')
+    }
+
+    def 'should include thread_ts in rich message when provided'() {
+        given:
+        def options = [
+            message: 'Rich message',
+            fields: [
+                [title: 'Field', value: 'Value', short: true]
+            ]
+        ]
+
+        when:
+        def message = messageBuilder.buildRichMessage(options, '1234567890.123456')
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        json.thread_ts == '1234567890.123456'
+    }
+
+    def 'should omit thread_ts from rich message when null'() {
+        given:
+        def options = [
+            message: 'Rich message',
+            fields: [
+                [title: 'Field', value: 'Value', short: true]
+            ]
+        ]
+
+        when:
+        def message = messageBuilder.buildRichMessage(options, null)
+        def json = new JsonSlurper().parseText(message)
+
+        then:
+        !json.containsKey('thread_ts')
+    }
 }

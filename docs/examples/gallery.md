@@ -25,6 +25,7 @@ Each example focuses on **one specific aspect** of the plugin, building progress
 | [Example 6: Selective Fields](#example-6-selective-default-fields) | Choose default fields    | ⭐⭐⭐     |
 | [Example 7: Footer Control](#example-7-footer-control)             | Control timestamp footer | ⭐         |
 | [Example 8: Specific Channel ID](#example-8-specific-channel-id)   | Send to specific channel | ⭐         |
+| [Example 9: Threaded Messages](#example-9-threaded-messages)       | Group messages in thread | ⭐⭐       |
 
 ### Script Examples (Programmatic Messages)
 
@@ -416,6 +417,57 @@ slack {
 ```
 
 **Use when**: You want to send notifications to a specific channel by ID instead of name.
+
+---
+
+### Example 9: Threaded Messages
+
+**Concept**: Group all workflow notifications (start, complete, error) into a single thread
+
+**New concepts**:
+
+- `useThreads` - Enable threading to reduce channel clutter
+- Each workflow run creates a new thread automatically
+
+**Configuration**:
+
+```groovy title="09-threaded-messages.config"
+slack {
+    bot {
+        token = System.getenv('SLACK_BOT_TOKEN')
+        channel = 'general'
+        useThreads = true  // Group all workflow messages in a thread
+    }
+
+    onStart {
+        message = '🚀 *Pipeline started*'
+    }
+
+    onComplete {
+        message = '✅ *Pipeline completed successfully*'
+    }
+
+    onError {
+        message = '❌ *Pipeline failed*'
+    }
+}
+```
+
+**How it works**:
+
+1. The initial "workflow started" message creates a new thread
+2. Subsequent messages (complete/error) are posted as replies to that thread
+3. **Custom messages** sent via `slackMessage()` are also posted in the thread
+4. Each new workflow run creates a separate thread
+
+**Important notes**:
+
+- ⚠️ Threading only works with bot tokens (see [Threading configuration](../usage/configuration.md#threading) for details)
+- ✅ Reduces channel clutter by keeping related messages together
+- ✅ Each workflow run gets its own thread
+- ✅ Custom `slackMessage()` calls are automatically included in the thread
+
+**Use when**: You want to keep workflow notifications organized and reduce noise in busy channels.
 
 ---
 
