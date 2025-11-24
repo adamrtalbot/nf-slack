@@ -462,7 +462,7 @@ slack {
 
 **Important notes**:
 
-- ⚠️ Threading **only works with bot tokens**, not webhooks
+- ⚠️ Threading only works with bot tokens (see [Threading configuration](../usage/configuration.md#threading) for details)
 - ✅ Reduces channel clutter by keeping related messages together
 - ✅ Each workflow run gets its own thread
 - ✅ Custom `slackMessage()` calls are automatically included in the thread
