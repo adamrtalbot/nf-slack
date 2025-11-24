@@ -45,8 +45,6 @@ xoxb-1234567890-1234567890123-xxxxxxxxxxxxxxxxxxxx
 
 For most cases, you can simply use the channel name (e.g., `general`, `pipelines`) in your configuration.
 
-### (Optional) Finding the Channel ID
-
 If you prefer to use a Channel ID (which remains stable even if the channel is renamed), you can find it as follows:
 
 1. Open Slack and navigate to the channel
