@@ -1166,15 +1166,23 @@
 <td>String</td>
 <td>-</td>
 <td>Yes</td>
-<td>Channel ID (e.g., <code>C12345678</code>) to send messages to</td>
+<td>Channel ID (e.g., <code>C12345678</code>) or Name (e.g., <code>general</code>) to send messages to</td>
+</tr>
+<tr>
+<td><code>useThreads</code></td>
+<td>Boolean</td>
+<td><code>false</code></td>
+<td>No</td>
+<td>Group all workflow messages (including custom <code>slackMessage()</code> calls) in threads (bot tokens only)</td>
 </tr>
 </tbody>
 </table>
 <h4 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h4>
 <div class="language-groovy highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">bot</span><span class="w"> </span><span class="o">{</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;xoxb-your-token&#39;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;C12345678&#39;</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">}</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;general&#39;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">useThreads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="w">  </span><span class="c1">// Optional: group messages in threads</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">}</span>
 </span></code></pre></div>
 <hr />
 <h3 id="slackwebhook"><code>slack.webhook</code><a class="headerlink" href="#slackwebhook" title="Permanent link">&para;</a></h3>
