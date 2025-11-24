@@ -39,6 +39,7 @@ class BotSlackSender implements SlackSender {
     private final String botToken
     private final String channelId
     private final Set<String> loggedErrors = Collections.synchronizedSet(new HashSet<String>())
+    private String threadTs  // Store the thread timestamp for threaded conversations
 
     /**
      * Create a new BotSlackSender
@@ -103,6 +104,13 @@ class BotSlackSender implements SlackSender {
                 if (loggedErrors.add(errorMsg)) {
                     log.error errorMsg
                 }
+            } else {
+                // Capture the thread timestamp from the response for future threaded replies
+                def ts = response.ts as String
+                if (ts && !threadTs) {
+                    threadTs = ts
+                    log.debug "Slack plugin: Captured thread timestamp: ${threadTs}"
+                }
             }
 
         } catch (Exception e) {
@@ -113,5 +121,14 @@ class BotSlackSender implements SlackSender {
         } finally {
             connection?.disconnect()
         }
+    }
+
+    /**
+     * Get the thread timestamp for threaded conversations
+     *
+     * @return The thread timestamp, or null if not set
+     */
+    String getThreadTs() {
+        return threadTs
     }
 }

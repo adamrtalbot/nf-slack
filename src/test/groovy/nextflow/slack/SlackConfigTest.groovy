@@ -336,4 +336,66 @@ class SlackConfigTest extends Specification {
         config != null
         config.botToken == 'xoxp-token'
     }
+
+    def 'should default useThreads to false'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456'
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.useThreads == false
+    }
+
+    def 'should parse useThreads when explicitly set to true'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456',
+                    useThreads: true
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.useThreads == true
+    }
+
+    def 'should parse useThreads when explicitly set to false'() {
+        given:
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456',
+                    useThreads: false
+                ]
+            ]
+        ]
+
+        when:
+        def config = SlackConfig.from(session)
+
+        then:
+        config != null
+        config.useThreads == false
+    }
 }

@@ -65,8 +65,14 @@ class SlackExtension extends PluginExtensionPoint {
                 return
             }
 
+            // Get thread timestamp if threading is enabled
+            def threadTs = null
+            if (observer.config?.useThreads && observer.sender instanceof BotSlackSender) {
+                threadTs = (observer.sender as BotSlackSender).getThreadTs()
+            }
+
             // Build and send simple message
-            def message = observer.messageBuilder.buildSimpleMessage(text)
+            def message = observer.messageBuilder.buildSimpleMessage(text, threadTs)
             observer.sender.sendMessage(message)
 
             log.debug "Slack plugin: Sent custom text message"
@@ -115,8 +121,14 @@ class SlackExtension extends PluginExtensionPoint {
                 return
             }
 
+            // Get thread timestamp if threading is enabled
+            def threadTs = null
+            if (observer.config?.useThreads && observer.sender instanceof BotSlackSender) {
+                threadTs = (observer.sender as BotSlackSender).getThreadTs()
+            }
+
             // Build and send rich message
-            def message = observer.messageBuilder.buildRichMessage(options)
+            def message = observer.messageBuilder.buildRichMessage(options, threadTs)
             observer.sender.sendMessage(message)
 
             log.debug "Slack plugin: Sent custom rich message"

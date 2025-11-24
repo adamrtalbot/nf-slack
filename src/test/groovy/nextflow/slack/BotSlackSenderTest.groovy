@@ -49,6 +49,31 @@ class BotSlackSenderTest extends Specification {
         noExceptionThrown()
     }
 
+    def 'should return null for threadTs initially'() {
+        when:
+        def sender = new BotSlackSender('xoxb-token', 'C123456')
+
+        then:
+        sender.getThreadTs() == null
+    }
+
+    def 'should have getThreadTs method available'() {
+        given:
+        def sender = new BotSlackSender('xoxb-token', 'C123456')
+
+        when:
+        def threadTs = sender.getThreadTs()
+
+        then:
+        threadTs == null || threadTs instanceof String
+    }
+
     // Note: We cannot easily test the actual HTTP call without mocking HttpURLConnection
-    // or using a mock server. For this MVP, we rely on the fact that it doesn't throw exceptions.
+    // or using a mock server. The thread timestamp capture happens in the postToSlack method
+    // after a successful API response. Full testing would require:
+    // 1. Mocking HttpURLConnection to return a successful response with a 'ts' field
+    // 2. Verifying that threadTs is captured from the response
+    // 3. Verifying that subsequent calls don't overwrite the threadTs
+    // For this implementation, we rely on integration testing and the fact that the code
+    // doesn't throw exceptions during normal operation.
 }

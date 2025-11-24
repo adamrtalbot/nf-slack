@@ -185,4 +185,144 @@ class SlackObserverTest extends Specification {
         then:
         noExceptionThrown()
     }
+
+    def 'should use thread timestamp when useThreads enabled and BotSlackSender'() {
+        given:
+        def mockBotSender = Mock(BotSlackSender)
+        mockBotSender.getThreadTs() >> '1234567890.123456'
+
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456',
+                    useThreads: true
+                ],
+                onComplete: [
+                    enabled: true
+                ]
+            ]
+        ]
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test.nf'
+        session.workflowMetadata >> metadata
+        session.runName >> 'test-run'
+
+        def observer = new SlackObserver()
+        observer.onFlowCreate(session)
+        observer.setSender(mockBotSender)
+
+        when:
+        observer.onFlowComplete()
+
+        then:
+        // Verify that getThreadTs was called to retrieve the thread timestamp
+        1 * mockBotSender.getThreadTs()
+    }
+
+    def 'should not use thread timestamp when useThreads disabled'() {
+        given:
+        def mockBotSender = Mock(BotSlackSender)
+
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456',
+                    useThreads: false
+                ],
+                onComplete: [
+                    enabled: true
+                ]
+            ]
+        ]
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test.nf'
+        session.workflowMetadata >> metadata
+        session.runName >> 'test-run'
+
+        def observer = new SlackObserver()
+        observer.onFlowCreate(session)
+        observer.setSender(mockBotSender)
+
+        when:
+        observer.onFlowComplete()
+
+        then:
+        // Verify that getThreadTs was NOT called since threading is disabled
+        0 * mockBotSender.getThreadTs()
+    }
+
+    def 'should not use thread timestamp with WebhookSlackSender'() {
+        given:
+        def mockWebhookSender = Mock(WebhookSlackSender)
+
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                webhook: [
+                    url: 'https://hooks.slack.com/services/TEST/TEST/TEST'
+                ],
+                onComplete: [
+                    enabled: true
+                ]
+            ]
+        ]
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test.nf'
+        session.workflowMetadata >> metadata
+        session.runName >> 'test-run'
+
+        def observer = new SlackObserver()
+        observer.onFlowCreate(session)
+        observer.setSender(mockWebhookSender)
+
+        when:
+        observer.onFlowComplete()
+
+        then:
+        // Threading is not supported with webhook sender
+        noExceptionThrown()
+    }
+
+    def 'should use thread timestamp for error messages when enabled'() {
+        given:
+        def mockBotSender = Mock(BotSlackSender)
+        mockBotSender.getThreadTs() >> '1234567890.123456'
+
+        def session = Mock(Session)
+        session.config >> [
+            slack: [
+                bot: [
+                    token: 'xoxb-token',
+                    channel: 'C123456',
+                    useThreads: true
+                ],
+                onError: [
+                    enabled: true
+                ]
+            ]
+        ]
+        def metadata = Mock(WorkflowMetadata)
+        metadata.scriptName >> 'test.nf'
+        metadata.errorMessage >> 'Test error'
+        session.workflowMetadata >> metadata
+        session.runName >> 'test-run'
+
+        def errorRecord = Mock(TraceRecord)
+        errorRecord.get('process') >> 'FAILED_PROCESS'
+
+        def observer = new SlackObserver()
+        observer.onFlowCreate(session)
+        observer.setSender(mockBotSender)
+
+        when:
+        observer.onFlowError(null, errorRecord)
+
+        then:
+        // Verify that getThreadTs was called for error messages too
+        1 * mockBotSender.getThreadTs()
+    }
 }

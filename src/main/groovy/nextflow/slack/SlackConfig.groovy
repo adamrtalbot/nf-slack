@@ -78,6 +78,12 @@ class SlackConfig {
     final String botChannel
 
     /**
+     * Enable threading for bot messages (groups workflow messages in a thread)
+     * Only works with bot tokens, not webhooks
+     */
+    final boolean useThreads
+
+    /**
      * Configuration for workflow start notifications
      */
     final OnStartConfig onStart
@@ -101,6 +107,7 @@ class SlackConfig {
         def botConfig = config.bot as Map
         this.botToken = botConfig?.token as String
         this.botChannel = botConfig?.channel as String
+        this.useThreads = botConfig?.useThreads != null ? botConfig.useThreads as boolean : false
         this.onStart = new OnStartConfig(config.onStart as Map)
         this.onComplete = new OnCompleteConfig(config.onComplete as Map)
         this.onError = new OnErrorConfig(config.onError as Map)
@@ -128,6 +135,7 @@ class SlackConfig {
         // Get bot config from nested structure
         def botToken = session.config?.navigate('slack.bot.token') as String
         def botChannel = session.config?.navigate('slack.bot.channel') as String
+        def useThreads = session.config?.navigate('slack.bot.useThreads') as Boolean
 
         if (!webhook && !botToken) {
             log.debug "Slack plugin: No webhook URL or Bot Token configured, plugin will be disabled"
@@ -162,6 +170,9 @@ class SlackConfig {
             }
             botConfig.token = botToken
             botConfig.channel = botChannel
+            if (useThreads != null) {
+                botConfig.useThreads = useThreads
+            }
         }
 
         def slackConfig = new SlackConfig(config)
